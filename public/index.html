@@ -78,6 +78,9 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
 .btn-primary:active{transform:scale(.98);box-shadow:0 0 0 1px var(--accent-dim)}
 .btn-secondary{background:transparent;color:var(--t);border:1.5px solid var(--b2)}
 .btn-secondary:active{background:var(--bg3);transform:scale(.98)}
+.btn-google{background:#fff;color:#3c4043;border:1px solid #dadce0;font-weight:600;display:flex;align-items:center;justify-content:center;margin-top:8px}
+.btn-google:active{background:#f8f9fa;transform:scale(.98)}
+.btn-google:hover{background:#f8f9fa;box-shadow:0 1px 3px rgba(0,0,0,.2)}
 .btn-ghost{background:transparent;color:var(--t2);font-size:14px;padding:10px 14px}
 .btn-full{width:100%;display:block;text-align:center}
 .btn-danger{background:var(--reddim);color:var(--red);border:1.5px solid rgba(255,59,48,.4)}
@@ -903,6 +906,33 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
 .adm-round-header{font-size:11px;font-weight:800;color:var(--accent);text-transform:uppercase;letter-spacing:.7px;margin:14px 0 8px;padding-bottom:5px;border-bottom:1px solid var(--b2)}
 .adm-round-header:first-child{margin-top:0}
 </style>
+<!-- ════════════════════════════════════════
+     FIREBASE AUTH (compat builds, fáciles de usar sin bundler)
+     Inicializamos en window.fb para que el JS de la app lo consuma.
+     ════════════════════════════════════════ -->
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyB5ho_TC_xECbGEQmdjLlIz3KaVWIUctLE",
+    authDomain: "qupa26-a019a.firebaseapp.com",
+    projectId: "qupa26-a019a",
+    storageBucket: "qupa26-a019a.firebasestorage.app",
+    messagingSenderId: "963176248378",
+    appId: "1:963176248378:web:c136b952a4ee282e0fb103",
+    measurementId: "G-P3K927LTZK"
+  };
+  firebase.initializeApp(firebaseConfig);
+  // Persistir sesion entre cierres de pestana (LOCAL = se mantiene hasta logout)
+  firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(()=>{});
+  // Exponer un objeto fb global para que el JS de la app lo use sin pelear con modules
+  window.fb = {
+    auth: firebase.auth(),
+    googleProvider: new firebase.auth.GoogleAuthProvider(),
+    ready: false,        // se pone true cuando onAuthStateChanged corra al menos una vez
+    user: null,          // ultimo currentUser conocido
+  };
+</script>
 </head>
 <body>
 
@@ -988,6 +1018,10 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
     </div>
     <div class="err" id="reg-err"></div>
     <button class="btn btn-primary btn-full" onclick="doRegister()">Crear cuenta</button>
+    <button class="btn btn-google btn-full" onclick="doGoogleLogin()">
+      <svg viewBox="0 0 24 24" width="18" height="18" style="margin-right:8px;vertical-align:-3px"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+      Continuar con Google
+    </button>
     <div class="auth-divider">o</div>
     <button class="btn btn-secondary btn-full" onclick="demoLogin()">Continuar como invitado</button>
     <div class="auth-footer">Ya tenes cuenta? <span onclick="goTo('screen-login')">Iniciar sesion</span></div>
@@ -1010,14 +1044,17 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
     <div class="auth-sub">Inicia sesion para ver tu quiniela</div>
     <div class="field"><label>Email</label><input type="email" id="log-email" placeholder="tu@email.com" autocomplete="email"></div>
     <div class="field"><label>Contrasena</label><input type="password" id="log-pass" placeholder="Tu contrasena" autocomplete="current-password"></div>
+    <div style="text-align:right;margin-top:-8px;margin-bottom:10px">
+      <span onclick="openForgotPassword()" style="font-size:12px;color:var(--gold);cursor:pointer;text-decoration:underline">Olvidaste tu contrasena?</span>
+    </div>
     <div class="err" id="log-err"></div>
     <button class="btn btn-primary btn-full" onclick="doLogin()">Iniciar sesion</button>
+    <button class="btn btn-google btn-full" onclick="doGoogleLogin()">
+      <svg viewBox="0 0 24 24" width="18" height="18" style="margin-right:8px;vertical-align:-3px"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+      Continuar con Google
+    </button>
     <div class="auth-divider">o</div>
     <button class="btn btn-secondary btn-full" onclick="demoLogin()">Continuar como invitado</button>
-    <div style="background:var(--bg3);border:1px solid var(--b);border-radius:var(--r);padding:12px 14px;margin-top:14px">
-      <p style="font-size:12px;color:var(--t2);margin-bottom:3px;font-weight:600">Demo</p>
-      <p style="font-size:11px;color:var(--t3);font-family:'DM Mono',monospace">pablo@demo.com / demo123</p>
-    </div>
     <div class="auth-footer">No tenes cuenta? <span onclick="goTo('screen-register')">Registrarse</span></div>
   </div>
 </div>
@@ -2053,10 +2090,59 @@ function navTo(page){
   if(page==='perfil')renderPerfil();
 }
 
-/* ── AUTH ── */
+/* ── AUTH (Firebase Auth + DB.users sincronizados por email) ──
+   Firebase Auth maneja: email/password, recovery, sesiones multi-device.
+   DB.users[] sigue guardando: quinielas, saldo, predicciones (sera Firestore en Fase 4).
+   El email es la llave de union entre ambos. */
+
+/* Helper: dado un email, devuelve (o crea) el record en DB.users */
+function getOrCreateLocalUser(email,defaults={}){
+  let u=DB.users.find(x=>x.email===email);
+  if(u)return u;
+  // Crear record local nuevo asociado al usuario Firebase
+  u={
+    id:'u'+(DB.nextId++),
+    name:defaults.name||email.split('@')[0],
+    email,
+    pass:'', // ya no se usa, Firebase maneja la pass
+    team:defaults.team||'',
+    wcBalance:0,
+    quinielas:{},
+    activeQuinielaId:null,
+    ligas:[],
+    entries:[],
+    ledger:[],
+    isAdmin:!!defaults.isAdmin,
+  };
+  DB.users.push(u);
+  saveDB();
+  return u;
+}
+
+/* Mensajes de error de Firebase traducidos al espanol */
+function fbErrorMsg(err){
+  const code=(err&&err.code)||'';
+  const map={
+    'auth/email-already-in-use':'Este email ya esta registrado',
+    'auth/invalid-email':'Email invalido',
+    'auth/operation-not-allowed':'Email/Password no esta habilitado',
+    'auth/weak-password':'Contrasena muy debil (minimo 6 caracteres)',
+    'auth/user-disabled':'Esta cuenta esta deshabilitada',
+    'auth/user-not-found':'No existe una cuenta con este email',
+    'auth/wrong-password':'Contrasena incorrecta',
+    'auth/invalid-credential':'Email o contrasena incorrectos',
+    'auth/too-many-requests':'Demasiados intentos. Espera unos minutos.',
+    'auth/network-request-failed':'Sin conexion. Revisa tu internet.',
+    'auth/popup-closed-by-user':'Cerraste la ventana antes de terminar',
+    'auth/cancelled-popup-request':'Login cancelado',
+    'auth/popup-blocked':'Tu navegador bloqueo el popup. Permite popups e intenta de nuevo.',
+  };
+  return map[code]||err?.message||'Error desconocido';
+}
+
 function doRegister(){
   const name=document.getElementById('reg-name').value.trim();
-  const email=document.getElementById('reg-email').value.trim();
+  const email=document.getElementById('reg-email').value.trim().toLowerCase();
   const pass=document.getElementById('reg-pass').value;
   const pass2=document.getElementById('reg-pass2').value;
   const team=document.getElementById('reg-team').value;
@@ -2065,20 +2151,92 @@ function doRegister(){
   if(!/\S+@\S+\.\S+/.test(email)){err.textContent='Email invalido';return;}
   if(pass.length<6){err.textContent='Contrasena: minimo 6 caracteres';return;}
   if(pass!==pass2){err.textContent='Las contrasenas no coinciden';return;}
-  if(DB.users.find(u=>u.email===email||u.name===name)){err.textContent='Email o usuario ya registrado';return;}
-  const user={id:'u'+(DB.nextId++),name,email,pass,team,wcBalance:0,quinielas:{},activeQuinielaId:null,ligas:[],entries:[],ledger:[]};
-  DB.users.push(user);saveDB();CUR=user;saveCur();err.textContent='';
-  enterApp();toast('Cuenta creada — Bienvenido '+name,'success');
+  err.textContent='Creando cuenta...';
+  fb.auth.createUserWithEmailAndPassword(email,pass).then(cred=>{
+    // Setear displayName en Firebase
+    return cred.user.updateProfile({displayName:name}).then(()=>cred);
+  }).then(cred=>{
+    // Crear record local con el nombre/team que eligio
+    const u=getOrCreateLocalUser(email,{name,team});
+    u.name=name;
+    u.team=team;
+    saveDB();
+    CUR=u;saveCur();
+    err.textContent='';
+    enterApp();
+    toast('Cuenta creada — Bienvenido '+name,'success');
+    // Email de verificacion (opcional, no bloquea)
+    cred.user.sendEmailVerification().catch(()=>{});
+  }).catch(e=>{
+    err.textContent=fbErrorMsg(e);
+  });
 }
+
 function doLogin(){
-  const email=document.getElementById('log-email').value.trim();
+  const email=document.getElementById('log-email').value.trim().toLowerCase();
   const pass=document.getElementById('log-pass').value;
   const err=document.getElementById('log-err');
-  const user=DB.users.find(u=>u.email===email&&u.pass===pass);
-  if(!user){err.textContent='Email o contrasena incorrectos';return;}
-  CUR=user;saveCur();err.textContent='';
-  enterApp();toast('Bienvenido de vuelta, '+user.name,'success');
+  if(!email||!pass){err.textContent='Email y contrasena son requeridos';return;}
+  err.textContent='Iniciando sesion...';
+  fb.auth.signInWithEmailAndPassword(email,pass).then(cred=>{
+    const u=getOrCreateLocalUser(email,{name:cred.user.displayName||email.split('@')[0]});
+    CUR=u;saveCur();
+    err.textContent='';
+    enterApp();
+    toast('Bienvenido de vuelta, '+u.name,'success');
+  }).catch(e=>{
+    err.textContent=fbErrorMsg(e);
+  });
 }
+
+/* Login con Google (un click) */
+function doGoogleLogin(){
+  const errReg=document.getElementById('reg-err');
+  const errLog=document.getElementById('log-err');
+  const err=errReg||errLog;
+  if(err)err.textContent='Abriendo Google...';
+  fb.auth.signInWithPopup(fb.googleProvider).then(cred=>{
+    const u=getOrCreateLocalUser(cred.user.email,{
+      name:cred.user.displayName||cred.user.email.split('@')[0],
+    });
+    CUR=u;saveCur();
+    if(err)err.textContent='';
+    enterApp();
+    toast('Bienvenido, '+u.name,'success');
+  }).catch(e=>{
+    if(err)err.textContent=fbErrorMsg(e);
+  });
+}
+
+/* Recovery: manda email para resetear contrasena */
+function openForgotPassword(){
+  const prefilled=(document.getElementById('log-email')?.value||'').trim().toLowerCase();
+  openModal(`<h3>Recuperar contrasena</h3>
+    <p class="pay-instr">Te enviaremos un email con un link para crear una contrasena nueva.</p>
+    <div class="field">
+      <label>Email de tu cuenta</label>
+      <input type="email" id="fp-email" placeholder="tu@email.com" value="${prefilled}" autocomplete="email">
+    </div>
+    <div class="err" id="fp-err"></div>
+    <div class="modal-btns">
+      <button class="btn btn-primary" style="flex:1" onclick="sendPasswordReset()">Enviar email</button>
+      <button class="btn btn-secondary" style="flex:1" onclick="closeModal()">Cancelar</button>
+    </div>
+  `);
+}
+function sendPasswordReset(){
+  const email=(document.getElementById('fp-email').value||'').trim().toLowerCase();
+  const err=document.getElementById('fp-err');
+  if(!/\S+@\S+\.\S+/.test(email)){err.textContent='Email invalido';return;}
+  err.textContent='Enviando...';
+  fb.auth.sendPasswordResetEmail(email).then(()=>{
+    closeModal();
+    toast('✓ Te enviamos un email a '+email,'success');
+  }).catch(e=>{
+    err.textContent=fbErrorMsg(e);
+  });
+}
+
 function demoLogin(){
   // Modo invitado: acceso completo a todos los tiers para que el usuario
   // pueda navegar y probar la app sin friccion
@@ -2110,7 +2268,39 @@ function demoLogin(){
   CUR=g;saveCur();enterApp();
   toast('Modo invitado · Acceso completo activado','success');
 }
-function doLogout(){if(!confirm('Cerrar sesion?'))return;CUR=null;localStorage.removeItem('wc26v5_cur');goTo('screen-onboard');}
+function doLogout(){
+  if(!confirm('Cerrar sesion?'))return;
+  // Cerrar tambien en Firebase si hay sesion
+  fb.auth.signOut().catch(()=>{});
+  CUR=null;
+  localStorage.removeItem('wc26v5_cur');
+  goTo('screen-onboard');
+}
+
+/* Detecta cambios de auth automaticamente. Si hay sesion Firebase activa
+   al cargar la app, restaura el usuario sin pedir login.
+   Diferimos la accion con setTimeout para asegurar que enterApp/goTo existen. */
+fb.auth.onAuthStateChanged(user=>{
+  fb.ready=true;
+  fb.user=user;
+  setTimeout(()=>{
+    if(user&&user.email){
+      // Hay sesion Firebase. Si no hay CUR aun (refresh), restaurarlo.
+      if(!CUR||CUR.email!==user.email){
+        const local=getOrCreateLocalUser(user.email,{
+          name:user.displayName||user.email.split('@')[0],
+        });
+        CUR=local;saveCur();
+        // Solo navegar si estamos en pantalla de auth (no interrumpir)
+        const onAuth=['screen-onboard','screen-register','screen-login']
+          .some(s=>document.getElementById(s)?.classList.contains('active'));
+        if(onAuth&&typeof enterApp==='function'){
+          enterApp();
+        }
+      }
+    }
+  },50);
+});
 
 /* ── ENTER APP ── */
 function enterApp(){
