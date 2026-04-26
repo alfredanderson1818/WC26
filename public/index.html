@@ -198,6 +198,32 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
 .auth-sub{font-size:14px;color:var(--t2);margin-bottom:22px}
 .auth-footer{text-align:center;font-size:14px;color:var(--t2);margin-top:20px}
 .auth-footer span{color:var(--gold);cursor:pointer;font-weight:500}
+.tyc-box{margin:14px 0 8px;padding:12px;background:var(--bg3);border:1px solid var(--b);border-radius:8px}
+.tyc-row{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px;font-size:12px;color:var(--t2);line-height:1.4}
+.tyc-row:last-child{margin-bottom:0}
+/* Override del input global: los checkboxes deben verse como checkbox real */
+.tyc-row input[type="checkbox"]{
+ -webkit-appearance:checkbox !important;
+ appearance:checkbox !important;
+ flex-shrink:0;
+ width:20px;height:20px;
+ margin:1px 0 0 0;
+ padding:0;
+ background:#fff;
+ border:1.5px solid var(--b2);
+ border-radius:4px;
+ accent-color:var(--gold);
+ cursor:pointer;
+}
+.tyc-row label{cursor:pointer;flex:1;font-size:12px;color:var(--t2);line-height:1.4}
+.tyc-row a{color:var(--gold);text-decoration:underline;cursor:pointer}
+.tyc-row strong{color:var(--t)}
+.btn:disabled{opacity:.4;cursor:not-allowed;pointer-events:none}
+.legal-doc{font-size:13px;line-height:1.6;color:var(--t2);max-height:60vh;overflow-y:auto;padding-right:8px}
+.legal-doc h4{font-size:13px;font-weight:700;color:var(--t);margin:14px 0 6px;line-height:1.3}
+.legal-doc h4:first-child{margin-top:0}
+.legal-doc p{margin:0 0 8px}
+.legal-doc strong{color:var(--t)}
 .auth-divider{display:flex;align-items:center;gap:12px;margin:16px 0;color:var(--t3);font-size:12px}
 .auth-divider::before,.auth-divider::after{content:'';flex:1;height:1px;background:var(--b)}
 
@@ -1216,9 +1242,21 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
  <div class="field"><label>Email</label><input type="email" id="reg-email" placeholder="tu@email.com" autocomplete="email"></div>
  <div class="field"><label>Contrasena</label><input type="password" id="reg-pass" placeholder="Minimo 6 caracteres" autocomplete="new-password"></div>
  <div class="field"><label>Confirmar contrasena</label><input type="password" id="reg-pass2" placeholder="Repetir contrasena" autocomplete="new-password"></div>
+
+ <div class="tyc-box">
+ <div class="tyc-row">
+ <input type="checkbox" id="reg-age" onclick="updateRegisterButton()">
+ <label for="reg-age" style="cursor:pointer;flex:1">Tengo <strong>18 anos o mas</strong> y soy mayor de edad en mi pais.</label>
+ </div>
+ <div class="tyc-row">
+ <input type="checkbox" id="reg-tyc" onclick="updateRegisterButton()">
+ <label for="reg-tyc" style="cursor:pointer;flex:1">He leido y acepto los <a onclick="event.preventDefault();event.stopPropagation();openTermsModal()">Terminos y Condiciones</a> y la <a onclick="event.preventDefault();event.stopPropagation();openPrivacyModal()">Politica de Privacidad</a>.</label>
+ </div>
+ </div>
+
  <div class="err" id="reg-err"></div>
- <button class="btn btn-primary btn-full" onclick="doRegister()">Crear cuenta</button>
- <button class="btn btn-google btn-full" onclick="doGoogleLogin()">
+ <button class="btn btn-primary btn-full" id="reg-submit-btn" onclick="doRegister()" disabled>Crear cuenta</button>
+ <button class="btn btn-google btn-full" id="reg-google-btn" onclick="doGoogleLogin()" disabled>
  <svg viewBox="0 0 24 24" width="18" height="18" style="margin-right:8px;vertical-align:-3px"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
  Continuar con Google
  </button>
@@ -1466,12 +1504,15 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
  <div>
  <div class="pf-name" id="pf-name-disp">Usuario</div>
  <div class="pf-email" id="pf-email-disp">email</div>
- <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px"><span class="badge badge-gold" id="pf-pts">0 pts</span><span class="badge" id="pf-vendor-badge" style="display:none;background:rgba(255,107,53,.15);color:#FF6B35;border:1px solid rgba(255,107,53,.3)">VENDEDOR</span></div>
+ <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px"><span class="badge badge-gold" id="pf-pts">0 pts</span><span class="badge" id="pf-vendor-badge" style="display:none;background:rgba(255,107,53,.15);color:#FF6B35;border:1px solid rgba(255,107,53,.3)">AGENTE</span></div>
  </div>
  </div>
 
- <!-- Panel de vendedor (solo si el usuario es vendedor) -->
+ <!-- Panel de agente (solo si el usuario es agente) -->
  <div id="pf-referrer-panel"></div>
+
+ <!-- Premios disponibles (solo si gano algo) -->
+ <div id="pf-payouts"></div>
 
  <!-- Sistema de puntos -->
  <div class="pts-system">
@@ -1516,7 +1557,16 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
  Invitar amigos
  </button>
 
- <button class="btn btn-secondary btn-full" style="margin-top:8px" onclick="doLogout()">Cerrar sesion</button>
+ <!-- Footer legal: FAQ, Terminos, Privacidad -->
+ <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:18px;font-size:11px;color:var(--t3)">
+ <span onclick="openFAQModal()" style="cursor:pointer;text-decoration:underline">Ayuda · FAQ</span>
+ <span style="opacity:.4">·</span>
+ <span onclick="openTermsModal()" style="cursor:pointer;text-decoration:underline">Terminos</span>
+ <span style="opacity:.4">·</span>
+ <span onclick="openPrivacyModal()" style="cursor:pointer;text-decoration:underline">Privacidad</span>
+ </div>
+
+ <button class="btn btn-secondary btn-full" style="margin-top:14px" onclick="doLogout()">Cerrar sesion</button>
  </div>
 
  </div><!-- /app-content -->
@@ -2070,14 +2120,201 @@ async function firestoreConnectivityCheck(){
 window.firestoreConnectivityCheck=firestoreConnectivityCheck;
 window.fsGet=fsGet;window.fsSet=fsSet;window.fsList=fsList;
 window.fsDelete=fsDelete;window.fsUpdate=fsUpdate;window.fsListen=fsListen;
+
+/* ══════════════════════════════════════════════════════════════
+ STEP 2 (v28): USERS en Firestore — sync bidireccional
+ ──────────────────────────────────────────────────────────────
+ Estrategia DUAL-WRITE:
+ - localStorage sigue siendo la fuente de verdad para predicciones/entries (Steps 4-5)
+ - Pero el USER PROFILE (name, email, isAdmin, legal) se sincroniza con Firestore
+ - Cuando alguien se loguea desde otro dispositivo, recupera su perfil del cloud
+ - Si el admin lo promueve, lo ve en tiempo real en cualquier dispositivo
+ ══════════════════════════════════════════════════════════════ */
+
+// Flag global: si Firestore falla, fallback a localStorage automatico
+window.fsMode = true;
+
+// Listener activo del user actual (real-time updates de su propio doc)
+window._myUserListener = null;
+
+/* Convierte un user de localStorage al formato que va a Firestore.
+   Solo lleva campos PUBLICOS o seguros — predicciones/entries van aparte en Steps 4-5 */
+function userToFirestoreShape(u){
+ if(!u)return null;
+ return {
+ // Identificacion
+ id: u.id,
+ email: (u.email||'').toLowerCase(),
+ name: u.name||'Usuario',
+ // Permisos (solo backend modifica isAdmin, las reglas lo bloquean del cliente)
+ isAdmin: !!u.isAdmin,
+ // Legal/consent (Step 1 v24)
+ legal: u.legal||null,
+ // Referrer (a quien sigue como agente)
+ referrerId: u.referrerId||null,
+ // Timestamps
+ createdAt: u.createdAt||Date.now(),
+ updatedAt: Date.now(),
+ };
+}
+
+/* Aplica un doc de Firestore al user local. Hace MERGE — preserva predicciones/entries
+   locales que aun no estan en Firestore (Steps 4-5) */
+function applyFirestoreUserToLocal(localUser, fsUser){
+ if(!fsUser)return localUser;
+ if(!localUser)localUser={};
+ // Campos que vienen de Firestore (cloud es autoridad)
+ localUser.id = fsUser.id || localUser.id;
+ localUser.email = fsUser.email || localUser.email;
+ localUser.name = fsUser.name || localUser.name;
+ localUser.isAdmin = !!fsUser.isAdmin;
+ localUser.legal = fsUser.legal || localUser.legal;
+ localUser.referrerId = fsUser.referrerId || localUser.referrerId;
+ localUser.createdAt = fsUser.createdAt || localUser.createdAt;
+ // NO toca: quinielas, entries, activeQuinielaId — esos siguen siendo locales
+ return localUser;
+}
+
+/* Sube el perfil del user actual a Firestore. Llamado en registro y en updates de perfil */
+async function syncUserToFirestore(u){
+ if(!window.fsMode)return false;
+ if(!u||!u.email)return false;
+ if(!fb||!fb.auth?.currentUser){
+ console.warn('[Step2] No fb auth user, skip sync');
+ return false;
+ }
+ // El uid de Firestore es el uid de Firebase Auth (no el id interno de localStorage)
+ const uid = fb.auth.currentUser.uid;
+ try {
+ const data = userToFirestoreShape(u);
+ // El campo isAdmin no se puede modificar desde el cliente (las reglas lo bloquean)
+ // Solo lo enviamos en CREATE inicial, no en UPDATE
+ const exists = await fsGet('users/'+uid);
+ if(exists){
+ // UPDATE: NO mandamos isAdmin (reglas lo rechazan si cambia)
+ const patch = {...data};
+ delete patch.isAdmin;
+ await fsUpdate('users/'+uid, patch);
+ } else {
+ // CREATE: isAdmin debe ser false (reglas lo exigen)
+ data.isAdmin = false;
+ await fsSet('users/'+uid, data);
+ }
+ console.log('[Step2] User synced to Firestore:',u.email);
+ return true;
+ } catch(err) {
+ console.error('[Step2] syncUserToFirestore failed:',err.code||'',err.message);
+ return false;
+ }
+}
+
+/* Carga el perfil del user desde Firestore. Si no existe ahi pero si en localStorage,
+   automigra creandolo en Firestore */
+async function loadUserFromFirestore(){
+ if(!window.fsMode)return null;
+ if(!fb||!fb.auth?.currentUser)return null;
+ const uid = fb.auth.currentUser.uid;
+ const email = fb.auth.currentUser.email;
+ try {
+ const fsUser = await fsGet('users/'+uid);
+ if(fsUser){
+ // Existe en Firestore. Mergear con local
+ let local = DB.users.find(u=>u.email===email);
+ if(!local){
+ // No tenemos local, crear uno minimo y aplicar Firestore encima
+ local = {
+ id: fsUser.id || ('u_'+Date.now()),
+ email: email,
+ name: fsUser.name||email.split('@')[0],
+ quinielas: {},
+ entries: [],
+ activeQuinielaId: null,
+ createdAt: fsUser.createdAt||Date.now(),
+ };
+ DB.users.push(local);
+ }
+ applyFirestoreUserToLocal(local, fsUser);
+ saveDB();
+ console.log('[Step2] User loaded from Firestore:',email);
+ return local;
+ } else {
+ // No existe en Firestore. Si esta en local, automigrar
+ const local = DB.users.find(u=>u.email===email);
+ if(local){
+ console.log('[Step2] Auto-migrating user to Firestore:',email);
+ await syncUserToFirestore(local);
+ return local;
+ }
+ // No esta en ningun lado, devolver null para que el flujo normal cree uno
+ return null;
+ }
+ } catch(err) {
+ console.error('[Step2] loadUserFromFirestore failed:',err.code||'',err.message);
+ // Si Firestore falla, usar localStorage
+ return DB.users.find(u=>u.email===email) || null;
+ }
+}
+
+/* Inicia un listener real-time del user actual.
+   Si su doc cambia en Firestore (ej: admin lo promovio), la app local se actualiza.
+   Devuelve unsubscribe para llamar al cerrar sesion. */
+function startMyUserListener(){
+ if(!window.fsMode)return null;
+ if(!fb||!fb.auth?.currentUser)return null;
+ // Si ya hay listener, cerrarlo primero
+ if(window._myUserListener){
+ try{window._myUserListener();}catch(e){}
+ window._myUserListener=null;
+ }
+ const uid = fb.auth.currentUser.uid;
+ try {
+ const unsub = fsListen('users/'+uid, (fsUser)=>{
+ if(!fsUser)return;
+ if(!CUR)return;
+ const wasAdmin = !!CUR.isAdmin;
+ applyFirestoreUserToLocal(CUR, fsUser);
+ saveCur();
+ saveDB();
+ // Si cambio rol admin, refrescar UI
+ if(wasAdmin !== !!CUR.isAdmin){
+ console.log('[Step2] Admin status changed:',CUR.isAdmin);
+ if(typeof renderAdminPanel==='function')renderAdminPanel();
+ if(typeof renderPerfil==='function')renderPerfil();
+ toast(CUR.isAdmin?'Eres admin ahora':'Ya no eres admin','success');
+ }
+ });
+ window._myUserListener = unsub;
+ console.log('[Step2] Real-time listener started for user');
+ return unsub;
+ } catch(err) {
+ console.error('[Step2] startMyUserListener failed:',err.code||'',err.message);
+ return null;
+ }
+}
+
+function stopMyUserListener(){
+ if(window._myUserListener){
+ try{window._myUserListener();}catch(e){}
+ window._myUserListener=null;
+ console.log('[Step2] Listener stopped');
+ }
+}
+
+// Exponer para debug
+window.syncUserToFirestore = syncUserToFirestore;
+window.loadUserFromFirestore = loadUserFromFirestore;
+window.startMyUserListener = startMyUserListener;
+window.stopMyUserListener = stopMyUserListener;
+
 /* ══════════════════════════════════════════
  SISTEMA DE COMISIONES (referrals/afiliados)
- - DB.referrers: vendedores activos con codigo + % comision
+ - DB.referrers: agentes activos con codigo + % comision
  - DB.commissions: cada inscripcion aprobada genera una comision
  - Usuario tiene campo 'referrerId' que indica quien lo refirio
  ══════════════════════════════════════════ */
 const RAKE_RATE = 0.12; // 12% — tu rake (configurable en DB.config.rakeRate)
-const DEFAULT_COMMISSION = 0.30; // 30% del rake al vendedor
+const DEFAULT_COMMISSION = 0.30; // 30% del rake al agente
+const LEGAL_VERSION = '1.0-2026-04'; // version de los TyC al momento de aceptar
 
 function getRakeRate(){
  if(DB.config&&typeof DB.config.rakeRate==='number')return DB.config.rakeRate;
@@ -2102,7 +2339,7 @@ function findReferrerByEmail(email){
  return (DB.referrers||[]).find(r=>(r.email||'').toLowerCase()===e&&r.isActive);
 }
 
-/* Genera nuevo ID/codigo de vendedor */
+/* Genera nuevo ID/codigo de agente */
 function newReferrerId(){
  return 'ref_'+Date.now().toString(36)+Math.random().toString(36).slice(2,5);
 }
@@ -2112,12 +2349,12 @@ function suggestReferralCode(name){
  return clean+Math.floor(Math.random()*99);
 }
 
-/* Crea un nuevo vendedor (solo admin) */
+/* Crea un nuevo agente (solo admin) */
 function createReferrer({name,code,email,commissionRate}){
  if(!isAdmin(CUR))throw new Error('Solo admins');
  if(!name||!code)throw new Error('Nombre y codigo requeridos');
  const codeUpper=code.trim().toUpperCase();
- if(findReferrerByCode(codeUpper))throw new Error('Ya existe un vendedor con ese codigo');
+ if(findReferrerByCode(codeUpper))throw new Error('Ya existe un agente con ese codigo');
  const ref={
  id:newReferrerId(),
  code:codeUpper,
@@ -2135,7 +2372,7 @@ function createReferrer({name,code,email,commissionRate}){
  return ref;
 }
 
-/* Asociar usuario con vendedor (al registrarse con codigo) */
+/* Asociar usuario con agente (al registrarse con codigo) */
 function attachReferrer(user,referrerId){
  if(!user||!referrerId)return;
  if(user.referrerId)return; // ya asociado, no sobrescribir
@@ -2151,7 +2388,7 @@ function attachReferrer(user,referrerId){
 /* Cuando una inscripcion se aprueba: genera la comision pendiente */
 function generateCommissionForEntry(user,entry){
  if(!user||!entry)return null;
- if(!user.referrerId)return null; // sin vendedor → sin comision
+ if(!user.referrerId)return null; // sin agente → sin comision
  const ref=findReferrerById(user.referrerId);
  if(!ref||!ref.isActive)return null;
  // Verificar que no hay ya una comision para esta entry
@@ -2221,7 +2458,7 @@ function markAllCommissionsPaidForReferrer(referrerId){
  toast(` ${pending.length} comisiones pagadas — $${total.toFixed(2)}`,'success');
 }
 
-/* Stats de un vendedor */
+/* Stats de un agente */
 function getReferrerStats(referrerId){
  const all=(DB.commissions||[]).filter(c=>c.referrerId===referrerId);
  const pending=all.filter(c=>c.status==='pending');
@@ -2241,6 +2478,143 @@ function getReferrerStats(referrerId){
  referredUsersCount:referredUserIds.length,
  commissions:all,
  };
+}
+
+/* ══════════════════════════════════════════════════════════════
+ SISTEMA DE PREMIOS (payouts)
+ ──────────────────────────────────────────────────────────────
+ Flujo:
+ 1) Admin marca un tier como "premios liberados" (DB.payoutsReleased[tier]=true)
+ 2) Sistema calcula top 3 de ese tier basado en pts de quinielas aprobadas
+ 3) Cada ganador ve en su perfil "Reclamar premio"
+ 4) Ganador da datos de cobro (Zelle/Binance/PagoMovil/Cash)
+ 5) Admin ve la lista de reclamos pendientes y marca como pagado
+ ══════════════════════════════════════════════════════════════ */
+
+/* Calcula los top 3 ganadores de un tier en base a aproved entries y puntos */
+function getTierWinners(tier){
+ const tierAmount=parseInt(tier);
+ const competitors=[];
+ DB.users.forEach(u=>{
+ const approvedEntries=(u.entries||[]).filter(e=>e.tier===tier&&(e.status||'pending')==='approved');
+ approvedEntries.forEach(e=>{
+ const q=u.quinielas?.[e.quinielaId];
+ if(q){
+ competitors.push({
+ userId:u.id,
+ userName:u.name,
+ userEmail:u.email,
+ quinielaId:e.quinielaId,
+ entryId:e.id||e.quinielaId,
+ pts:q.pts||0,
+ });
+ }
+ });
+ });
+ if(!competitors.length)return [];
+ competitors.sort((a,b)=>b.pts-a.pts);
+ const totalRecaudado=competitors.length*tierAmount;
+ const rakeRate=getRakeRate();
+ const prizePool=Math.round(totalRecaudado*(1-rakeRate)*100)/100;
+ const top3=competitors.slice(0,3);
+ const shares=[0.5,0.3,0.2];
+ return top3.map((c,i)=>({
+ ...c,
+ position:i+1,
+ prize:Math.round(prizePool*shares[i]*100)/100,
+ tier,
+ tierName:TIER_NAMES[tier]||'Liga',
+ }));
+}
+
+/* Verifica si un usuario tiene premios disponibles para reclamar */
+function getMyPendingPayouts(userId){
+ if(!userId)userId=CUR?.id;
+ if(!userId)return [];
+ const result=[];
+ const released=DB.payoutsReleased||{};
+ Object.keys(released).forEach(tier=>{
+ if(!released[tier])return;
+ const winners=getTierWinners(tier);
+ winners.forEach(w=>{
+ if(w.userId===userId){
+ // Ver si ya hay un payout registrado
+ const existing=(DB.payouts||[]).find(p=>p.userId===userId&&p.tier===tier&&p.position===w.position);
+ result.push({
+ ...w,
+ claimed:!!existing,
+ paid:existing?.status==='paid',
+ payoutRecord:existing||null,
+ });
+ }
+ });
+ });
+ return result;
+}
+
+/* Usuario reclama un premio: guarda datos de cobro */
+function claimPayout(tier,position,method,details){
+ if(!CUR)return null;
+ if(!DB.payouts)DB.payouts=[];
+ const winners=getTierWinners(tier);
+ const w=winners.find(x=>x.userId===CUR.id&&x.position===position);
+ if(!w){toast('No eres ganador en este tier','error');return null;}
+ // Evitar duplicado
+ const existing=DB.payouts.find(p=>p.userId===CUR.id&&p.tier===tier&&p.position===position);
+ if(existing){
+ // Actualizar datos
+ existing.method=method;
+ existing.details=details;
+ existing.claimedAt=Date.now();
+ saveDB();
+ return existing;
+ }
+ const payout={
+ id:'payout_'+Date.now().toString(36)+Math.random().toString(36).slice(2,5),
+ userId:CUR.id,
+ userName:CUR.name,
+ userEmail:CUR.email,
+ tier,
+ tierName:TIER_NAMES[tier]||'Liga',
+ position,
+ prizeAmount:w.prize,
+ method,
+ details,
+ status:'claimed',
+ claimedAt:Date.now(),
+ paidAt:null,
+ paymentRef:null,
+ };
+ DB.payouts.push(payout);
+ saveDB();
+ pushLog({type:'admin',action:'claim_payout',targetId:CUR.id,targetName:CUR.name,
+ payload:{tier,position,amount:w.prize,method}});
+ return payout;
+}
+
+/* Admin marca un payout como pagado */
+function markPayoutAsPaid(payoutId,paymentRef){
+ if(!isAdmin(CUR)){toast('Solo admins','error');return;}
+ const payout=(DB.payouts||[]).find(p=>p.id===payoutId);
+ if(!payout)return;
+ payout.status='paid';
+ payout.paidAt=Date.now();
+ payout.paymentRef=paymentRef||'';
+ saveDB();
+ pushLog({type:'admin',action:'pay_payout',targetId:payout.userId,targetName:payout.userName,
+ payload:{tier:payout.tier,position:payout.position,amount:payout.prizeAmount,ref:paymentRef}});
+}
+
+/* Admin libera/retiene premios de un tier completo */
+function toggleTierPayouts(tier){
+ if(!isAdmin(CUR)){toast('Solo admins','error');return;}
+ if(!DB.payoutsReleased)DB.payoutsReleased={};
+ const newState=!DB.payoutsReleased[tier];
+ DB.payoutsReleased[tier]=newState;
+ saveDB();
+ pushLog({type:'admin',action:'toggle_payouts',
+ payload:{tier,released:newState}});
+ toast(newState?'Premios liberados — los ganadores ya pueden reclamar':'Premios retenidos','success');
 }
 
 /* Detecta ?ref=CODIGO en la URL al cargar y guarda en localStorage */
@@ -2604,7 +2978,15 @@ function getTotalPts(){
 }
 
 /* ── NAV ── */
-function goTo(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');window.scrollTo(0,0);}
+function goTo(id){
+ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+ document.getElementById(id).classList.add('active');
+ window.scrollTo(0,0);
+ // Si vamos al registro, sincronizar el estado de los botones con los checkboxes
+ if(id==='screen-register'&&typeof updateRegisterButton==='function'){
+ setTimeout(updateRegisterButton,10);
+ }
+}
 function navTo(page){
  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
  document.querySelectorAll('.bnav-btn').forEach(b=>b.classList.remove('active'));
@@ -2701,30 +3083,46 @@ function doRegister(){
  const email=document.getElementById('reg-email').value.trim().toLowerCase();
  const pass=document.getElementById('reg-pass').value;
  const pass2=document.getElementById('reg-pass2').value;
+ const ageOk=document.getElementById('reg-age')?.checked;
+ const tycOk=document.getElementById('reg-tyc')?.checked;
  const err=document.getElementById('reg-err');
  if(name.length<3){err.textContent='Nombre: minimo 3 caracteres';return;}
  if(!/\S+@\S+\.\S+/.test(email)){err.textContent='Email invalido';return;}
  if(pass.length<6){err.textContent='Contrasena: minimo 6 caracteres';return;}
  if(pass!==pass2){err.textContent='Las contrasenas no coinciden';return;}
+ if(!ageOk){err.textContent='Debes confirmar que eres mayor de edad';return;}
+ if(!tycOk){err.textContent='Debes aceptar los Terminos y Condiciones';return;}
  err.textContent='Creando cuenta...';
  fb.auth.createUserWithEmailAndPassword(email,pass).then(cred=>{
- // Setear displayName en Firebase
  return cred.user.updateProfile({displayName:name}).then(()=>cred);
  }).then(cred=>{
- // Crear record local con el nombre que eligio
  const u=getOrCreateLocalUser(email,{name});
  u.name=name;
+ // Guardar consent legal (proteccion ante disputas)
+ u.legal={ageConfirmed:true,tycAccepted:true,tycVersion:LEGAL_VERSION,acceptedAt:Date.now()};
  saveDB();
  CUR=u;saveCur();
  err.textContent='';
- pushLog({type:'auth',action:'register',targetId:u.id,targetName:u.name,payload:{method:'email'}});
+ pushLog({type:'auth',action:'register',targetId:u.id,targetName:u.name,payload:{method:'email',tycVersion:LEGAL_VERSION}});
+ // Step 2: subir a Firestore inmediatamente
+ syncUserToFirestore(u).then(()=>startMyUserListener());
  enterApp();
  toast('Cuenta creada · Bienvenido '+name,'success');
- // Email de verificacion (opcional, no bloquea)
  cred.user.sendEmailVerification().catch(()=>{});
  }).catch(e=>{
  err.textContent=fbErrorMsg(e);
  });
+}
+
+/* Habilita botones de registro solo cuando ambos checkboxes estan marcados */
+function updateRegisterButton(){
+ const ageOk=document.getElementById('reg-age')?.checked;
+ const tycOk=document.getElementById('reg-tyc')?.checked;
+ const ok=ageOk&&tycOk;
+ const btn=document.getElementById('reg-submit-btn');
+ const gbtn=document.getElementById('reg-google-btn');
+ if(btn)btn.disabled=!ok;
+ if(gbtn)gbtn.disabled=!ok;
 }
 
 function doLogin(){
@@ -2733,9 +3131,16 @@ function doLogin(){
  const err=document.getElementById('log-err');
  if(!email||!pass){err.textContent='Email y contrasena son requeridos';return;}
  err.textContent='Iniciando sesion...';
- fb.auth.signInWithEmailAndPassword(email,pass).then(cred=>{
- const u=getOrCreateLocalUser(email,{name:cred.user.displayName||email.split('@')[0]});
+ fb.auth.signInWithEmailAndPassword(email,pass).then(async cred=>{
+ // Step 2: cargar perfil de Firestore (puede tener isAdmin actualizado)
+ let u = await loadUserFromFirestore();
+ if(!u){
+ u=getOrCreateLocalUser(email,{name:cred.user.displayName||email.split('@')[0]});
+ // Subir a Firestore (primer login en este device)
+ syncUserToFirestore(u);
+ }
  CUR=u;saveCur();
+ startMyUserListener();
  err.textContent='';
  pushLog({type:'auth',action:'login',targetId:u.id,targetName:u.name,payload:{method:'email'}});
  enterApp();
@@ -2750,12 +3155,33 @@ function doGoogleLogin(){
  const errReg=document.getElementById('reg-err');
  const errLog=document.getElementById('log-err');
  const err=errReg||errLog;
+ // Si esta en pantalla de registro, exigir TyC checkboxes
+ const isRegisterScreen=document.getElementById('screen-register')?.classList.contains('active');
+ if(isRegisterScreen){
+ const ageOk=document.getElementById('reg-age')?.checked;
+ const tycOk=document.getElementById('reg-tyc')?.checked;
+ if(!ageOk||!tycOk){
+ if(err)err.textContent='Debes aceptar los terminos antes de continuar';
+ return;
+ }
+ }
  if(err)err.textContent='Abriendo Google...';
- fb.auth.signInWithPopup(fb.googleProvider).then(cred=>{
- const u=getOrCreateLocalUser(cred.user.email,{
+ fb.auth.signInWithPopup(fb.googleProvider).then(async cred=>{
+ // Step 2: intentar cargar de Firestore primero
+ let u = await loadUserFromFirestore();
+ if(!u){
+ u=getOrCreateLocalUser(cred.user.email,{
  name:cred.user.displayName||cred.user.email.split('@')[0],
  });
+ }
+ // Guardar consent legal si vino del registro
+ if(isRegisterScreen){
+ u.legal={ageConfirmed:true,tycAccepted:true,tycVersion:LEGAL_VERSION,acceptedAt:Date.now()};
+ saveDB();
+ }
  CUR=u;saveCur();
+ // Step 2: sync a Firestore (crea si no existe, actualiza si existe)
+ syncUserToFirestore(u).then(()=>startMyUserListener());
  if(err)err.textContent='';
  pushLog({type:'auth',action:'login',targetId:u.id,targetName:u.name,payload:{method:'google'}});
  enterApp();
@@ -2900,6 +3326,8 @@ document.addEventListener('DOMContentLoaded',()=>{
 });
 function doLogout(){
  if(!confirm('Cerrar sesion?'))return;
+ // Step 2: detener listener Firestore antes de cerrar sesion
+ stopMyUserListener();
  // Cerrar tambien en Firebase si hay sesion
  fb.auth.signOut().catch(()=>{});
  CUR=null;
@@ -2910,30 +3338,53 @@ function doLogout(){
 /* Detecta cambios de auth automaticamente. Si hay sesion Firebase activa
  al cargar la app, restaura el usuario sin pedir login.
  Diferimos la accion con setTimeout para asegurar que enterApp/goTo existen. */
-fb.auth.onAuthStateChanged(user=>{
+fb.auth.onAuthStateChanged(async user=>{
  fb.ready=true;
  fb.user=user;
- setTimeout(()=>{
+ if(!user){
+ // Sesion cerrada — detener listener
+ stopMyUserListener();
+ return;
+ }
  if(user&&user.email){
- // Hay sesion Firebase. Si no hay CUR aun (refresh), restaurarlo.
+ // Step 2: intentar cargar de Firestore primero
+ try {
+ const fsUser = await loadUserFromFirestore();
+ if(fsUser){
+ CUR = fsUser;
+ saveCur();
+ } else if(!CUR||CUR.email!==user.email){
+ // No hay en Firestore ni local consistente — crear local
+ const local=getOrCreateLocalUser(user.email,{
+ name:user.displayName||user.email.split('@')[0],
+ });
+ CUR=local;saveCur();
+ // Subir a Firestore (auto-migracion para usuarios viejos de localStorage)
+ syncUserToFirestore(local);
+ }
+ } catch(e) {
+ // Fallback a localStorage
+ console.warn('[Step2] Firestore load failed, fallback to local:',e.message);
  if(!CUR||CUR.email!==user.email){
  const local=getOrCreateLocalUser(user.email,{
  name:user.displayName||user.email.split('@')[0],
  });
  CUR=local;saveCur();
- // Solo navegar si estamos en pantalla de auth (no interrumpir)
+ }
+ }
+ // Iniciar listener real-time de mi propio doc
+ startMyUserListener();
+ // Si estamos en pantalla de auth, navegar a app
  const onAuth=['screen-onboard','screen-register','screen-login']
  .some(s=>document.getElementById(s)?.classList.contains('active'));
  if(onAuth&&typeof enterApp==='function'){
  enterApp();
  }
  }
- }
- // Step 1 (v18): probar conectividad Firestore en background, no bloquea nada
+ // Step 1 (v18): probar conectividad Firestore en background
  if(user&&typeof firestoreConnectivityCheck==='function'){
  firestoreConnectivityCheck();
  }
- },50);
 });
 
 /* ── ENTER APP ── */
@@ -4595,23 +5046,9 @@ function openQuinielaSwitcher(){
  - Si ya tiene inscripcion(es) en ese tier → activa la primera y va a Grupos a predecir
  - Si no tiene → abre el modal de inscripcion (joinTier) directo */
 function onTierCardClick(t){
- const myEntries=(CUR.entries||[]).filter(e=>e.tier===t);
- if(myEntries.length>0){
- // Ya esta inscrito → cambiar a esa quiniela y ir a Grupos
- const firstEntry=myEntries[0];
- CUR.activeQuinielaId=firstEntry.quinielaId;
- sync();updatePts();updateActiveLigaBar();
- navTo('grupos');
- const tierName=TIER_NAMES[t]||'Liga';
- const status=firstEntry.status||'pending';
- if(status==='pending'){
- setTimeout(()=>toast(`En ${tierName} (pendiente de aprobacion)`,'success'),250);
- } else {
- setTimeout(()=>toast(`En ${tierName}`,'success'),250);
- }
- return;
- }
- // No tiene → abrir modal de inscripcion
+ // Click en tier del Home SIEMPRE abre modal de inscripcion.
+ // Si el usuario ya tiene inscripcion(es) en este tier, joinTier muestra
+ // que sera una inscripcion adicional independiente.
  joinTier(t);
 }
 
@@ -4765,9 +5202,13 @@ function renderAdminPanel(){
  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
  Ingresos · Mi ganancia
  </button>
+ <button class="btn btn-secondary btn-full" onclick="openPayoutsAdmin()" style="margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:8px">
+ <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H3l1 5h2m12-5h3l-1 5h-2M6 9V4h12v5M6 9c0 4.418 2.686 8 6 8s6-3.582 6-8M9 20h6M12 18v2"/></svg>
+ Premios <span style="opacity:.7;font-size:11px" id="payouts-pending-count">(${(DB.payouts||[]).filter(p=>p.status==='claimed').length} reclamados)</span>
+ </button>
  <button class="btn btn-secondary btn-full" onclick="openReferrersAdmin()" style="margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:8px">
  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
- Vendedores <span style="opacity:.7;font-size:11px">(${(DB.referrers||[]).length})</span>
+ Agentes <span style="opacity:.7;font-size:11px">(${(DB.referrers||[]).length})</span>
  </button>
  <button class="btn btn-secondary btn-full" onclick="openAdminConfig()" style="margin-bottom:14px;display:flex;align-items:center;justify-content:center;gap:8px">
  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
@@ -4867,7 +5308,7 @@ function approveEntry(userId,quinielaId){
  targetId:u.id,targetName:u.name,
  payload:{tier:e.tier,tierName:TIER_NAMES[e.tier],amount:parseInt(e.tier),quinielaId},
  });
- // Generar comision si el usuario tiene vendedor asociado
+ // Generar comision si el usuario tiene agente asociado
  const com=generateCommissionForEntry(u,e);
  if(u.id===CUR.id){CUR=u;saveCur();}
  if(com){
@@ -5473,12 +5914,127 @@ async function runFirestoreReadTest(){
 }
 
 /* ══════════════════════════════════════════
+ ADMIN: panel de premios (payouts)
+ - Liberar premios por tier
+ - Ver lista de reclamos pendientes
+ - Marcar como pagado
+ ══════════════════════════════════════════ */
+function openPayoutsAdmin(){
+ if(!isAdmin(CUR)){toast('Solo admins','error');return;}
+ const released=DB.payoutsReleased||{};
+ const claims=(DB.payouts||[]).filter(p=>p.status==='claimed');
+ const paid=(DB.payouts||[]).filter(p=>p.status==='paid');
+
+ const tierStatus=Object.keys(TIER_NAMES).map(t=>{
+ const isReleased=!!released[t];
+ const winners=getTierWinners(t);
+ const tierName=TIER_NAMES[t];
+ const totalPrize=winners.reduce((s,w)=>s+w.prize,0);
+ return `<div style="background:var(--bg3);border:1px solid var(--b);border-radius:10px;padding:12px;margin-bottom:8px">
+ <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+ <strong style="font-size:13px">${tierName}</strong>
+ <span style="font-size:11px;color:${isReleased?'var(--green-ok)':'var(--t3)'}">${isReleased?'Liberado':'Retenido'}</span>
+ </div>
+ <div style="font-size:11px;color:var(--t2);margin-bottom:8px">${winners.length} ganador${winners.length===1?'':'es'} · $${totalPrize.toLocaleString()} en premios</div>
+ ${winners.map(w=>`<div style="font-size:11px;color:var(--t3);padding:2px 0">${w.position}° · ${w.userName} · $${w.prize.toLocaleString()}</div>`).join('')}
+ <button class="btn btn-secondary btn-full" style="margin-top:8px;font-size:11px;padding:6px;${isReleased?'border-color:rgba(91,201,125,.3);color:var(--green-ok)':''}" onclick="confirmToggleTierPayouts('${t}')">${isReleased?'Retener premios':'Liberar premios'}</button>
+ </div>`;
+ }).join('');
+
+ const claimRows=claims.length?claims.map(p=>{
+ const detailLines=Object.entries(p.details||{}).map(([k,v])=>`<div style="font-size:11px;color:var(--t2)"><strong style="color:var(--t)">${k}:</strong> ${v}</div>`).join('');
+ return `<div style="background:var(--bg3);border:1px solid var(--b);border-radius:10px;padding:12px;margin-bottom:8px">
+ <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+ <div>
+ <strong style="font-size:13px">${p.userName}</strong>
+ <span style="font-size:11px;color:var(--accent);margin-left:6px">${p.tierName} · ${p.position}°</span>
+ </div>
+ <div style="font-family:'Anton',sans-serif;font-size:18px;color:var(--accent)">$${p.prizeAmount.toLocaleString()}</div>
+ </div>
+ <div style="background:var(--bg4);border-radius:6px;padding:8px;margin:6px 0">
+ <div style="font-size:11px;color:var(--accent);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">${p.method.replace('_',' ')}</div>
+ ${detailLines}
+ </div>
+ <div style="font-size:10px;color:var(--t3);margin-top:4px">Reclamado ${new Date(p.claimedAt).toLocaleDateString()} ${new Date(p.claimedAt).toLocaleTimeString().slice(0,5)}</div>
+ <div style="display:flex;gap:6px;margin-top:8px">
+ <button class="btn btn-primary" style="flex:1;font-size:11px;padding:6px" onclick="confirmMarkPaid('${p.id}')">Marcar como pagado</button>
+ <button class="btn btn-secondary" style="font-size:11px;padding:6px" onclick="contactWinnerWa('${p.id}')">WhatsApp</button>
+ </div>
+ </div>`;
+ }).join(''):'<div style="padding:14px;text-align:center;color:var(--t3);font-size:12px">No hay premios reclamados pendientes</div>';
+
+ const paidSection=paid.length?`<div class="admin-section-label" style="margin-top:18px">Pagados (${paid.length})</div>
+ ${paid.map(p=>`<div style="background:rgba(91,201,125,.05);border:1px solid rgba(91,201,125,.2);border-radius:8px;padding:8px;margin-bottom:4px;display:flex;justify-content:space-between;font-size:11px">
+ <span>${p.userName} · ${p.tierName} · ${p.position}°</span>
+ <span style="color:var(--green-ok)">$${p.prizeAmount.toLocaleString()}</span>
+ </div>`).join('')}`:'';
+
+ openModal(`<h3>Premios</h3>
+ <p class="pay-instr">Gestiona la liberacion y pago de premios al final del torneo.</p>
+
+ <div class="admin-section-label" style="margin-top:0">Estado por tier</div>
+ ${tierStatus}
+
+ <div class="admin-section-label" style="margin-top:18px">Reclamos pendientes (${claims.length})</div>
+ ${claimRows}
+
+ ${paidSection}
+
+ <button class="btn btn-secondary btn-full" style="margin-top:14px" onclick="closeModal()">Cerrar</button>
+ `,{wide:true});
+}
+
+function confirmToggleTierPayouts(tier){
+ const released=(DB.payoutsReleased||{})[tier];
+ const tierName=TIER_NAMES[tier]||'Liga';
+ if(released){
+ if(!confirm(`Retener premios de ${tierName}? Los ganadores YA NO podran reclamar hasta que vuelvas a liberarlos.`))return;
+ } else {
+ const winners=getTierWinners(tier);
+ if(!winners.length){toast('No hay ganadores en este tier (sin inscripciones aprobadas)','error');return;}
+ if(!confirm(`Liberar premios de ${tierName}? Los ${winners.length} ganadores podran reclamar su premio. ESTA ACCION ES IRREVERSIBLE en el sentido de que los notificas, aunque puedes retener despues.`))return;
+ }
+ toggleTierPayouts(tier);
+ setTimeout(()=>openPayoutsAdmin(),100);
+}
+
+function confirmMarkPaid(payoutId){
+ const p=(DB.payouts||[]).find(x=>x.id===payoutId);
+ if(!p)return;
+ const ref=prompt(`Confirmar pago a ${p.userName} de $${p.prizeAmount}?\n\nReferencia/comprobante (opcional):`);
+ if(ref===null)return;
+ markPayoutAsPaid(payoutId,ref||'');
+ toast('Premio marcado como pagado','success');
+ setTimeout(()=>openPayoutsAdmin(),100);
+}
+
+function contactWinnerWa(payoutId){
+ const p=(DB.payouts||[]).find(x=>x.id===payoutId);
+ if(!p)return;
+ const text=encodeURIComponent(`Hola ${p.userName}, soy del Mundial 2026 quiniela. Te escribo para pagarte tu premio de $${p.prizeAmount} (${p.tierName} - ${p.position}° lugar). Quedamos por aqui para coordinar.`);
+ // Si hay telefono en details (cash o pago_movil), abrir wa.me
+ if(p.details?.contactPhone){
+ window.open(`https://wa.me/${p.details.contactPhone.replace(/[^0-9]/g,'')}?text=${text}`,'_blank');
+ } else if(p.details?.phone){
+ window.open(`https://wa.me/${p.details.phone.replace(/[^0-9]/g,'')}?text=${text}`,'_blank');
+ } else {
+ // Si no hay telefono, copiar email
+ if(p.userEmail){
+ navigator.clipboard?.writeText(p.userEmail);
+ toast('Email copiado: '+p.userEmail,'success');
+ } else {
+ toast('No hay forma de contacto registrada','error');
+ }
+ }
+}
+
+/* ══════════════════════════════════════════
  ADMIN: panel de ingresos · TU ganancia (solo admin)
  Muestra el desglose financiero de toda la plataforma:
  - Total recaudado (suma de inscripciones aprobadas)
  - Pool de premios (88% que va a jugadores)
  - Tu rake bruto (12%)
- - Comisiones a vendedores (descuento)
+ - Comisiones a agentes (descuento)
  - Tu ganancia neta
  ══════════════════════════════════════════ */
 function openIngresosAdmin(){
@@ -5546,7 +6102,7 @@ function openIngresosAdmin(){
  <div style="background:linear-gradient(135deg,rgba(255,215,0,.15),rgba(255,215,0,.04));border:1px solid rgba(255,215,0,.3);border-radius:12px;padding:18px;margin-bottom:14px;text-align:center">
  <div style="font-size:11px;color:var(--accent);text-transform:uppercase;letter-spacing:1px;font-weight:800;margin-bottom:4px">Mi ganancia neta</div>
  <div style="font-family:'Anton',sans-serif;font-size:42px;color:var(--accent);line-height:1">$${netProfit.toLocaleString()}</div>
- <div style="font-size:11px;color:var(--t2);margin-top:4px">Despues de comisiones a vendedores</div>
+ <div style="font-size:11px;color:var(--t2);margin-top:4px">Despues de comisiones a agentes</div>
  </div>
 
  <!-- Resumen ejecutivo -->
@@ -5573,12 +6129,43 @@ function openIngresosAdmin(){
 
  <!-- Estado de pagos -->
  ${totalCommissionsPending>0?`<div style="background:rgba(255,215,0,.06);border:1px solid rgba(255,215,0,.2);border-radius:10px;padding:12px;margin-bottom:14px;font-size:12px;color:var(--t)">
- <strong style="color:var(--accent)">Atencion:</strong> Debes <strong>$${totalCommissionsPending.toFixed(2)}</strong> en comisiones pendientes a vendedores. Cuando pagues, tu ganancia disponible AHORA es <strong style="color:var(--accent)">$${netPaidNow.toLocaleString()}</strong>.
+ <strong style="color:var(--accent)">Atencion:</strong> Debes <strong>$${totalCommissionsPending.toFixed(2)}</strong> en comisiones pendientes a agentes. Cuando pagues, tu ganancia disponible AHORA es <strong style="color:var(--accent)">$${netPaidNow.toLocaleString()}</strong>.
  </div>`:''}
 
  <!-- Desglose por tier -->
  <div class="admin-section-label">Por liga</div>
  ${tierRows}
+
+ <!-- Lista de agentes con ganancias -->
+ <div class="admin-section-label" style="margin-top:18px">Agentes · Sus ganancias</div>
+ ${(function(){
+ const refs=DB.referrers||[];
+ if(!refs.length){
+ return '<div style="padding:14px;text-align:center;color:var(--t3);font-size:12px;background:var(--bg3);border:1px solid var(--b);border-radius:10px">Aun no has creado agentes. Cuando crees uno, veras aqui cuanto generan.</div>';
+ }
+ // Sort por totalGenerated descendente
+ const refsWithStats=refs.map(ref=>{
+ const stats=getReferrerStats(ref.id);
+ return {ref,stats};
+ }).sort((a,b)=>b.stats.totalGenerated-a.stats.totalGenerated);
+ return refsWithStats.map(({ref,stats})=>{
+ return `<div onclick="openReferrerDetail('${ref.id}')" style="background:var(--bg3);border:1px solid var(--b);border-radius:10px;padding:12px;margin-bottom:8px;cursor:pointer;transition:border-color .15s" onmouseover="this.style.borderColor='rgba(255,215,0,.3)'" onmouseout="this.style.borderColor='var(--b)'">
+ <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+ <div>
+ <strong style="font-size:14px">${ref.name}</strong>
+ <span style="font-size:11px;color:var(--accent);margin-left:6px">${ref.code}</span>
+ </div>
+ <span style="font-size:11px;color:var(--t2)">${(ref.commissionRate*100).toFixed(0)}% del rake</span>
+ </div>
+ <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;font-size:11px;color:var(--t2)">
+ <div>Generado: <strong style="color:var(--t)">$${stats.totalGenerated.toFixed(2)}</strong></div>
+ <div>Pagado: <strong style="color:var(--green-ok)">$${stats.totalPaid.toFixed(2)}</strong></div>
+ <div>Pendiente: <strong style="color:${stats.totalPending>0?'var(--accent)':'var(--t3)'}">$${stats.totalPending.toFixed(2)}</strong></div>
+ </div>
+ <div style="font-size:10px;color:var(--t3);margin-top:6px">${stats.referredUsersCount} ${stats.referredUsersCount===1?'usuario referido':'usuarios referidos'} · ${stats.total} ${stats.total===1?'comision':'comisiones'}</div>
+ </div>`;
+ }).join('');
+ })()}
 
  <p style="font-size:11px;color:var(--t3);margin-top:14px;line-height:1.5">
  Solo se cuentan inscripciones <strong>aprobadas</strong>. Las pendientes no han generado dinero todavia.
@@ -5588,7 +6175,7 @@ function openIngresosAdmin(){
 }
 
 /* ══════════════════════════════════════════
- ADMIN: panel de vendedores (referrers)
+ ADMIN: panel de agentes (referrers)
  ══════════════════════════════════════════ */
 function openReferrersAdmin(){
  if(!isAdmin(CUR)){toast('Solo admins','error');return;}
@@ -5600,7 +6187,7 @@ function openReferrersAdmin(){
  const totalPaid=allCom.filter(c=>c.status==='paid').reduce((s,c)=>s+c.commissionAmount,0);
 
  const refsRows=refs.length===0
- ? '<div style="padding:24px;text-align:center;color:var(--t3);font-size:13px">Aun no hay vendedores. Crea el primero.</div>'
+ ? '<div style="padding:24px;text-align:center;color:var(--t3);font-size:13px">Aun no hay agentes. Crea el primero.</div>'
  : refs.map(r=>{
  const stats=getReferrerStats(r.id);
  return `<div class="admin-user-row" onclick="openReferrerDetail('${r.id}')" style="cursor:pointer">
@@ -5615,7 +6202,7 @@ function openReferrersAdmin(){
  </div>`;
  }).join('');
 
- openModal(`<h3>Vendedores</h3>
+ openModal(`<h3>Agentes</h3>
  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px">
  <div style="background:var(--bg3);border:1px solid var(--b);border-radius:10px;padding:10px;text-align:center">
  <div style="font-family:'Anton',sans-serif;font-size:20px;color:var(--t)">$${totalGenerated.toFixed(0)}</div>
@@ -5632,7 +6219,7 @@ function openReferrersAdmin(){
  </div>
  <button class="btn btn-primary btn-full" onclick="openCreateReferrerModal()" style="margin-bottom:14px;display:flex;align-items:center;justify-content:center;gap:6px">
  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
- Nuevo vendedor
+ Nuevo agente
  </button>
  <div class="admin-section-label">Activos (${refs.filter(r=>r.isActive).length})</div>
  <div class="admin-users-list" style="margin-bottom:14px">${refsRows}</div>
@@ -5644,13 +6231,13 @@ function openReferrersAdmin(){
  `);
 }
 
-/* Modal: crear nuevo vendedor */
+/* Modal: crear nuevo agente */
 function openCreateReferrerModal(){
  if(!isAdmin(CUR)){toast('Solo admins','error');return;}
- openModal(`<h3>Nuevo vendedor</h3>
- <p class="pay-instr">Cuando crees el vendedor, recibiras un link unico que puede compartir. Cada usuario que se registre por ese link queda asociado a el.</p>
+ openModal(`<h3>Nuevo agente</h3>
+ <p class="pay-instr">Cuando crees el agente, recibiras un link unico que puede compartir. Cada usuario que se registre por ese link queda asociado a el.</p>
  <div class="field">
- <label>Nombre del vendedor</label>
+ <label>Nombre del agente</label>
  <input type="text" id="ref-new-name" placeholder="ej. Elias" oninput="onReferrerNameInput()">
  </div>
  <div class="field">
@@ -5664,10 +6251,10 @@ function openCreateReferrerModal(){
  <div class="field">
  <label>% del rake que recibe (default ${Math.round(getDefaultCommission()*100)}%)</label>
  <input type="number" id="ref-new-rate" placeholder="${Math.round(getDefaultCommission()*100)}" value="${Math.round(getDefaultCommission()*100)}" min="1" max="100" step="1">
- <div style="font-size:11px;color:var(--t3);margin-top:4px">Ejemplo: usuario inscribe $100 · tu rake ${(getRakeRate()*100).toFixed(0)}% = $${(100*getRakeRate()).toFixed(2)} · vendedor recibe ${Math.round(getDefaultCommission()*100)}% de eso = $${(100*getRakeRate()*getDefaultCommission()).toFixed(2)}</div>
+ <div style="font-size:11px;color:var(--t3);margin-top:4px">Ejemplo: usuario inscribe $100 · tu rake ${(getRakeRate()*100).toFixed(0)}% = $${(100*getRakeRate()).toFixed(2)} · agente recibe ${Math.round(getDefaultCommission()*100)}% de eso = $${(100*getRakeRate()*getDefaultCommission()).toFixed(2)}</div>
  </div>
  <div class="err" id="ref-new-err"></div>
- <button class="btn btn-primary btn-full" onclick="confirmCreateReferrer()" style="margin-bottom:8px">Crear vendedor</button>
+ <button class="btn btn-primary btn-full" onclick="confirmCreateReferrer()" style="margin-bottom:8px">Crear agente</button>
  <button class="btn btn-secondary btn-full" onclick="openReferrersAdmin()">Cancelar</button>
  `);
 }
@@ -5690,18 +6277,18 @@ function confirmCreateReferrer(){
  if(isNaN(ratePct)||ratePct<=0||ratePct>100){err.textContent='Porcentaje invalido (1-100)';return;}
  try{
  const ref=createReferrer({name,code,email,commissionRate:ratePct/100});
- toast(` Vendedor ${ref.name} creado`,'success');
+ toast(` Agente ${ref.name} creado`,'success');
  setTimeout(()=>openReferrerDetail(ref.id),100);
  }catch(e){
  err.textContent=e.message||'Error al crear';
  }
 }
 
-/* Detalle: ver un vendedor con sus comisiones */
+/* Detalle: ver un agente con sus comisiones */
 function openReferrerDetail(referrerId){
  if(!isAdmin(CUR)){toast('Solo admins','error');return;}
  const ref=findReferrerById(referrerId);
- if(!ref){toast('Vendedor no encontrado','error');return;}
+ if(!ref){toast('Agente no encontrado','error');return;}
  const stats=getReferrerStats(referrerId);
  const link=getReferralLink(ref.code);
  const comList=stats.commissions.sort((a,b)=>b.createdAt-a.createdAt);
@@ -5764,7 +6351,7 @@ function openReferrerDetail(referrerId){
  <button class="btn btn-secondary btn-full" style="margin-top:12px" onclick="openReferrersAdmin()">← Volver</button>
  `);
 }
-/* Editar tasa de comision de un vendedor existente */
+/* Editar tasa de comision de un agente existente */
 function editReferrerRate(referrerId){
  if(!isAdmin(CUR)){toast('Solo admins','error');return;}
  const ref=findReferrerById(referrerId);
@@ -5798,7 +6385,7 @@ function copyReferralLink(referrerId){
 }
 
 /* ══════════════════════════════════════════
- PERFIL: dashboard del vendedor (su propia vista)
+ PERFIL: dashboard del agente (su propia vista)
  ══════════════════════════════════════════ */
 function getMyReferrerRecord(){
  if(!CUR)return null;
@@ -5807,7 +6394,7 @@ function getMyReferrerRecord(){
  const byEmail=findReferrerByEmail(CUR.email);
  if(byEmail)return byEmail;
  }
- // Tambien admins pueden tener su propio registro de vendedor identificado
+ // Tambien admins pueden tener su propio registro de agente identificado
  return null;
 }
 function renderMyReferrerDashboard(containerEl){
@@ -5818,7 +6405,7 @@ function renderMyReferrerDashboard(containerEl){
  const link=getReferralLink(ref.code);
  containerEl.innerHTML=`
  <div class="ds-card highlight" style="margin-bottom:14px">
- <div class="dash-hero-eyebrow">PANEL DE VENDEDOR</div>
+ <div class="dash-hero-eyebrow">PANEL DE AGENTE</div>
  <div style="font-family:'Anton',sans-serif;font-size:24px;color:var(--t);margin-top:6px;text-transform:uppercase">${ref.name}</div>
  <div style="font-size:13px;color:var(--t2);margin-bottom:12px">Codigo <strong style="color:var(--accent);font-family:'DM Mono',monospace">${ref.code}</strong> · ${(ref.commissionRate*100).toFixed(0)}% del rake</div>
  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
@@ -5866,7 +6453,7 @@ function copyMyReferralLink(){
 }
 function openMyReferrerCommissions(){
  const ref=getMyReferrerRecord();
- if(!ref){toast('No tienes panel de vendedor','error');return;}
+ if(!ref){toast('No tienes panel de agente','error');return;}
  const stats=getReferrerStats(ref.id);
  const comList=stats.commissions.sort((a,b)=>b.createdAt-a.createdAt);
  const comRows=comList.length===0
@@ -5911,11 +6498,11 @@ function openAdminConfig(){
  </div>
 
  <div class="field">
- <label>% del rake que reciben vendedores nuevos (default)</label>
+ <label>% del rake que reciben agentes nuevos (default)</label>
  <input type="number" id="cfg-commission" value="${currentDefaultCommission}" min="0" max="100" step="5" inputmode="numeric">
  <p style="font-size:11px;color:var(--t3);margin-top:6px;line-height:1.4">
- Cuando creas un vendedor, este es el porcentaje que recibira de tu rake. Lo puedes ajustar individualmente por vendedor.<br>
- Ejemplo: rake ${currentRake}% + comision ${currentDefaultCommission}% = vendedor recibe ${(currentRake*currentDefaultCommission/100).toFixed(2)}% del monto inscrito por sus referidos.
+ Cuando creas un agente, este es el porcentaje que recibira de tu rake. Lo puedes ajustar individualmente por agente.<br>
+ Ejemplo: rake ${currentRake}% + comision ${currentDefaultCommission}% = agente recibe ${(currentRake*currentDefaultCommission/100).toFixed(2)}% del monto inscrito por sus referidos.
  </p>
  </div>
 
@@ -6189,14 +6776,192 @@ function renderPerfil(){
  document.getElementById('pf-email-disp').textContent=CUR.email||'Sin email';
  const q=getActiveQ();
  document.getElementById('pf-pts').textContent=(q?q.pts:0)+' pts';
- // Mostrar badge VENDEDOR si aplica
+ // Mostrar badge AGENTE si aplica
  const vendorBadge=document.getElementById('pf-vendor-badge');
  const myRef=getMyReferrerRecord();
  if(vendorBadge)vendorBadge.style.display=myRef?'':'none';
- // Render panel de vendedor
+ // Render panel de agente
  const refPanel=document.getElementById('pf-referrer-panel');
  if(refPanel)renderMyReferrerDashboard(refPanel);
+ // Render premios disponibles
+ renderMyPayouts();
  renderAdminPanel();
+}
+
+/* Render de premios que el usuario actual puede reclamar / ya reclamo */
+function renderMyPayouts(){
+ const cont=document.getElementById('pf-payouts');
+ if(!cont||!CUR)return;
+ const payouts=getMyPendingPayouts(CUR.id);
+ if(!payouts.length){cont.innerHTML='';return;}
+ const rows=payouts.map(p=>{
+ const posLabel=p.position===1?'1er lugar':p.position===2?'2do lugar':'3er lugar';
+ const trophyColor=p.position===1?'#FFD700':p.position===2?'#C0C0C0':'#CD7F32';
+ if(p.paid){
+ return `<div style="background:rgba(91,201,125,.08);border:1px solid rgba(91,201,125,.3);border-radius:10px;padding:14px;margin-bottom:8px">
+ <div style="display:flex;justify-content:space-between;align-items:center">
+ <div>
+ <div style="font-weight:700;color:var(--green-ok);font-size:14px">Premio pagado</div>
+ <div style="font-size:12px;color:var(--t2);margin-top:2px">${p.tierName} · ${posLabel}</div>
+ </div>
+ <div style="font-family:'Anton',sans-serif;font-size:24px;color:var(--green-ok)">$${p.prize.toLocaleString()}</div>
+ </div>
+ ${p.payoutRecord?.paidAt?`<div style="font-size:11px;color:var(--t3);margin-top:6px">Pagado ${new Date(p.payoutRecord.paidAt).toLocaleDateString()}${p.payoutRecord.paymentRef?' · Ref: '+p.payoutRecord.paymentRef:''}</div>`:''}
+ </div>`;
+ }
+ if(p.claimed){
+ return `<div style="background:rgba(255,215,0,.08);border:1px solid rgba(255,215,0,.3);border-radius:10px;padding:14px;margin-bottom:8px">
+ <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+ <div>
+ <div style="font-weight:700;color:var(--accent);font-size:14px">${posLabel} · ${p.tierName}</div>
+ <div style="font-size:12px;color:var(--t2);margin-top:2px">Premio reclamado · Esperando pago</div>
+ </div>
+ <div style="font-family:'Anton',sans-serif;font-size:24px;color:var(--accent)">$${p.prize.toLocaleString()}</div>
+ </div>
+ <div style="font-size:11px;color:var(--t2);margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,215,0,.15)">
+ Metodo: <strong style="color:var(--t)">${p.payoutRecord?.method||'?'}</strong> · El admin te contactara para pagarte (hasta 30 dias)
+ </div>
+ <button class="btn btn-secondary btn-full" style="margin-top:8px;font-size:11px;padding:6px" onclick="openClaimPayoutModal('${p.tier}',${p.position})">Cambiar metodo de cobro</button>
+ </div>`;
+ }
+ return `<div style="background:linear-gradient(135deg,rgba(255,215,0,.18),rgba(255,215,0,.05));border:1px solid rgba(255,215,0,.4);border-radius:12px;padding:16px;margin-bottom:8px">
+ <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+ <svg width="22" height="22" viewBox="0 0 24 24" fill="${trophyColor}" stroke="${trophyColor}" stroke-width="1.5"><path d="M6 9H3l1 5h2m12-5h3l-1 5h-2M6 9V4h12v5M6 9c0 4.418 2.686 8 6 8s6-3.582 6-8M9 20h6M12 18v2"/></svg>
+ <strong style="font-size:15px;color:var(--accent)">GANASTE ${p.tierName.toUpperCase()}</strong>
+ </div>
+ <div style="font-size:12px;color:var(--t2);margin-bottom:8px">${posLabel}</div>
+ <div style="font-family:'Anton',sans-serif;font-size:36px;color:var(--accent);line-height:1;margin-bottom:8px">$${p.prize.toLocaleString()}</div>
+ <button class="btn btn-primary btn-full" style="margin-top:8px" onclick="openClaimPayoutModal('${p.tier}',${p.position})">Reclamar mi premio</button>
+ </div>`;
+ }).join('');
+ cont.innerHTML=`<div style="margin-bottom:18px">
+ <h3 style="font-size:13px;font-weight:600;margin-bottom:8px;color:var(--accent);text-transform:uppercase;letter-spacing:1px">Mis premios</h3>
+ ${rows}
+ </div>`;
+}
+
+/* Modal para que el usuario reclame su premio */
+function openClaimPayoutModal(tier,position){
+ const winners=getTierWinners(tier);
+ const w=winners.find(x=>x.userId===CUR.id&&x.position===position);
+ if(!w){toast('Premio no disponible','error');return;}
+ const existing=(DB.payouts||[]).find(p=>p.userId===CUR.id&&p.tier===tier&&p.position===position);
+ const currentMethod=existing?.method||'';
+ openModal(`<h3>Reclamar premio</h3>
+ <p class="pay-instr">${w.tierName} · ${position===1?'1er':position===2?'2do':'3er'} lugar · <strong style="color:var(--accent)">$${w.prize.toLocaleString()} USD</strong></p>
+
+ <div class="field">
+ <label>Como quieres recibir tu premio?</label>
+ <select id="payout-method" onchange="updatePayoutFields()">
+ <option value="">Selecciona un metodo</option>
+ <option value="zelle" ${currentMethod==='zelle'?'selected':''}>Zelle (USA)</option>
+ <option value="binance" ${currentMethod==='binance'?'selected':''}>Binance USDT</option>
+ <option value="pago_movil" ${currentMethod==='pago_movil'?'selected':''}>Pago Movil (Venezuela)</option>
+ <option value="cash" ${currentMethod==='cash'?'selected':''}>Efectivo (Caracas)</option>
+ </select>
+ </div>
+
+ <div id="payout-fields"></div>
+
+ <div class="err" id="payout-err"></div>
+
+ <button class="btn btn-primary btn-full" style="margin-top:12px" onclick="confirmClaimPayout('${tier}',${position})">Confirmar metodo</button>
+ <button class="btn btn-secondary btn-full" style="margin-top:6px" onclick="closeModal()">Cancelar</button>
+
+ <p style="font-size:11px;color:var(--t3);margin-top:14px;line-height:1.5">
+ El admin se contactara contigo en hasta 30 dias despues del fin del Mundial. Premios mayores a $500 USD pueden requerir verificacion de identidad.
+ </p>
+ `);
+ // Si ya tiene metodo seleccionado, cargar campos
+ if(currentMethod){
+ setTimeout(()=>{
+ updatePayoutFields();
+ // Pre-llenar
+ if(existing?.details){
+ Object.entries(existing.details).forEach(([k,v])=>{
+ const el=document.getElementById('payout-'+k);
+ if(el)el.value=v;
+ });
+ }
+ },50);
+ }
+}
+
+/* Renderiza los campos segun metodo seleccionado */
+function updatePayoutFields(){
+ const method=document.getElementById('payout-method')?.value;
+ const cont=document.getElementById('payout-fields');
+ if(!cont)return;
+ if(!method){cont.innerHTML='';return;}
+ if(method==='zelle'){
+ cont.innerHTML=`<div class="field"><label>Email registrado en Zelle</label><input type="email" id="payout-email" placeholder="tu@email.com"></div>
+ <div class="field"><label>Nombre completo (como aparece en tu banco)</label><input type="text" id="payout-fullname" placeholder="Juan Carlos Perez"></div>`;
+ } else if(method==='binance'){
+ cont.innerHTML=`<div class="field"><label>UID Binance (8-9 digitos) o wallet USDT</label><input type="text" id="payout-binanceId" placeholder="123456789 o TXyZ..."></div>
+ <div class="field"><label>Red (si das wallet, no UID)</label>
+ <select id="payout-network">
+ <option value="">No aplica (envio por UID)</option>
+ <option>TRC20</option>
+ <option>BEP20</option>
+ <option>ERC20</option>
+ </select>
+ </div>`;
+ } else if(method==='pago_movil'){
+ cont.innerHTML=`<div class="field"><label>Cedula</label><input type="text" id="payout-cedula" placeholder="V-12345678"></div>
+ <div class="field"><label>Telefono (formato 04XX...)</label><input type="tel" id="payout-phone" placeholder="04141234567"></div>
+ <div class="field"><label>Banco</label>
+ <select id="payout-bank">
+ <option value="">Selecciona</option>
+ <option>Banesco</option><option>Mercantil</option><option>BNC</option>
+ <option>Banco de Venezuela</option><option>Provincial</option><option>BOD</option>
+ <option>Bancaribe</option><option>Banco Plaza</option><option>Otro</option>
+ </select>
+ </div>`;
+ } else if(method==='cash'){
+ cont.innerHTML=`<div class="field"><label>Ciudad / zona donde podemos coordinar</label><input type="text" id="payout-city" placeholder="Caracas - Las Mercedes"></div>
+ <div class="field"><label>Telefono de contacto</label><input type="tel" id="payout-contactPhone" placeholder="04141234567"></div>`;
+ }
+}
+
+/* Confirma el reclamo del premio */
+function confirmClaimPayout(tier,position){
+ const method=document.getElementById('payout-method')?.value;
+ const err=document.getElementById('payout-err');
+ if(!method){err.textContent='Selecciona un metodo de cobro';return;}
+ const details={};
+ // Recolectar datos segun metodo
+ if(method==='zelle'){
+ const email=document.getElementById('payout-email')?.value.trim();
+ const fullname=document.getElementById('payout-fullname')?.value.trim();
+ if(!email||!/\S+@\S+\.\S+/.test(email)){err.textContent='Email invalido';return;}
+ if(!fullname||fullname.length<5){err.textContent='Ingresa tu nombre completo';return;}
+ details.email=email;details.fullname=fullname;
+ } else if(method==='binance'){
+ const id=document.getElementById('payout-binanceId')?.value.trim();
+ const network=document.getElementById('payout-network')?.value;
+ if(!id||id.length<5){err.textContent='UID o wallet invalido';return;}
+ details.binanceId=id;details.network=network||'';
+ } else if(method==='pago_movil'){
+ const ced=document.getElementById('payout-cedula')?.value.trim();
+ const phone=document.getElementById('payout-phone')?.value.trim();
+ const bank=document.getElementById('payout-bank')?.value;
+ if(!ced||ced.length<5){err.textContent='Cedula invalida';return;}
+ if(!phone||phone.length<10){err.textContent='Telefono invalido';return;}
+ if(!bank){err.textContent='Selecciona el banco';return;}
+ details.cedula=ced;details.phone=phone;details.bank=bank;
+ } else if(method==='cash'){
+ const city=document.getElementById('payout-city')?.value.trim();
+ const phone=document.getElementById('payout-contactPhone')?.value.trim();
+ if(!city||city.length<3){err.textContent='Ingresa ciudad/zona';return;}
+ if(!phone||phone.length<10){err.textContent='Telefono invalido';return;}
+ details.city=city;details.contactPhone=phone;
+ }
+ const payout=claimPayout(tier,position,method,details);
+ if(payout){
+ closeModal();
+ toast('Datos guardados — el admin se contactara contigo','success');
+ renderMyPayouts();
+ }
 }
 
 /* Render del historial de movimientos $WC */
@@ -6231,6 +6996,135 @@ function renderLedger(){
  }).join('');
 }
 /* ── MODAL ── */
+/* ══════════════════════════════════════════════════════════════
+ LEGAL · Terminos, Privacidad y FAQ
+ ══════════════════════════════════════════════════════════════ */
+function openTermsModal(){
+ openModal(`<h3>Terminos y Condiciones</h3>
+ <p style="font-size:11px;color:var(--t3);margin-bottom:14px">Version ${LEGAL_VERSION} · Ultima actualizacion abril 2026</p>
+
+ <div class="legal-doc">
+ <h4>1. Naturaleza del servicio</h4>
+ <p>Esta plataforma ("la App") organiza una <strong>quiniela privada de habilidad</strong> sobre el Mundial de Futbol FIFA 2026. No es una casa de apuestas regulada ni un operador de juegos de azar con licencia. La participacion implica predecir resultados deportivos basandose en conocimiento del usuario.</p>
+
+ <h4>2. Operador</h4>
+ <p>El operador es una persona natural domiciliada en <strong>Venezuela</strong>. La App acepta participantes mayores de edad de cualquier pais. Cada participante es responsable de verificar la legalidad de su participacion segun las leyes de su jurisdiccion.</p>
+
+ <h4>3. Edad minima</h4>
+ <p>Para participar debes tener al menos <strong>18 anos cumplidos</strong> al momento del registro, o la mayoria de edad legal de tu pais (la que sea mayor). Al registrarte aceptas que cumples este requisito. Cuentas registradas por menores de edad seran cerradas y no se reembolsaran inscripciones.</p>
+
+ <h4>4. Inscripciones y pagos</h4>
+ <p>El monto de inscripcion se paga al operador por canales privados (Zelle, Binance, Pago Movil, efectivo). El admin confirma el pago manualmente y aprueba la inscripcion. Una vez aprobada, <strong>NO hay reembolso</strong> bajo ninguna circunstancia (incluyendo cancelacion del torneo por causas de fuerza mayor de FIFA).</p>
+
+ <h4>5. Premios</h4>
+ <p>Los premios se calculan como <strong>${(getRakeRate()*100).toFixed(0)}% retenido por el operador</strong> y el resto distribuido a los 3 primeros lugares de cada liga (50% / 30% / 20%). El monto exacto del premio depende del numero de inscripciones aprobadas al cierre del torneo.</p>
+ <p>Los premios se pagan <strong>una sola vez al finalizar el Mundial</strong>, en un plazo de hasta <strong>30 dias</strong> despues del partido final. El operador se reserva el derecho de pedir verificacion de identidad antes del pago para premios mayores a $500 USD.</p>
+
+ <h4>6. Riesgos asumidos por el participante</h4>
+ <p>Al participar reconoces que: (a) el operador es una persona privada sin licencia regulatoria; (b) no existe garantia legal de pago si el operador desaparece, fallece o es impedido por causas mayores; (c) los pagos se realizan por buena fe y reputacion del operador; (d) eres responsable de declarar el premio como ingreso ante las autoridades fiscales de tu pais.</p>
+
+ <h4>7. Conducta prohibida</h4>
+ <p>Estan prohibidas: cuentas multiples del mismo usuario, manipulacion de resultados, hackeo o acceso no autorizado, publicidad no autorizada usando el nombre del torneo. El operador puede expulsar y descalificar sin reembolso a quien viole estas reglas.</p>
+
+ <h4>8. Disputas</h4>
+ <p>Cualquier disputa se resuelve primero por dialogo directo con el operador via WhatsApp. Si no hay acuerdo, las partes aceptan resolver la disputa por arbitraje en <strong>Venezuela</strong>, idioma espanol, con costos compartidos. El participante renuncia a iniciar acciones colectivas.</p>
+
+ <h4>9. Limitacion de responsabilidad</h4>
+ <p>La responsabilidad maxima del operador frente a un participante esta limitada al monto de inscripcion pagado por ese participante. El operador no es responsable por interrupciones del servicio, perdida de datos, ni decisiones de FIFA sobre el torneo.</p>
+
+ <h4>10. Cambios a los terminos</h4>
+ <p>El operador puede actualizar estos terminos. Cambios significativos se notificaran en la App. Continuar usando la App tras un cambio implica aceptarlo.</p>
+
+ <h4>11. Contacto</h4>
+ <p>Para reclamos o dudas, contacta al admin via WhatsApp en el numero indicado en tu pantalla de inscripcion.</p>
+ </div>
+
+ <button class="btn btn-secondary btn-full" style="margin-top:14px" onclick="closeModal()">Cerrar</button>
+ `,{wide:true});
+}
+
+function openPrivacyModal(){
+ openModal(`<h3>Politica de Privacidad</h3>
+ <p style="font-size:11px;color:var(--t3);margin-bottom:14px">Version ${LEGAL_VERSION}</p>
+
+ <div class="legal-doc">
+ <h4>1. Que datos recolectamos</h4>
+ <p>Recolectamos: nombre que elijes, email, contrasena (encriptada por Firebase), tus predicciones, tus inscripciones a ligas, los datos de pago que tu mismo nos envies por WhatsApp para recibir premios.</p>
+
+ <h4>2. Para que los usamos</h4>
+ <p>Para: identificarte en la App, calcular tus puntos y ranking, contactarte sobre el torneo, pagarte premios si ganas, cumplir con la ley.</p>
+
+ <h4>3. Con quien los compartimos</h4>
+ <p>Con nadie excepto: <strong>Google Firebase</strong> (servidor donde se guardan los datos), tus datos de premio que solo el admin ve, autoridades si nos lo exigen por ley.</p>
+
+ <h4>4. Cuanto tiempo</h4>
+ <p>Mientras tu cuenta este activa + 6 meses despues del fin del torneo (para resolver disputas). Despues se eliminan o anonimizan.</p>
+
+ <h4>5. Tus derechos</h4>
+ <p>Puedes pedir copia de tus datos, correccion, eliminacion. Escribenos al WhatsApp del admin. La eliminacion antes de cobrar tu premio implica renuncia al mismo.</p>
+
+ <h4>6. Cookies</h4>
+ <p>Usamos almacenamiento local del navegador para mantener tu sesion. No usamos cookies de rastreo de terceros.</p>
+
+ <h4>7. Menores de edad</h4>
+ <p>No recolectamos datos de menores de 18 anos a sabiendas. Si descubrimos una cuenta de menor, la cerramos.</p>
+
+ <h4>8. Cambios</h4>
+ <p>Si cambiamos esta politica te avisamos en la App.</p>
+ </div>
+
+ <button class="btn btn-secondary btn-full" style="margin-top:14px" onclick="closeModal()">Cerrar</button>
+ `,{wide:true});
+}
+
+function openFAQModal(){
+ openModal(`<h3>Preguntas Frecuentes</h3>
+
+ <div class="legal-doc">
+ <h4>Como me inscribo a una liga?</h4>
+ <p>Click en cualquier card de liga ($20, $50, $100 o $500) en el Home. Se abre un modal donde el admin te dice como pagar (Zelle, Binance, Pago Movil o efectivo). Una vez pagues, el admin aprueba tu inscripcion manualmente.</p>
+
+ <h4>Cuanto tarda en aprobarse mi inscripcion?</h4>
+ <p>Normalmente 1-24 horas despues de que el admin verifica tu pago. Si tarda mas, escribe al WhatsApp del admin.</p>
+
+ <h4>Puedo predecir antes de ser aprobado?</h4>
+ <p>Si. Tus predicciones se guardan desde que te registras. La aprobacion solo es necesaria para optar al premio.</p>
+
+ <h4>Puedo tener varias inscripciones?</h4>
+ <p>Si. Puedes inscribirte multiples veces a la misma liga (cada una es una quiniela independiente con sus propias predicciones) o a ligas diferentes.</p>
+
+ <h4>Hasta cuando puedo predecir un partido?</h4>
+ <p>Hasta <strong>5 minutos antes</strong> del horario oficial de inicio. Despues queda bloqueado.</p>
+
+ <h4>Como se calculan los puntos?</h4>
+ <p>Fase de grupos: 10 puntos por resultado exacto, 3 por acertar ganador o empate. En eliminatorias los puntos suben (15, 25, 40, 60 segun la fase). Bonus: 75 por campeon, 50 por goleador.</p>
+
+ <h4>Cuando me pagan si gano?</h4>
+ <p>Una sola vez al final del Mundial, en un plazo de hasta 30 dias despues del partido final. Te contactaremos al email registrado para pedir tus datos de cobro.</p>
+
+ <h4>Como recibo mi premio?</h4>
+ <p>Por Zelle, Binance USDT, Pago Movil Venezuela, o efectivo si estas en Caracas. Tu eliges el metodo. Premios mayores a $500 USD pueden requerir verificacion de identidad.</p>
+
+ <h4>Puedo reembolsar mi inscripcion?</h4>
+ <p>No. Una vez aprobada, no hay reembolso bajo ninguna circunstancia.</p>
+
+ <h4>Que pasa si pierdo mi contrasena?</h4>
+ <p>En la pantalla de login click "Olvidaste tu contrasena". Te llega un email de Firebase para crear una nueva.</p>
+
+ <h4>Que pasa si FIFA cambia el calendario?</h4>
+ <p>El admin actualiza la App. Tus predicciones existentes se mantienen.</p>
+
+ <h4>Puedo usar la App desde mi celular y mi compu al mismo tiempo?</h4>
+ <p>Si, con la misma cuenta. Tus datos se sincronizan.</p>
+
+ <h4>Donde escribo si tengo un problema?</h4>
+ <p>Al WhatsApp del admin que aparece en el modal de inscripcion. Respondemos en horario laboral hora Caracas.</p>
+ </div>
+
+ <button class="btn btn-secondary btn-full" style="margin-top:14px" onclick="closeModal()">Cerrar</button>
+ `,{wide:true});
+}
+
 function openModal(html,opts){
  document.getElementById('modal-body').innerHTML=html;
  const ov=document.getElementById('modal-ov');
