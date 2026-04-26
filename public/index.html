@@ -1120,6 +1120,7 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
      ════════════════════════════════════════ -->
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
 <script>
   const firebaseConfig = {
     apiKey: "AIzaSyB5ho_TC_xECbGEQmdjLlIz3KaVWIUctLE",
@@ -1137,8 +1138,10 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
   window.fb = {
     auth: firebase.auth(),
     googleProvider: new firebase.auth.GoogleAuthProvider(),
+    db: firebase.firestore(),  // ← Firestore (v18, Step 1: foundation)
     ready: false,        // se pone true cuando onAuthStateChanged corra al menos una vez
     user: null,          // ultimo currentUser conocido
+    firestoreReady: false, // se pone true tras connectivityCheck OK
   };
 </script>
 </head>
@@ -1932,6 +1935,172 @@ function logIcon(type){
   return icons[type]||icons.config;
 }
 
+/* ══════════════════════════════════════════════════════════════
+   FIRESTORE FOUNDATION (v18 — Step 1)
+   ──────────────────────────────────────────────────────────────
+   IMPORTANTE: Estos helpers ESTAN LISTOS pero NO se usan todavia
+   en el flujo principal de la app. Toda la app sigue funcionando
+   en localStorage como antes. En Step 2 empezaremos a migrar
+   datos uno por uno.
+   ══════════════════════════════════════════════════════════════ */
+
+/* Lee un documento. Path puede ser 'collection/docId' o 'col/doc/subcol/subdoc' */
+async function fsGet(path){
+  if(!fb||!fb.db)throw new Error('Firestore no inicializado');
+  const parts=path.split('/').filter(Boolean);
+  if(parts.length%2!==0)throw new Error(`Path invalido (debe tener # par de segmentos): ${path}`);
+  let ref=fb.db;
+  for(let i=0;i<parts.length;i+=2){
+    ref=ref.collection(parts[i]).doc(parts[i+1]);
+  }
+  const snap=await ref.get();
+  return snap.exists?{id:snap.id,...snap.data()}:null;
+}
+
+/* Escribe un documento (merge:true por defecto = NO destruye campos existentes) */
+async function fsSet(path,data,opts={merge:true}){
+  if(!fb||!fb.db)throw new Error('Firestore no inicializado');
+  const parts=path.split('/').filter(Boolean);
+  if(parts.length%2!==0)throw new Error(`Path invalido: ${path}`);
+  let ref=fb.db;
+  for(let i=0;i<parts.length;i+=2){
+    ref=ref.collection(parts[i]).doc(parts[i+1]);
+  }
+  await ref.set(data,opts);
+  return {path,data};
+}
+
+/* Update parcial (NO crea el doc si no existe) */
+async function fsUpdate(path,partial){
+  if(!fb||!fb.db)throw new Error('Firestore no inicializado');
+  const parts=path.split('/').filter(Boolean);
+  if(parts.length%2!==0)throw new Error(`Path invalido: ${path}`);
+  let ref=fb.db;
+  for(let i=0;i<parts.length;i+=2){
+    ref=ref.collection(parts[i]).doc(parts[i+1]);
+  }
+  await ref.update(partial);
+  return {path,partial};
+}
+
+/* Borra un documento */
+async function fsDelete(path){
+  if(!fb||!fb.db)throw new Error('Firestore no inicializado');
+  const parts=path.split('/').filter(Boolean);
+  if(parts.length%2!==0)throw new Error(`Path invalido: ${path}`);
+  let ref=fb.db;
+  for(let i=0;i<parts.length;i+=2){
+    ref=ref.collection(parts[i]).doc(parts[i+1]);
+  }
+  await ref.delete();
+  return {path,deleted:true};
+}
+
+/* Lista documentos de una coleccion. Path debe ser una collection (# impar de segmentos) */
+async function fsList(path,opts={}){
+  if(!fb||!fb.db)throw new Error('Firestore no inicializado');
+  const parts=path.split('/').filter(Boolean);
+  if(parts.length%2===0)throw new Error(`Path debe ser una coleccion, no doc: ${path}`);
+  let ref=fb.db;
+  for(let i=0;i<parts.length;i+=2){
+    if(i+1<parts.length){
+      ref=ref.collection(parts[i]).doc(parts[i+1]);
+    } else {
+      ref=ref.collection(parts[i]);
+    }
+  }
+  // Query optionals
+  let q=ref;
+  if(opts.where)opts.where.forEach(([f,op,v])=>{q=q.where(f,op,v);});
+  if(opts.orderBy)q=q.orderBy(opts.orderBy[0],opts.orderBy[1]||'asc');
+  if(opts.limit)q=q.limit(opts.limit);
+  const snap=await q.get();
+  const docs=[];
+  snap.forEach(d=>docs.push({id:d.id,...d.data()}));
+  return docs;
+}
+
+/* Real-time listener. Devuelve unsubscribe(). */
+function fsListen(path,callback,opts={}){
+  if(!fb||!fb.db)throw new Error('Firestore no inicializado');
+  const parts=path.split('/').filter(Boolean);
+  let ref=fb.db;
+  for(let i=0;i<parts.length;i+=2){
+    if(i+1<parts.length){
+      ref=ref.collection(parts[i]).doc(parts[i+1]);
+    } else {
+      ref=ref.collection(parts[i]);
+    }
+  }
+  if(parts.length%2===0){
+    // doc listener
+    return ref.onSnapshot(snap=>{
+      callback(snap.exists?{id:snap.id,...snap.data()}:null);
+    });
+  } else {
+    // collection listener
+    let q=ref;
+    if(opts.where)opts.where.forEach(([f,op,v])=>{q=q.where(f,op,v);});
+    if(opts.orderBy)q=q.orderBy(opts.orderBy[0],opts.orderBy[1]||'asc');
+    if(opts.limit)q=q.limit(opts.limit);
+    return q.onSnapshot(snap=>{
+      const docs=[];
+      snap.forEach(d=>docs.push({id:d.id,...d.data()}));
+      callback(docs);
+    });
+  }
+}
+
+/* Server timestamp (para createdAt/updatedAt) */
+function fsServerTime(){
+  return firebase.firestore.FieldValue.serverTimestamp();
+}
+
+/* ────────────────────────────────────────────────
+   CONNECTIVITY CHECK: prueba que la conexion funciona.
+   Solo corre una vez al cargar. Resultado en fb.firestoreReady.
+   ──────────────────────────────────────────────── */
+async function firestoreConnectivityCheck(){
+  try{
+    if(!fb||!fb.db){
+      console.warn('[Firestore] fb.db no existe — SDK no cargo');
+      fb.firestoreReady=false;
+      return false;
+    }
+    // Esperar a que haya un user autenticado, porque las rules requieren auth
+    if(!fb.auth.currentUser){
+      // Sin sesion firebase, no podemos probar (las rules lo bloquean)
+      console.log('[Firestore] Sin sesion auth, skip connectivity check');
+      fb.firestoreReady='no-auth';
+      return false;
+    }
+    // Test write
+    const testPath='_test/connection-check';
+    await fsSet(testPath,{
+      ts:Date.now(),
+      uid:fb.auth.currentUser.uid,
+      ua:(navigator.userAgent||'').slice(0,80),
+    });
+    // Test read
+    const back=await fsGet(testPath);
+    if(back&&back.ts){
+      fb.firestoreReady=true;
+      console.log('[Firestore] ✓ Conectado · doc test ok');
+      return true;
+    }
+    fb.firestoreReady=false;
+    console.warn('[Firestore] Read no devolvio doc');
+    return false;
+  }catch(err){
+    fb.firestoreReady=false;
+    console.error('[Firestore] Connectivity check FAIL:',err.code||'',err.message);
+    return false;
+  }
+}
+// Exponer en consola para debug
+window.firestoreConnectivityCheck=firestoreConnectivityCheck;
+window.fsGet=fsGet;window.fsSet=fsSet;window.fsList=fsList;
+window.fsDelete=fsDelete;window.fsUpdate=fsUpdate;window.fsListen=fsListen;
 /* ══════════════════════════════════════════
    SISTEMA DE COMISIONES (referrals/afiliados)
    - DB.referrers: vendedores activos con codigo + % comision
@@ -2789,6 +2958,10 @@ fb.auth.onAuthStateChanged(user=>{
           enterApp();
         }
       }
+    }
+    // Step 1 (v18): probar conectividad Firestore en background, no bloquea nada
+    if(user&&typeof firestoreConnectivityCheck==='function'){
+      firestoreConnectivityCheck();
     }
   },50);
 });
@@ -4607,6 +4780,11 @@ function renderAdminPanel(){
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
       Configuración ${waConfigured?'<span style="color:var(--green-ok);font-size:11px">✓</span>':'<span style="color:var(--red);font-size:11px">⚠ Pendiente</span>'}
     </button>
+    <!-- Step 1 (v18): boton de prueba Firestore para admin -->
+    <button class="btn btn-secondary btn-full" onclick="openFirestoreTestModal()" style="margin-bottom:14px;display:flex;align-items:center;justify-content:center;gap:8px;border-color:rgba(91,201,125,.25);color:var(--green-ok)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><circle cx="12" cy="10" r="3"/></svg>
+      Test Firestore <span id="fs-status-pill" style="opacity:.85;font-size:11px;font-weight:700">${fb&&fb.firestoreReady===true?'✓ ON':fb&&fb.firestoreReady==='no-auth'?'⚠ login':'○'}</span>
+    </button>
 
     <div class="admin-section-label">Inscripciones pendientes (${pendingEntries.length})</div>
     <div class="admin-users-list" style="margin-bottom:14px">
@@ -5218,6 +5396,88 @@ function openMatchActivity(matchKey){
     <div style="max-height:25vh;overflow-y:auto;margin:0 -4px">${logsHtml}</div>
     <button class="btn btn-secondary btn-full" style="margin-top:12px" onclick="closeModal()">Cerrar</button>
   `);
+}
+
+/* ══════════════════════════════════════════
+   FIRESTORE TEST MODAL (v18 — Step 1)
+   Solo para admins, prueba la conexion live.
+   ══════════════════════════════════════════ */
+async function openFirestoreTestModal(){
+  if(!isAdmin(CUR)){toast('Solo admins','error');return;}
+  const status=fb.firestoreReady;
+  const statusLabel=status===true?'<span style="color:var(--green-ok)">✓ Conectado</span>'
+    :status==='no-auth'?'<span style="color:var(--accent)">⚠ Sin sesion auth</span>'
+    :status===false?'<span style="color:var(--red)">✗ Error</span>'
+    :'<span style="color:var(--t2)">No probado</span>';
+  openModal(`<h3>Test Firestore</h3>
+    <p class="pay-instr">Estado actual: ${statusLabel}</p>
+    <div style="background:var(--bg3);border:1px solid var(--b);border-radius:8px;padding:12px;margin-bottom:12px;font-family:'DM Mono',monospace;font-size:11px;color:var(--t2);line-height:1.6">
+      <div>Project: <span style="color:var(--accent)">qupa26-a019a</span></div>
+      <div>SDK: <span style="color:var(--accent)">${typeof firebase!=='undefined'&&firebase.firestore?'cargado':'NO cargado'}</span></div>
+      <div>Auth UID: <span style="color:var(--accent)">${fb.auth.currentUser?.uid?.slice(0,12)+'…'||'sin sesion'}</span></div>
+      <div id="fs-test-output">_</div>
+    </div>
+    <button class="btn btn-primary btn-full" onclick="runFirestoreTest()" style="margin-bottom:6px">▶ Correr prueba completa</button>
+    <button class="btn btn-secondary btn-full" onclick="runFirestoreReadTest()" style="margin-bottom:6px">Solo lectura</button>
+    <button class="btn btn-secondary btn-full" onclick="closeModal()">Cerrar</button>
+    <p style="font-size:11px;color:var(--t3);margin-top:14px;line-height:1.5">
+      <strong style="color:var(--t2)">v18 (Step 1):</strong> Firestore conectado pero la app sigue corriendo en localStorage.
+      Las migraciones empiezan en Step 2. Si esta prueba falla, revisa que las reglas de seguridad esten publicadas en
+      <a href="https://console.firebase.google.com/project/qupa26-a019a/firestore/rules" target="_blank" style="color:var(--accent)">Firebase Console</a>.
+    </p>
+  `);
+}
+async function runFirestoreTest(){
+  const out=document.getElementById('fs-test-output');
+  if(!out)return;
+  const log=(msg)=>{out.innerHTML+='<div>'+msg+'</div>';};
+  out.innerHTML='';
+  try{
+    log('1) Escribiendo doc test...');
+    const ts=Date.now();
+    await fsSet('_test/manual-check',{
+      ts,
+      uid:fb.auth.currentUser?.uid||'?',
+      ua:navigator.userAgent.slice(0,60),
+      msg:'Hola Firestore',
+    });
+    log('   <span style="color:var(--green-ok)">✓ Write OK</span>');
+    log('2) Leyendo doc...');
+    const back=await fsGet('_test/manual-check');
+    if(back&&back.ts===ts){
+      log('   <span style="color:var(--green-ok)">✓ Read OK · ts:'+ts+'</span>');
+    } else {
+      log('   <span style="color:var(--red)">✗ Read no devolvio data esperada</span>');
+    }
+    log('3) Borrando doc...');
+    await fsDelete('_test/manual-check');
+    log('   <span style="color:var(--green-ok)">✓ Delete OK</span>');
+    log('<br><strong style="color:var(--green-ok)">✓ Todas las operaciones OK</strong>');
+    log('Firestore esta listo para Step 2.');
+    fb.firestoreReady=true;
+    const pill=document.getElementById('fs-status-pill');
+    if(pill)pill.textContent='✓ ON';
+  }catch(err){
+    log('<span style="color:var(--red)">✗ Error: '+(err.code||'')+' '+(err.message||err)+'</span>');
+    log('Verifica las reglas de Firestore en Firebase Console.');
+  }
+}
+async function runFirestoreReadTest(){
+  const out=document.getElementById('fs-test-output');
+  if(!out)return;
+  out.innerHTML='Leyendo _test/manual-check...';
+  try{
+    const back=await fsGet('_test/manual-check');
+    if(back){
+      out.innerHTML='<span style="color:var(--green-ok)">✓ Read OK</span><br>'+
+        '<pre style="white-space:pre-wrap;color:var(--t2);font-size:10px;margin-top:6px">'+
+        JSON.stringify(back,null,2)+'</pre>';
+    } else {
+      out.innerHTML='<span style="color:var(--accent)">⚠ Doc no existe (corre prueba completa primero)</span>';
+    }
+  }catch(err){
+    out.innerHTML='<span style="color:var(--red)">✗ '+(err.code||'')+' '+(err.message||err)+'</span>';
+  }
 }
 
 /* ══════════════════════════════════════════
