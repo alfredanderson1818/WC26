@@ -54,6 +54,34 @@
 
   --r:10px; --rl:14px;
   --sb:env(safe-area-inset-bottom,0px);
+
+  /* ── DESIGN SYSTEM TOKENS (v14) ──
+     Usar SIEMPRE estos tokens en lugar de pixels hard-coded
+     para mantener consistencia entre paginas. */
+  /* Spacing escala 4px */
+  --s1:4px;     /* tight */
+  --s2:8px;     /* base mobile gap */
+  --s3:12px;    /* card-internal */
+  --s4:16px;    /* PAGE PADDING + section gap */
+  --s5:20px;
+  --s6:24px;    /* section-to-section */
+  --s7:32px;
+  --s8:48px;
+  /* Tipografia */
+  --fs-display:32px;   /* h1 page-title (Anton uppercase) */
+  --fs-display-lg:48px;/* hero hero name */
+  --fs-h2:20px;        /* section heading */
+  --fs-h3:16px;        /* card title */
+  --fs-body:14px;      /* body text */
+  --fs-sm:13px;        /* sub */
+  --fs-xs:12px;        /* labels */
+  --fs-xxs:11px;       /* eyebrows uppercase */
+  --fs-tn:10px;        /* tiny */
+  /* Card unificada */
+  --card-bg:var(--bg3);
+  --card-border:1px solid var(--b);
+  --card-radius:12px;
+  --card-pad:16px;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html{scroll-behavior:smooth}
@@ -100,7 +128,7 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
 /* ── LOGO ── */
 .logo-svg{display:flex;align-items:center;gap:8px}
 .logo-mark{width:30px;height:30px;flex-shrink:0}
-.logo-text{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:1px;line-height:1}
+.logo-text{font-family:'Anton','Bebas Neue',sans-serif;font-size:32px;letter-spacing:0;line-height:1;color:#F5EFD9}
 .logo-text span{color:var(--gold)}
 
 /* ── ONBOARDING ── */
@@ -110,36 +138,40 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
 .ob-hero{position:relative;z-index:1;width:100%;padding:52px 24px 32px;display:flex;flex-direction:column;align-items:center;text-align:center}
 .ob-logo-wrap{margin-bottom:24px}
 .ob-logo-big{width:180px;height:120px}
+.ob-logo-text{font-family:'Anton','Bebas Neue',sans-serif;font-size:96px;line-height:.85;letter-spacing:-2px;color:#F5EFD9;display:inline-block;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:geometricPrecision}
+.ob-logo-text span{color:var(--gold)}
 .ob-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(52px,15vw,76px);line-height:.9;letter-spacing:1px;margin-bottom:10px}
 .ob-title span{background:linear-gradient(135deg,var(--gold-bright) 0%,var(--gold) 50%,var(--copper) 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;display:block}
 .ob-body{position:relative;z-index:1;width:100%;padding:0 16px;max-width:480px;margin:0 auto}
 
 /* Leagues grid */
-.leagues-label{font-size:11px;font-weight:600;color:var(--t2);text-transform:uppercase;letter-spacing:.7px;margin-bottom:10px;text-align:center}
-.leagues-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
-.lt{background:var(--bg3);border:1px solid var(--b);border-radius:var(--r);padding:14px 12px;text-align:center;position:relative;overflow:hidden;cursor:pointer;transition:border-color .2s}
+.leagues-label{font-size:11px;font-weight:600;color:var(--t2);text-transform:uppercase;letter-spacing:.7px;margin-bottom:12px;text-align:center}
+.leagues-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:8px}
+.lt{background:linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,.005));border:1px solid var(--b);border-radius:var(--r);padding:18px 14px 14px 18px;position:relative;overflow:hidden;cursor:pointer;transition:transform .15s, border-color .2s, background .2s;min-height:128px;display:flex;flex-direction:column;justify-content:space-between}
 .lt:active{transform:scale(.97)}
-.lt.hot{border-color:var(--b3);background:rgba(255,215,0,.04)}
-.lt::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
-.lt.a::before{background:#8A6E40}
-.lt.b::before{background:linear-gradient(90deg,var(--copper),var(--gold-soft))}
-.lt.c::before{background:linear-gradient(90deg,var(--gold-soft),var(--gold))}
-.lt.d::before{background:linear-gradient(90deg,var(--gold),var(--gold-bright))}
-.lt-price{font-family:'Bebas Neue',sans-serif;font-size:26px;line-height:1;margin-bottom:3px}
+.lt:hover{border-color:var(--b3)}
+.lt.hot{border-color:rgba(255,215,0,.3);background:linear-gradient(180deg,rgba(255,215,0,.05),rgba(255,215,0,.01))}
+/* Acento lateral izquierdo en lugar de top */
+.lt::before{content:'';position:absolute;left:0;top:14px;bottom:14px;width:3px;border-radius:0 2px 2px 0}
+.lt.a::before{background:#8A6E40;opacity:.5}
+.lt.b::before{background:var(--copper);opacity:.7}
+.lt.c::before{background:var(--gold-soft)}
+.lt.d::before{background:var(--gold);box-shadow:0 0 12px rgba(255,215,0,.5)}
+.lt-price{font-family:'Anton','Bebas Neue',sans-serif;font-size:36px;line-height:.9;letter-spacing:0;margin-bottom:2px;color:var(--t)}
 .lt.a .lt-price{color:#A88D5A}
 .lt.b .lt-price{color:var(--copper)}
 .lt.c .lt-price{color:var(--gold-soft)}
 .lt.d .lt-price{color:var(--gold)}
-.lt-name{font-size:11px;font-weight:600;color:var(--t2);margin-bottom:4px}
-.lt-prize{font-size:11px;color:var(--t);font-weight:600}
-.lt-users{font-size:10px;color:var(--t2);margin-top:6px;display:flex;align-items:center;justify-content:center;gap:5px}
-.lt-users-bar{width:38px;height:3px;background:var(--bg5);border-radius:2px;overflow:hidden;flex-shrink:0}
-.lt-users-fill{height:100%;background:var(--gold-soft);border-radius:2px}
+.lt-name{font-size:11px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px}
+.lt-prize{font-size:13px;color:var(--t);font-weight:600;margin-bottom:10px}
+.lt-users{font-size:10px;color:var(--t3);display:flex;align-items:center;gap:6px;font-weight:500}
+.lt-users-bar{flex:1;height:3px;background:var(--bg5);border-radius:2px;overflow:hidden}
+.lt-users-fill{height:100%;background:var(--gold-soft);border-radius:2px;transition:width .3s}
 .lt.a .lt-users-fill{background:#8A6E40}
 .lt.b .lt-users-fill{background:var(--copper)}
 .lt.c .lt-users-fill{background:var(--gold-soft)}
 .lt.d .lt-users-fill{background:var(--gold)}
-.lt-hot{position:absolute;top:6px;right:6px;font-size:9px;font-weight:700;background:var(--gold-dim);color:var(--gold);padding:2px 5px;border-radius:8px}
+.lt-hot{position:absolute;top:8px;right:8px;font-size:9px;font-weight:800;background:var(--gold);color:#0A0A0A;padding:3px 7px;border-radius:10px;letter-spacing:.5px;text-transform:uppercase}
 .ob-free{text-align:center;font-size:12px;color:var(--t3);margin-bottom:18px}
 .ob-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:18px}
 .ob-stat{background:var(--bg3);border:1px solid var(--b);border-radius:var(--r);padding:13px 8px;text-align:center}
@@ -245,14 +277,11 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
 .bnav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 4px 6px;background:none;border:none;cursor:pointer;color:var(--t3);gap:3px;-webkit-tap-highlight-color:transparent;touch-action:manipulation;transition:color .15s;font-family:'DM Sans',sans-serif}
 .bnav-btn.active{color:var(--gold)}
 .bnav-btn svg{width:22px;height:22px;flex-shrink:0}
-/* Botón centrado destacado */
-.bnav-btn.bnav-center{position:relative;padding-top:0}
-.bnav-btn.bnav-center .bnav-center-circle{display:flex;align-items:center;justify-content:center;width:54px;height:54px;border-radius:50%;background:var(--accent);color:#0A0A0A;box-shadow:0 6px 18px rgba(255,215,0,.35),0 0 0 4px var(--bg);margin-top:-22px;transition:transform .15s, box-shadow .2s}
-.bnav-btn.bnav-center .bnav-center-circle svg{width:26px;height:26px;stroke:#0A0A0A}
-.bnav-btn.bnav-center .bnav-label{margin-top:2px;color:var(--t3);font-weight:600}
-.bnav-btn.bnav-center.active .bnav-label{color:var(--gold)}
-.bnav-btn.bnav-center.active .bnav-center-circle{transform:scale(1.04);box-shadow:0 8px 22px rgba(255,215,0,.5),0 0 0 4px var(--bg)}
-.bnav-btn.bnav-center:active .bnav-center-circle{transform:scale(.95)}
+/* Botón centrado: mismo tamaño que los demás, solo con un punto dorado debajo cuando NO está activo */
+.bnav-btn.bnav-center{position:relative}
+.bnav-btn.bnav-center::after{content:'';position:absolute;bottom:2px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:var(--accent);opacity:.6;transition:opacity .15s, transform .15s}
+.bnav-btn.bnav-center.active::after{opacity:0}
+.bnav-btn.bnav-center .bnav-center-circle{display:contents}
 .bnav-label{font-size:10px;font-weight:500;white-space:nowrap}
 
 .app-content{flex:1;padding:20px 16px 110px;max-width:680px;margin:0 auto;width:100%}
@@ -542,6 +571,70 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
 .flag[data-cc="CZE"]::before{content:'';position:absolute;left:0;top:0;width:50%;height:100%;background:linear-gradient(135deg,transparent 50%,#11457E 50%);clip-path:polygon(0 0,50% 50%,0 100%)}
 .flag[data-cc="SRB"]{background:linear-gradient(180deg,#C6363C 0 33.33%,#0C4076 33.33% 66.66%,#fff 66.66%)}
 .flag[data-cc="NZL"]{background:#012169}
+
+/* ── BANDERAS FIFA WC 2026 (paises clasificados) ── */
+/* RSA: bandera de Sudafrica (5 colores con Y) */
+.flag[data-cc="RSA"]{background:linear-gradient(180deg,#007749 0 50%,#000 50%);position:relative}
+.flag[data-cc="RSA"]::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,#FFB81C 0 14%,transparent 14%);clip-path:polygon(0 0,30% 50%,0 100%)}
+.flag[data-cc="RSA"]::after{content:'';position:absolute;inset:0;background:#DE3831;clip-path:polygon(30% 50%,100% 0,100% 30%);background-color:#001489}
+
+/* QAT: granate con borde dentado blanco */
+.flag[data-cc="QAT"]{background:#8A1538;position:relative}
+.flag[data-cc="QAT"]::before{content:'';position:absolute;left:0;top:0;width:33%;height:100%;background:#fff}
+
+/* BIH: azul con triangulo amarillo */
+.flag[data-cc="BIH"]{background:#002395;position:relative}
+.flag[data-cc="BIH"]::before{content:'';position:absolute;inset:0;background:#FECB00;clip-path:polygon(15% 0,100% 0,100% 100%)}
+
+/* SCO: azul con cruz blanca de San Andres */
+.flag[data-cc="SCO"]{background:#0065BD;position:relative}
+.flag[data-cc="SCO"]::before{content:'';position:absolute;inset:0;background:linear-gradient(45deg,transparent 45%,#fff 45% 55%,transparent 55%),linear-gradient(135deg,transparent 45%,#fff 45% 55%,transparent 55%)}
+
+/* HAI: azul/rojo con escudo central */
+.flag[data-cc="HAI"]{background:linear-gradient(180deg,#00209F 0 50%,#D21034 50%);position:relative}
+.flag[data-cc="HAI"]::before{content:'';position:absolute;width:30%;height:40%;background:#fff;left:50%;top:50%;transform:translate(-50%,-50%);border-radius:2px}
+
+/* CIV: naranja/blanco/verde vertical */
+.flag[data-cc="CIV"]{background:linear-gradient(90deg,#F77F00 0 33.33%,#fff 33.33% 66.66%,#009E60 66.66%)}
+
+/* CUW: azul con estrella */
+.flag[data-cc="CUW"]{background:#002B7F;position:relative}
+.flag[data-cc="CUW"]::before{content:'';position:absolute;left:0;top:38%;width:100%;height:8%;background:#F9E814}
+
+/* TUN: rojo con luna y estrella */
+.flag[data-cc="TUN"]{background:#E70013;position:relative}
+.flag[data-cc="TUN"]::before{content:'';position:absolute;width:50%;height:70%;background:#fff;border-radius:50%;left:50%;top:50%;transform:translate(-50%,-50%)}
+.flag[data-cc="TUN"]::after{content:'';position:absolute;width:18%;height:25%;background:#E70013;border-radius:50%;left:50%;top:50%;transform:translate(-50%,-50%)}
+
+/* NOR: rojo con cruz azul/blanca */
+.flag[data-cc="NOR"]{background:#EF2B2D;position:relative}
+.flag[data-cc="NOR"]::before{content:'';position:absolute;left:35%;top:0;width:14%;height:100%;background:#fff}
+.flag[data-cc="NOR"]::after{content:'';position:absolute;left:0;top:43%;width:100%;height:14%;background:#fff;box-shadow:inset 0 0 0 6px #fff,0 0 0 0 transparent}
+
+/* IRQ: rojo/blanco/negro con texto verde */
+.flag[data-cc="IRQ"]{background:linear-gradient(180deg,#CE1126 0 33.33%,#fff 33.33% 66.66%,#000 66.66%)}
+
+/* AUT: rojo/blanco/rojo */
+.flag[data-cc="AUT"]{background:linear-gradient(180deg,#ED2939 0 33.33%,#fff 33.33% 66.66%,#ED2939 66.66%)}
+
+/* JOR: 3 franjas con triangulo rojo */
+.flag[data-cc="JOR"]{background:linear-gradient(180deg,#000 0 33.33%,#fff 33.33% 66.66%,#007A3D 66.66%);position:relative}
+.flag[data-cc="JOR"]::before{content:'';position:absolute;inset:0;background:#CE1126;clip-path:polygon(0 0,40% 50%,0 100%)}
+
+/* UZB: 3 franjas azul/blanco/verde con bordes rojos */
+.flag[data-cc="UZB"]{background:linear-gradient(180deg,#0099B5 0 33.33%,#fff 33.33% 66.66%,#1EB53A 66.66%)}
+
+/* COD: azul cielo con cinta amarilla diagonal y estrella */
+.flag[data-cc="COD"]{background:#007FFF;position:relative}
+.flag[data-cc="COD"]::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,transparent 35%,#F7D618 35% 50%,#CE1021 50% 60%,#F7D618 60% 75%,transparent 75%)}
+
+/* PAN: cuatro cuadrantes blanco/rojo/azul/blanco */
+.flag[data-cc="PAN"]{background:#fff;position:relative}
+.flag[data-cc="PAN"]::before{content:'';position:absolute;right:0;top:0;width:50%;height:50%;background:#005AA7}
+.flag[data-cc="PAN"]::after{content:'';position:absolute;left:0;bottom:0;width:50%;height:50%;background:#D21034}
+
+/* CPV: 3 franjas azul/blanco/azul con franja roja y estrellas */
+.flag[data-cc="CPV"]{background:linear-gradient(180deg,#003893 0 60%,#fff 60% 65%,#CF2027 65% 70%,#fff 70% 75%,#003893 75%)}
 
 /* Fallback: si no hay match, queda gris */
 .flag:not([data-cc]){background:#444}
@@ -916,6 +1009,110 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
 
 .adm-round-header{font-size:11px;font-weight:800;color:var(--accent);text-transform:uppercase;letter-spacing:.7px;margin:14px 0 8px;padding-bottom:5px;border-bottom:1px solid var(--b2)}
 .adm-round-header:first-child{margin-top:0}
+
+/* ═════════════════════════════════════════════
+   DESIGN SYSTEM v14 — COMPONENTES UNIFICADOS
+   Usar estas clases en TODA la app para sinergia.
+   ═════════════════════════════════════════════ */
+
+/* PAGE: contenedor base de cada pantalla con padding lateral consistente */
+.page{padding:0 var(--s4)}
+.page.active{padding:0 var(--s4)}
+
+/* PAGE HEADER: header consistente en todas las paginas */
+.page-header{padding:var(--s5) 0 var(--s4)}
+.page-header-eyebrow{font-family:'Inter',sans-serif;font-size:var(--fs-xxs);font-weight:800;color:var(--accent);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:var(--s2);display:inline-block;padding:3px 8px;background:var(--accent-dim);border-radius:3px}
+.page-header-title{font-family:'Anton','Bebas Neue',sans-serif;font-size:var(--fs-display);letter-spacing:0;line-height:1;margin-bottom:var(--s2);color:var(--t);text-transform:uppercase}
+.page-header-sub{font-size:var(--fs-sm);color:var(--t2);line-height:1.5;margin-bottom:var(--s4)}
+
+/* SECTION: bloque de seccion con gap uniforme */
+.section{margin-bottom:var(--s6)}
+.section-label{font-size:var(--fs-xs);font-weight:800;color:var(--t2);text-transform:uppercase;letter-spacing:.8px;margin-bottom:var(--s3);padding:0 var(--s1);display:flex;align-items:center;justify-content:space-between}
+.section-label-link{font-size:var(--fs-xs);color:var(--accent);font-weight:600;cursor:pointer}
+
+/* CARD: base para TODAS las cards de la app */
+.ds-card{background:var(--card-bg);border:var(--card-border);border-radius:var(--card-radius);padding:var(--card-pad);transition:border-color .2s, transform .15s}
+.ds-card.clickable{cursor:pointer}
+.ds-card.clickable:active{transform:scale(.99)}
+.ds-card.clickable:hover{border-color:var(--b3)}
+.ds-card.highlight{border-color:rgba(255,215,0,.3);background:linear-gradient(180deg,rgba(255,215,0,.04),rgba(255,215,0,.01))}
+
+/* MATCH CARD: la card de partido UNIFICADA — Home, Grupos, etc */
+.match-card{background:var(--card-bg);border:var(--card-border);border-radius:var(--card-radius);padding:var(--s5) var(--s4);margin-bottom:var(--s3);transition:border-color .2s}
+.match-card.locked{opacity:.6}
+.match-card.urgent{border-color:rgba(255,215,0,.45);background:linear-gradient(180deg,rgba(255,215,0,.06),transparent);box-shadow:0 0 24px rgba(255,215,0,.06)}
+.match-card.predicted{border-color:rgba(91,201,125,.18)}
+.match-card-meta{display:flex;justify-content:space-between;align-items:center;font-size:var(--fs-xs);color:var(--t3);margin-bottom:var(--s3);text-transform:uppercase;letter-spacing:.6px;font-weight:700}
+.match-card-meta-left{display:flex;gap:var(--s2);align-items:center;flex-wrap:wrap}
+.match-card-meta-time{font-family:'Anton',sans-serif;font-size:18px;color:var(--accent);letter-spacing:.5px;line-height:1}
+.match-card-meta-day{font-size:11px;color:var(--t2);font-weight:700}
+.match-card-meta-grp{font-size:11px;color:var(--t3);background:var(--bg4);padding:3px 8px;border-radius:6px;font-weight:700}
+.match-card-venue{font-size:var(--fs-xs);color:var(--t3);margin-bottom:var(--s4);display:flex;align-items:center;gap:6px;font-weight:500}
+.match-card-venue svg{width:13px;height:13px;flex-shrink:0;opacity:.7}
+/* GRID SIMETRICO: 3 columnas (equipo-izq | scores | equipo-der) con anchos iguales en los laterales */
+.match-card-row{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:var(--s2)}
+.match-card-team{display:flex;align-items:center;gap:var(--s3);min-width:0}
+.match-card-team.left{justify-content:flex-start}
+.match-card-team.right{justify-content:flex-end}
+.match-card-team-name{font-family:'Anton','Bebas Neue',sans-serif;font-size:24px;color:var(--t);text-transform:uppercase;letter-spacing:.5px;line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.match-card-score{display:flex;align-items:center;gap:var(--s2);flex-shrink:0;justify-self:center}
+.match-card-score-input{width:56px;height:56px;text-align:center;font-family:'Anton','Bebas Neue',sans-serif;font-size:30px;font-weight:700;color:var(--t);background:var(--bg4);border:1.5px solid var(--b2);border-radius:10px;padding:0;line-height:1}
+.match-card-score-input:focus{border-color:var(--accent);background:var(--bg5)}
+.match-card-score-input:disabled{opacity:.5;cursor:not-allowed}
+.match-card-score-sep{color:var(--t3);font-size:24px;font-weight:600;font-family:'Anton',sans-serif}
+.match-card-lock{font-size:var(--fs-tn);color:var(--accent);text-align:center;margin-top:var(--s2);font-weight:600}
+.match-card-lock.urgent-lock{color:var(--red)}
+
+/* STATS GRID: grid 2x2 unificado para Home, Mi Quiniela, etc */
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--s2);margin-bottom:var(--s4)}
+.stat-cell{background:var(--card-bg);border:var(--card-border);border-radius:var(--card-radius);padding:var(--s4) var(--s3);text-align:center}
+.stat-cell-value{font-family:'Anton','Bebas Neue',sans-serif;font-size:32px;line-height:1;color:var(--t);margin-bottom:var(--s1)}
+.stat-cell-value.gold{color:var(--accent)}
+.stat-cell-label{font-size:var(--fs-xs);color:var(--t2);text-transform:uppercase;letter-spacing:.6px;font-weight:600}
+
+/* RANKING PODIO Y TABLA */
+.podium-v2{display:flex;align-items:flex-end;justify-content:center;gap:var(--s2);padding:var(--s4) 0 var(--s5);margin-bottom:var(--s4);border-bottom:1px solid var(--b)}
+.podium-spot{flex:1;display:flex;flex-direction:column;align-items:center;text-align:center;max-width:120px}
+.podium-spot-1{order:2}.podium-spot-2{order:1}.podium-spot-3{order:3}
+.podium-avatar{width:56px;height:56px;border-radius:50%;background:var(--bg4);display:flex;align-items:center;justify-content:center;font-family:'Anton',sans-serif;font-size:22px;color:var(--t);border:2px solid var(--b);margin-bottom:var(--s2);position:relative}
+.podium-spot-1 .podium-avatar{width:72px;height:72px;border-color:var(--accent);box-shadow:0 6px 20px rgba(255,215,0,.25);font-size:28px}
+.podium-spot-2 .podium-avatar{border-color:rgba(192,192,192,.4)}
+.podium-spot-3 .podium-avatar{border-color:rgba(205,127,50,.4)}
+.podium-medal{position:absolute;top:-6px;right:-6px;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#0A0A0A}
+.podium-medal-1{background:var(--accent)}
+.podium-medal-2{background:#C0C0C0}
+.podium-medal-3{background:#CD7F32}
+.podium-name{font-size:var(--fs-xs);color:var(--t);font-weight:600;margin-bottom:2px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.podium-pts{font-family:'Anton',sans-serif;font-size:var(--fs-h3);color:var(--accent)}
+.podium-empty{color:var(--t3);font-size:var(--fs-xs);padding:var(--s4) 0}
+
+.rank-row-v2{display:flex;align-items:center;gap:var(--s3);padding:var(--s3) var(--s4);background:var(--card-bg);border:var(--card-border);border-radius:var(--card-radius);margin-bottom:var(--s2);transition:border-color .2s}
+.rank-row-v2.me{border-color:var(--accent);background:linear-gradient(180deg,rgba(255,215,0,.06),rgba(255,215,0,.01))}
+.rank-row-v2-pos{font-family:'Anton',sans-serif;font-size:20px;color:var(--t2);min-width:28px;text-align:center}
+.rank-row-v2.me .rank-row-v2-pos{color:var(--accent)}
+.rank-row-v2-av{width:36px;height:36px;border-radius:50%;background:var(--bg4);display:flex;align-items:center;justify-content:center;font-family:'Anton',sans-serif;font-size:14px;color:var(--t);flex-shrink:0}
+.rank-row-v2-info{flex:1;min-width:0}
+.rank-row-v2-name{font-size:var(--fs-body);font-weight:600;color:var(--t);margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rank-row-v2-meta{font-size:var(--fs-tn);color:var(--t3)}
+.rank-row-v2-pts{font-family:'Anton',sans-serif;font-size:22px;color:var(--accent);text-align:right;flex-shrink:0}
+
+/* Ranking: tabs de seleccion de liga */
+.rank-tabs{display:flex;gap:6px;margin-bottom:var(--s4);overflow-x:auto;padding-bottom:4px;-ms-overflow-style:none;scrollbar-width:none}
+.rank-tabs::-webkit-scrollbar{display:none}
+.rank-tab{flex-shrink:0;background:var(--bg3);border:1px solid var(--b);color:var(--t2);padding:8px 14px;border-radius:24px;font-size:var(--fs-sm);font-weight:600;cursor:pointer;transition:all .15s;white-space:nowrap;font-family:inherit}
+.rank-tab:hover{border-color:var(--b3);color:var(--t)}
+.rank-tab.active{background:var(--accent);color:#0A0A0A;border-color:var(--accent)}
+.rank-tab.locked{opacity:.4;cursor:not-allowed}
+.rank-tab-pending{background:rgba(255,165,0,.1);border-color:rgba(255,165,0,.3);color:#FFA500}
+
+/* Banner de premio total */
+.rank-prize-banner{background:linear-gradient(135deg,rgba(255,215,0,.12),rgba(255,215,0,.04));border:1px solid rgba(255,215,0,.25);border-radius:var(--card-radius);padding:var(--s4) var(--s5);margin-bottom:var(--s4);display:flex;align-items:center;justify-content:space-between;gap:var(--s3)}
+.rank-prize-info{flex:1;min-width:0}
+.rank-prize-label{font-size:var(--fs-xxs);font-weight:800;color:var(--accent);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:4px}
+.rank-prize-amount{font-family:'Anton',sans-serif;font-size:36px;line-height:1;color:var(--accent);margin-bottom:2px}
+.rank-prize-sub{font-size:var(--fs-xs);color:var(--t2)}
+.rank-prize-icon{width:48px;height:48px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#0A0A0A}
+.rank-prize-empty{padding:var(--s5);text-align:center;color:var(--t2);font-size:var(--fs-sm);background:var(--card-bg);border:var(--card-border);border-radius:var(--card-radius);margin-bottom:var(--s4)}
 </style>
 <!-- ════════════════════════════════════════
      FIREBASE AUTH (compat builds, fáciles de usar sin bundler)
@@ -953,11 +1150,7 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
   <div class="ob-grid"></div>
   <div class="ob-hero">
     <div class="ob-logo-wrap">
-      <svg class="ob-logo-big" viewBox="0 0 96 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect width="96" height="64" rx="14" fill="#1A150C"/>
-        <text x="8" y="46" font-family="Bebas Neue, sans-serif" font-size="38" font-weight="700" fill="#F5EFD9" letter-spacing="1">WC</text>
-        <text x="50" y="46" font-family="Bebas Neue, sans-serif" font-size="38" font-weight="700" fill="#FFD700" letter-spacing="1">26</text>
-      </svg>
+      <div class="ob-logo-text">WC<span>26</span></div>
     </div>
     <div class="ob-title">Quiniela<span>Mundial 2026</span></div>
   </div>
@@ -995,6 +1188,7 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
     <div class="ob-btns">
       <button class="btn btn-primary btn-full" onclick="goTo('screen-register')">Crear cuenta gratis</button>
       <button class="btn btn-secondary btn-full" onclick="goTo('screen-login')">Ya tengo cuenta</button>
+      <button id="dev-admin-btn" class="btn btn-secondary btn-full" onclick="devAdminLogin()" style="display:none;border-color:#FF6B35;color:#FF6B35;margin-top:6px;font-size:13px">⚡ Dev Admin (local only)</button>
     </div>
   </div>
 </div>
@@ -1008,10 +1202,11 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
       Volver
     </div>
     <div class="logo-svg">
-      <svg class="logo-mark" viewBox="0 0 30 30" fill="none"><rect width="30" height="30" rx="7" fill="#1A150C"/><path d="M7 7h16v2.5H7zM7 11h10v2.5H7zM7 15h12v2.5H7zM7 19h7.5v2.5H7z" fill="#FFD700"/><path d="M18 12.5l4 4-4 4" stroke="#FFE55C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      
       <span class="logo-text">WC<span>26</span></span>
     </div>
-    <div class="auth-title">Crear cuenta</div>
+    <div class="dash-hero-eyebrow" style="margin-top:18px">MUNDIAL 2026 · USA · CANADA · MEXICO</div>
+    <div class="auth-title" style="margin-top:8px">Crear cuenta</div>
     <div class="auth-sub">Unite y empieza tu quiniela del Mundial 2026</div>
     <div class="field"><label>Nombre de usuario</label><input type="text" id="reg-name" placeholder="el_pulpo_pablo" maxlength="20" autocomplete="username"></div>
     <div class="field"><label>Email</label><input type="email" id="reg-email" placeholder="tu@email.com" autocomplete="email"></div>
@@ -1045,10 +1240,11 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
       Volver
     </div>
     <div class="logo-svg">
-      <svg class="logo-mark" viewBox="0 0 30 30" fill="none"><rect width="30" height="30" rx="7" fill="#1A150C"/><path d="M7 7h16v2.5H7zM7 11h10v2.5H7zM7 15h12v2.5H7zM7 19h7.5v2.5H7z" fill="#FFD700"/><path d="M18 12.5l4 4-4 4" stroke="#FFE55C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      
       <span class="logo-text">WC<span>26</span></span>
     </div>
-    <div class="auth-title">Bienvenido</div>
+    <div class="dash-hero-eyebrow" style="margin-top:18px">MUNDIAL 2026 · USA · CANADA · MEXICO</div>
+    <div class="auth-title" style="margin-top:8px">Bienvenido</div>
     <div class="auth-sub">Inicia sesion para ver tu quiniela</div>
     <div class="field"><label>Email</label><input type="email" id="log-email" placeholder="tu@email.com" autocomplete="email"></div>
     <div class="field"><label>Contrasena</label><input type="password" id="log-pass" placeholder="Tu contrasena" autocomplete="current-password"></div>
@@ -1069,7 +1265,7 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
 <div id="screen-app" class="screen">
   <header class="app-header">
     <div class="logo-svg">
-      <svg class="logo-mark" viewBox="0 0 30 30" fill="none"><rect width="30" height="30" rx="7" fill="#1A150C"/><path d="M7 7h16v2.5H7zM7 11h10v2.5H7zM7 15h12v2.5H7zM7 19h7.5v2.5H7z" fill="#FFD700"/><path d="M18 12.5l4 4-4 4" stroke="#FFE55C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      
       <span class="logo-text">WC<span>26</span></span>
     </div>
     <div class="app-header-right">
@@ -1141,6 +1337,10 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
 
       <div id="grupos-content">
         <div class="active-liga-header" id="grupos-liga-hd"></div>
+
+        <div class="dash-hero-eyebrow" style="margin-top:10px">PARTIDOS · MUNDIAL 2026</div>
+        <div class="sec-title" style="margin-top:6px">Predicciones</div>
+        <p class="sec-sub">Predice los partidos de grupos y eliminatorias</p>
 
         <!-- Tabs de modos -->
         <div class="mode-tabs">
@@ -1230,7 +1430,8 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
       <div id="mq-content">
         <div class="active-liga-header" id="mq-liga-hd"></div>
         <div class="mq-head">
-          <div class="sec-title">Mi quiniela</div>
+          <div class="dash-hero-eyebrow">TU QUINIELA · MUNDIAL 2026</div>
+          <div class="sec-title" style="margin-top:6px">Mi quiniela</div>
           <p class="sec-sub" id="mq-sub">Resumen de tus predicciones</p>
         </div>
         <div class="mq-stats">
@@ -1240,10 +1441,9 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
           <div class="mq-stat"><div class="mq-n" id="mq-pts">0</div><div class="mq-l">Puntos</div></div>
         </div>
 
-        <!-- Acceso a Mis Ligas (gestion de inscripciones) -->
+        <!-- Mis ligas (gestion de inscripciones existentes) -->
         <div class="sec-label" style="margin-top:18px">Mis ligas <span id="my-leagues-count" style="opacity:.6;font-weight:400"></span></div>
         <div id="my-leagues-list"></div>
-        <div id="tiers-list" style="margin-top:14px"></div>
 
         <div id="mq-summary" style="margin-top:18px"></div>
       </div>
@@ -1251,24 +1451,35 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
 
     <!-- RANKING -->
     <div id="page-ranking" class="page">
-      <div class="sec-title">Ranking</div>
+      <div class="dash-hero-eyebrow">RANKING · MUNDIAL 2026</div>
+      <div class="sec-title" style="margin-top:6px">Tabla de posiciones</div>
       <p class="sec-sub" id="rank-sub">Cargando...</p>
+      <!-- Tabs de ligas (selector) -->
+      <div class="rank-tabs" id="rank-tabs"></div>
+      <!-- Banner del premio total -->
+      <div class="rank-prize-banner" id="rank-prize-banner"></div>
+      <!-- Podio -->
       <div class="podium" id="rank-podium"></div>
+      <!-- Tabla -->
       <div class="rank-table" id="rank-table"></div>
     </div>
 
     <!-- PERFIL (avatar) -->
     <div id="page-perfil" class="page">
-      <div class="sec-title">Perfil</div>
+      <div class="dash-hero-eyebrow">CUENTA · MUNDIAL 2026</div>
+      <div class="sec-title" style="margin-top:6px">Perfil</div>
 
       <div class="pf-hd">
         <div class="avatar pf-av-lg" id="pf-av">??</div>
         <div>
           <div class="pf-name" id="pf-name-disp">Usuario</div>
           <div class="pf-email" id="pf-email-disp">email</div>
-          <div style="display:flex;gap:6px;flex-wrap:wrap"><span class="badge badge-gold" id="pf-pts">0 pts</span><span class="badge badge-gray" id="pf-team">Sin equipo</span></div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap"><span class="badge badge-gold" id="pf-pts">0 pts</span><span class="badge badge-gray" id="pf-team">Sin equipo</span><span class="badge" id="pf-vendor-badge" style="display:none;background:rgba(255,107,53,.15);color:#FF6B35;border:1px solid rgba(255,107,53,.3)">VENDEDOR</span></div>
         </div>
       </div>
+
+      <!-- Panel de vendedor (solo si el usuario es vendedor) -->
+      <div id="pf-referrer-panel"></div>
 
       <!-- Historial de transacciones -->
       <div id="ledger-section" class="hidden" style="margin-bottom:18px">
@@ -1376,29 +1587,54 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
 /* ══════════════════════════════════════════
    DATA
 ══════════════════════════════════════════ */
+/* GRUPOS OFICIALES FIFA WORLD CUP 2026
+   Fuente: Final Draw del 5 de diciembre 2025 (Kennedy Center, Washington DC)
+   42 equipos clasificados directos + 6 ganadores de playoffs
+   PAISES QUE NO CLASIFICARON (mencionados): Italia, Venezuela, Chile, Peru,
+   Polonia, Hungria, Camerun, Costa Rica, Dinamarca, Serbia, Wales, Ucrania, Nigeria. */
 const GD = {
-  A:[{n:'Mexico',c:'MEX',iso:'mx'},{n:'EE.UU.',c:'USA',iso:'us'},{n:'Jamaica',c:'JAM',iso:'jm'},{n:'Uruguay',c:'URU',iso:'uy'}],
-  B:[{n:'Argentina',c:'ARG',iso:'ar'},{n:'Peru',c:'PER',iso:'pe'},{n:'Chile',c:'CHI',iso:'cl'},{n:'Marruecos',c:'MAR',iso:'ma'}],
-  C:[{n:'Brasil',c:'BRA',iso:'br'},{n:'Colombia',c:'COL',iso:'co'},{n:'Paraguay',c:'PAR',iso:'py'},{n:'N.Zelanda',c:'NZL',iso:'nz'}],
-  D:[{n:'Francia',c:'FRA',iso:'fr'},{n:'Belgica',c:'BEL',iso:'be'},{n:'Nigeria',c:'NGA',iso:'ng'},{n:'A.Saudita',c:'KSA',iso:'sa'}],
-  E:[{n:'Espana',c:'ESP',iso:'es'},{n:'Alemania',c:'GER',iso:'de'},{n:'Costa Rica',c:'CRC',iso:'cr'},{n:'Senegal',c:'SEN',iso:'sn'}],
-  F:[{n:'Portugal',c:'POR',iso:'pt'},{n:'Polonia',c:'POL',iso:'pl'},{n:'Ghana',c:'GHA',iso:'gh'},{n:'Ecuador',c:'ECU',iso:'ec'}],
-  G:[{n:'Inglaterra',c:'ENG',iso:'gb-eng'},{n:'P.Bajos',c:'NED',iso:'nl'},{n:'Turquia',c:'TUR',iso:'tr'},{n:'Camerun',c:'CMR',iso:'cm'}],
-  H:[{n:'Italia',c:'ITA',iso:'it'},{n:'Croacia',c:'CRO',iso:'hr'},{n:'Japon',c:'JPN',iso:'jp'},{n:'Canada',c:'CAN',iso:'ca'}],
-  I:[{n:'Corea S.',c:'KOR',iso:'kr'},{n:'Australia',c:'AUS',iso:'au'},{n:'Iran',c:'IRN',iso:'ir'},{n:'Suiza',c:'SUI',iso:'ch'}],
-  J:[{n:'Dinamarca',c:'DEN',iso:'dk'},{n:'Serbia',c:'SRB',iso:'rs'},{n:'Ucrania',c:'UKR',iso:'ua'},{n:'Venezuela',c:'VEN',iso:'ve'}],
-  K:[{n:'Suecia',c:'SWE',iso:'se'},{n:'Rumania',c:'ROU',iso:'ro'},{n:'Egipto',c:'EGY',iso:'eg'},{n:'Bolivia',c:'BOL',iso:'bo'}],
-  L:[{n:'R.Checa',c:'CZE',iso:'cz'},{n:'Hungria',c:'HUN',iso:'hu'},{n:'Argelia',c:'ALG',iso:'dz'},{n:'Honduras',c:'HON',iso:'hn'}],
+  A:[{n:'Mexico',c:'MEX',iso:'mx'},{n:'Sudafrica',c:'RSA',iso:'za'},{n:'Corea S.',c:'KOR',iso:'kr'},{n:'Chequia',c:'CZE',iso:'cz'}],
+  B:[{n:'Canada',c:'CAN',iso:'ca'},{n:'Suiza',c:'SUI',iso:'ch'},{n:'Qatar',c:'QAT',iso:'qa'},{n:'Bosnia',c:'BIH',iso:'ba'}],
+  C:[{n:'Brasil',c:'BRA',iso:'br'},{n:'Marruecos',c:'MAR',iso:'ma'},{n:'Escocia',c:'SCO',iso:'gb-sct'},{n:'Haiti',c:'HAI',iso:'ht'}],
+  D:[{n:'EE.UU.',c:'USA',iso:'us'},{n:'Paraguay',c:'PAR',iso:'py'},{n:'Australia',c:'AUS',iso:'au'},{n:'Turquia',c:'TUR',iso:'tr'}],
+  E:[{n:'Alemania',c:'GER',iso:'de'},{n:'Ecuador',c:'ECU',iso:'ec'},{n:'C.Marfil',c:'CIV',iso:'ci'},{n:'Curazao',c:'CUW',iso:'cw'}],
+  F:[{n:'P.Bajos',c:'NED',iso:'nl'},{n:'Japon',c:'JPN',iso:'jp'},{n:'Tunez',c:'TUN',iso:'tn'},{n:'Suecia',c:'SWE',iso:'se'}],
+  G:[{n:'Belgica',c:'BEL',iso:'be'},{n:'Iran',c:'IRN',iso:'ir'},{n:'Egipto',c:'EGY',iso:'eg'},{n:'N.Zelanda',c:'NZL',iso:'nz'}],
+  H:[{n:'Espana',c:'ESP',iso:'es'},{n:'Uruguay',c:'URU',iso:'uy'},{n:'A.Saudita',c:'KSA',iso:'sa'},{n:'Cabo Verde',c:'CPV',iso:'cv'}],
+  I:[{n:'Francia',c:'FRA',iso:'fr'},{n:'Senegal',c:'SEN',iso:'sn'},{n:'Noruega',c:'NOR',iso:'no'},{n:'Iraq',c:'IRQ',iso:'iq'}],
+  J:[{n:'Argentina',c:'ARG',iso:'ar'},{n:'Austria',c:'AUT',iso:'at'},{n:'Argelia',c:'ALG',iso:'dz'},{n:'Jordania',c:'JOR',iso:'jo'}],
+  K:[{n:'Portugal',c:'POR',iso:'pt'},{n:'Colombia',c:'COL',iso:'co'},{n:'Uzbekistan',c:'UZB',iso:'uz'},{n:'R.D.Congo',c:'COD',iso:'cd'}],
+  L:[{n:'Inglaterra',c:'ENG',iso:'gb-eng'},{n:'Croacia',c:'CRO',iso:'hr'},{n:'Panama',c:'PAN',iso:'pa'},{n:'Ghana',c:'GHA',iso:'gh'}],
 };
 
 /* Mapa ISO 3166-1 alpha-2 → código 3 letras usado para banderas CSS */
 const ISO_TO_CC={
-  ar:'ARG',br:'BRA',mx:'MEX',us:'USA',ca:'CAN',jm:'JAM',uy:'URU',pe:'PER',cl:'CHI',
-  ma:'MAR',co:'COL',py:'PAR',nz:'NZL',fr:'FRA',be:'BEL',ng:'NGA',sa:'KSA',es:'ESP',
-  de:'GER',cr:'CRC',sn:'SEN',pt:'POR',pl:'POL',gh:'GHA',ec:'ECU','gb-eng':'ENG',
-  nl:'NED',tr:'TUR',cm:'CMR',it:'ITA',hr:'CRO',jp:'JPN',kr:'KOR',au:'AUS',ir:'IRN',
-  ch:'SUI',dk:'DEN',rs:'SRB',ua:'UKR',ve:'VEN',se:'SWE',ro:'ROU',eg:'EGY',bo:'BOL',
-  cz:'CZE',hu:'HUN',dz:'ALG',hn:'HON',
+  // Hosts
+  mx:'MEX',us:'USA',ca:'CAN',
+  // Group A
+  za:'RSA',kr:'KOR',cz:'CZE',
+  // Group B
+  ch:'SUI',qa:'QAT',ba:'BIH',
+  // Group C
+  br:'BRA',ma:'MAR','gb-sct':'SCO',ht:'HAI',
+  // Group D
+  py:'PAR',au:'AUS',tr:'TUR',
+  // Group E
+  de:'GER',ec:'ECU',ci:'CIV',cw:'CUW',
+  // Group F
+  nl:'NED',jp:'JPN',tn:'TUN',se:'SWE',
+  // Group G
+  be:'BEL',ir:'IRN',eg:'EGY',nz:'NZL',
+  // Group H
+  es:'ESP',uy:'URU',sa:'KSA',cv:'CPV',
+  // Group I
+  fr:'FRA',sn:'SEN',no:'NOR',iq:'IRQ',
+  // Group J
+  ar:'ARG',at:'AUT',dz:'ALG',jo:'JOR',
+  // Group K
+  pt:'POR',co:'COL',uz:'UZB',cd:'COD',
+  // Group L
+  'gb-eng':'ENG',hr:'CRO',pa:'PAN',gh:'GHA',
 };
 
 /* Helper: render bandera CSS inline (NO requiere red).
@@ -1636,6 +1872,272 @@ function pushLedger(user, type, amount, note){
   });
   // Cap del ledger a 200 transacciones
   if(user.ledger.length>200)user.ledger=user.ledger.slice(-200);
+}
+
+/* ══════════════════════════════════════════
+   SISTEMA DE LOGS GLOBAL (v15)
+   Cada accion importante se guarda en DB.logs[] para audit trail.
+   Tipos de log:
+     - 'auth': login/logout/registro
+     - 'pred': predicciones (grupo/KO/champion/topscorer)
+     - 'entry': inscripciones (request/approve/reject/leave)
+     - 'admin': acciones admin (acreditar saldo, ingresar resultado, lock toggle)
+     - 'config': cambios de configuracion
+   Cada log tiene: id, ts, type, action, actorId, actorName, targetId, targetName, payload
+   ══════════════════════════════════════════ */
+function pushLog(entry){
+  if(!DB.logs)DB.logs=[];
+  const log={
+    id:'log_'+Date.now().toString(36)+Math.random().toString(36).slice(2,5),
+    ts:Date.now(),
+    type:entry.type||'misc',
+    action:entry.action||'',
+    actorId:entry.actorId||(CUR?CUR.id:'unknown'),
+    actorName:entry.actorName||(CUR?CUR.name:'Sistema'),
+    actorEmail:entry.actorEmail||(CUR?CUR.email:''),
+    targetId:entry.targetId||null,
+    targetName:entry.targetName||null,
+    payload:entry.payload||null,
+  };
+  DB.logs.unshift(log); // mas reciente primero
+  // Cap a 1000 logs
+  if(DB.logs.length>1000)DB.logs=DB.logs.slice(0,1000);
+  saveDB();
+}
+function getAllLogs(){return DB.logs||[];}
+function getLogsByActor(userId){return getAllLogs().filter(l=>l.actorId===userId);}
+function getLogsByTarget(targetId){return getAllLogs().filter(l=>l.targetId===targetId);}
+function getLogsByType(type){return getAllLogs().filter(l=>l.type===type);}
+function getLogsByMatchKey(matchKey){
+  return getAllLogs().filter(l=>l.type==='pred'&&l.payload&&l.payload.matchKey===matchKey);
+}
+function fmtLogTime(ts){
+  const d=new Date(ts);
+  const now=Date.now();
+  const diff=now-ts;
+  if(diff<60000)return 'hace un momento';
+  if(diff<3600000)return `hace ${Math.floor(diff/60000)} min`;
+  if(diff<86400000)return `hace ${Math.floor(diff/3600000)}h`;
+  if(diff<604800000)return `hace ${Math.floor(diff/86400000)}d`;
+  return d.toLocaleDateString('es-MX',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
+}
+function logIcon(type){
+  const icons={
+    auth:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg>',
+    pred:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>',
+    entry:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>',
+    admin:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>',
+    config:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>',
+  };
+  return icons[type]||icons.config;
+}
+
+/* ══════════════════════════════════════════
+   SISTEMA DE COMISIONES (referrals/afiliados)
+   - DB.referrers: vendedores activos con codigo + % comision
+   - DB.commissions: cada inscripcion aprobada genera una comision
+   - Usuario tiene campo 'referrerId' que indica quien lo refirio
+   ══════════════════════════════════════════ */
+const RAKE_RATE = 0.10;            // tu rake (configurable en DB.config)
+const DEFAULT_COMMISSION = 0.30;   // 30% del rake al vendedor
+
+function getRakeRate(){
+  if(DB.config&&typeof DB.config.rakeRate==='number')return DB.config.rakeRate;
+  return RAKE_RATE;
+}
+
+function findReferrerByCode(code){
+  if(!code)return null;
+  const c=code.trim().toUpperCase();
+  return (DB.referrers||[]).find(r=>r.code===c&&r.isActive);
+}
+function findReferrerById(id){
+  return (DB.referrers||[]).find(r=>r.id===id);
+}
+function findReferrerByEmail(email){
+  if(!email)return null;
+  const e=email.trim().toLowerCase();
+  return (DB.referrers||[]).find(r=>(r.email||'').toLowerCase()===e&&r.isActive);
+}
+
+/* Genera nuevo ID/codigo de vendedor */
+function newReferrerId(){
+  return 'ref_'+Date.now().toString(36)+Math.random().toString(36).slice(2,5);
+}
+function suggestReferralCode(name){
+  if(!name)return 'REF'+Math.floor(Math.random()*9999);
+  const clean=name.trim().toUpperCase().replace(/[^A-Z]/g,'').slice(0,8);
+  return clean+Math.floor(Math.random()*99);
+}
+
+/* Crea un nuevo vendedor (solo admin) */
+function createReferrer({name,code,email,commissionRate}){
+  if(!isAdmin(CUR))throw new Error('Solo admins');
+  if(!name||!code)throw new Error('Nombre y codigo requeridos');
+  const codeUpper=code.trim().toUpperCase();
+  if(findReferrerByCode(codeUpper))throw new Error('Ya existe un vendedor con ese codigo');
+  const ref={
+    id:newReferrerId(),
+    code:codeUpper,
+    name:name.trim(),
+    email:(email||'').trim().toLowerCase(),
+    commissionRate:typeof commissionRate==='number'?commissionRate:DEFAULT_COMMISSION,
+    createdAt:Date.now(),
+    isActive:true,
+  };
+  if(!DB.referrers)DB.referrers=[];
+  DB.referrers.push(ref);
+  saveDB();
+  pushLog({type:'admin',action:'create_referrer',targetId:ref.id,targetName:ref.name,
+    payload:{code:ref.code,commissionRate:ref.commissionRate}});
+  return ref;
+}
+
+/* Asociar usuario con vendedor (al registrarse con codigo) */
+function attachReferrer(user,referrerId){
+  if(!user||!referrerId)return;
+  if(user.referrerId)return; // ya asociado, no sobrescribir
+  user.referrerId=referrerId;
+  user.referredAt=Date.now();
+  saveDB();
+  const ref=findReferrerById(referrerId);
+  pushLog({type:'admin',action:'attach_referrer',
+    targetId:user.id,targetName:user.name,
+    payload:{referrerId,referrerName:ref?ref.name:'?',referrerCode:ref?ref.code:'?'}});
+}
+
+/* Cuando una inscripcion se aprueba: genera la comision pendiente */
+function generateCommissionForEntry(user,entry){
+  if(!user||!entry)return null;
+  if(!user.referrerId)return null; // sin vendedor → sin comision
+  const ref=findReferrerById(user.referrerId);
+  if(!ref||!ref.isActive)return null;
+  // Verificar que no hay ya una comision para esta entry
+  const existing=(DB.commissions||[]).find(c=>c.userId===user.id&&c.quinielaId===entry.quinielaId);
+  if(existing)return existing;
+  const amountInscribed=parseInt(entry.tier);
+  const rakeRate=getRakeRate();
+  const rakeAmount=amountInscribed*rakeRate;
+  const commissionRate=ref.commissionRate||DEFAULT_COMMISSION;
+  const commissionAmount=rakeAmount*commissionRate;
+  const com={
+    id:'com_'+Date.now().toString(36)+Math.random().toString(36).slice(2,5),
+    referrerId:ref.id,
+    referrerCode:ref.code,
+    referrerName:ref.name,
+    userId:user.id,
+    userName:user.name,
+    quinielaId:entry.quinielaId,
+    tier:entry.tier,
+    tierName:TIER_NAMES[entry.tier]||'Liga',
+    amountInscribed,
+    rakeRate,
+    rakeAmount:Math.round(rakeAmount*100)/100,
+    commissionRate,
+    commissionAmount:Math.round(commissionAmount*100)/100,
+    status:'pending',
+    createdAt:Date.now(),
+    paidAt:null,
+  };
+  if(!DB.commissions)DB.commissions=[];
+  DB.commissions.push(com);
+  saveDB();
+  pushLog({type:'admin',action:'generate_commission',
+    targetId:ref.id,targetName:ref.name,
+    payload:{commissionId:com.id,amount:com.commissionAmount,tier:entry.tier,userName:user.name}});
+  return com;
+}
+
+/* Marcar comision como pagada (admin) */
+function markCommissionPaid(commissionId){
+  if(!isAdmin(CUR)){toast('Solo admins','error');return;}
+  const com=(DB.commissions||[]).find(c=>c.id===commissionId);
+  if(!com){toast('Comision no encontrada','error');return;}
+  if(com.status==='paid'){toast('Ya estaba pagada','error');return;}
+  com.status='paid';
+  com.paidAt=Date.now();
+  com.paidBy=CUR.id;
+  saveDB();
+  pushLog({type:'admin',action:'pay_commission',
+    targetId:com.referrerId,targetName:com.referrerName,
+    payload:{commissionId:com.id,amount:com.commissionAmount}});
+  toast(`✓ Comision $${com.commissionAmount} marcada como pagada`,'success');
+  return com;
+}
+function markAllCommissionsPaidForReferrer(referrerId){
+  if(!isAdmin(CUR)){toast('Solo admins','error');return;}
+  const pending=(DB.commissions||[]).filter(c=>c.referrerId===referrerId&&c.status==='pending');
+  if(pending.length===0){toast('Sin pendientes','error');return;}
+  const total=pending.reduce((s,c)=>s+c.commissionAmount,0);
+  if(!confirm(`Marcar ${pending.length} comisiones como pagadas? Total: $${total.toFixed(2)}`))return;
+  pending.forEach(c=>{c.status='paid';c.paidAt=Date.now();c.paidBy=CUR.id;});
+  saveDB();
+  const ref=findReferrerById(referrerId);
+  pushLog({type:'admin',action:'pay_all_commissions',
+    targetId:referrerId,targetName:ref?ref.name:'?',
+    payload:{count:pending.length,total}});
+  toast(`✓ ${pending.length} comisiones pagadas — $${total.toFixed(2)}`,'success');
+}
+
+/* Stats de un vendedor */
+function getReferrerStats(referrerId){
+  const all=(DB.commissions||[]).filter(c=>c.referrerId===referrerId);
+  const pending=all.filter(c=>c.status==='pending');
+  const paid=all.filter(c=>c.status==='paid');
+  const totalGenerated=all.reduce((s,c)=>s+c.commissionAmount,0);
+  const totalPending=pending.reduce((s,c)=>s+c.commissionAmount,0);
+  const totalPaid=paid.reduce((s,c)=>s+c.commissionAmount,0);
+  // Conteo unico de usuarios traidos
+  const referredUserIds=[...new Set(all.map(c=>c.userId))];
+  return {
+    total:all.length,
+    pendingCount:pending.length,
+    paidCount:paid.length,
+    totalGenerated:Math.round(totalGenerated*100)/100,
+    totalPending:Math.round(totalPending*100)/100,
+    totalPaid:Math.round(totalPaid*100)/100,
+    referredUsersCount:referredUserIds.length,
+    commissions:all,
+  };
+}
+
+/* Detecta ?ref=CODIGO en la URL al cargar y guarda en localStorage */
+function checkReferralCodeInUrl(){
+  try{
+    const params=new URLSearchParams(window.location.search);
+    let code=params.get('ref');
+    if(!code){
+      // Tambien aceptar /r/CODIGO
+      const m=window.location.pathname.match(/\/r\/([A-Za-z0-9]+)/);
+      if(m)code=m[1];
+    }
+    if(code){
+      const codeUpper=code.toUpperCase();
+      const ref=findReferrerByCode(codeUpper);
+      if(ref){
+        localStorage.setItem('wc26_pending_ref',codeUpper);
+        // Limpiar URL pero mantener historial
+        const cleanUrl=window.location.origin+window.location.pathname.replace(/\/r\/[A-Za-z0-9]+/,'');
+        window.history.replaceState({},'',cleanUrl);
+      }
+    }
+  }catch(e){}
+}
+function consumePendingReferral(){
+  try{
+    const code=localStorage.getItem('wc26_pending_ref');
+    if(!code)return null;
+    const ref=findReferrerByCode(code);
+    if(ref){
+      localStorage.removeItem('wc26_pending_ref');
+      return ref;
+    }
+    return null;
+  }catch(e){return null;}
+}
+function getReferralLink(code){
+  const origin=window.location.origin;
+  return `${origin}/?ref=${code}`;
 }
 
 /* ══════════════════════════════════════════
@@ -1882,6 +2384,9 @@ if(!DB || DB.schemaVersion !== SCHEMA_VERSION){
 if(!DB.results)DB.results={groups:{},ko:{},champion:'',topscorer:''};
 if(!DB.locks)DB.locks={groups:{},ko:{}};
 if(!DB.config)DB.config={adminWhatsapp:''};
+if(!DB.logs)DB.logs=[];
+if(!DB.referrers)DB.referrers=[];
+if(!DB.commissions)DB.commissions=[];
 let CUR=JSON.parse(localStorage.getItem('wc26v5_cur')||'null');
 
 function saveDB(){localStorage.setItem('wc26v5_db',JSON.stringify(DB));}
@@ -1984,15 +2489,12 @@ function navTo(page){
       document.getElementById('mq-no-liga').classList.add('hidden');
       renderMQ();renderActiveLigaHeader('mq-liga-hd');
     } else {
-      // Aun sin liga activa, mostramos #mq-content para que pueda inscribirse a tiers
-      document.getElementById('mq-content').classList.remove('hidden');
-      document.getElementById('mq-no-liga').classList.add('hidden');
-      // mq-summary se queda vacio porque no hay liga activa
-      const sum=document.getElementById('mq-summary');if(sum)sum.innerHTML='';
+      // Sin liga activa: mostrar empty state que lleva al Home (donde estan los tiers)
+      document.getElementById('mq-content').classList.add('hidden');
+      document.getElementById('mq-no-liga').classList.remove('hidden');
     }
-    // Siempre renderizar mis ligas y tiers disponibles
+    // Renderizar lista de mis ligas (incluso vacia)
     renderMyLeagues();
-    renderTiers();
   }
   if(page==='ranking')renderRanking();
   if(page==='perfil')renderPerfil();
@@ -2024,6 +2526,11 @@ function getOrCreateLocalUser(email,defaults={}){
   };
   DB.users.push(u);
   saveDB();
+  // Si vino con un referido pendiente del URL, asociarlo
+  const pendingRef=consumePendingReferral();
+  if(pendingRef){
+    attachReferrer(u,pendingRef.id);
+  }
   return u;
 }
 
@@ -2071,6 +2578,7 @@ function doRegister(){
     saveDB();
     CUR=u;saveCur();
     err.textContent='';
+    pushLog({type:'auth',action:'register',targetId:u.id,targetName:u.name,payload:{method:'email',team}});
     enterApp();
     toast('Cuenta creada — Bienvenido '+name,'success');
     // Email de verificacion (opcional, no bloquea)
@@ -2090,6 +2598,7 @@ function doLogin(){
     const u=getOrCreateLocalUser(email,{name:cred.user.displayName||email.split('@')[0]});
     CUR=u;saveCur();
     err.textContent='';
+    pushLog({type:'auth',action:'login',targetId:u.id,targetName:u.name,payload:{method:'email'}});
     enterApp();
     toast('Bienvenido de vuelta, '+u.name,'success');
   }).catch(e=>{
@@ -2109,6 +2618,7 @@ function doGoogleLogin(){
     });
     CUR=u;saveCur();
     if(err)err.textContent='';
+    pushLog({type:'auth',action:'login',targetId:u.id,targetName:u.name,payload:{method:'google'}});
     enterApp();
     toast('Bienvenido, '+u.name,'success');
   }).catch(e=>{
@@ -2173,6 +2683,82 @@ function demoLogin(){
   CUR=g;saveCur();enterApp();
   toast('Modo invitado · Acceso completo activado','success');
 }
+
+/* ── DEV ADMIN LOGIN ──
+   Bypass total de Firebase Auth. Solo aparece corriendo localmente.
+   Crea o reusa un usuario "admin local" con isAdmin:true + saldo + ligas. */
+function isLocalDev(){
+  const h=location.hostname;
+  return h==='localhost'||h==='127.0.0.1'||h===''||h.startsWith('192.168.')||h.endsWith('.local');
+}
+function devAdminLogin(){
+  if(!isLocalDev()){toast('Solo disponible en local','error');return;}
+  const now=Date.now();
+  // Buscar admin local existente o crear uno
+  let admin=DB.users.find(u=>u.email==='admin@local.dev');
+  if(!admin){
+    admin={
+      id:'admin_local',
+      name:'Admin Local',
+      email:'admin@local.dev',
+      pass:'',
+      team:'Argentina',
+      isAdmin:true,
+      wcBalance:10000,
+      quinielas:{
+        tier_20_1:{groups:{},scores:{},ko:{},champ:'',topscorer:'',pts:0},
+        tier_50_1:{groups:{},scores:{},ko:{},champ:'',topscorer:'',pts:0},
+        tier_100_1:{groups:{},scores:{},ko:{},champ:'',topscorer:'',pts:0},
+        tier_500_1:{groups:{},scores:{},ko:{},champ:'',topscorer:'',pts:0},
+      },
+      activeQuinielaId:'tier_50_1',
+      entries:[
+        {tier:'20',entryNum:1,joinedAt:now,quinielaId:'tier_20_1',status:'approved',approvedAt:now},
+        {tier:'50',entryNum:1,joinedAt:now,quinielaId:'tier_50_1',status:'approved',approvedAt:now},
+        {tier:'100',entryNum:1,joinedAt:now,quinielaId:'tier_100_1',status:'approved',approvedAt:now},
+        {tier:'500',entryNum:1,joinedAt:now,quinielaId:'tier_500_1',status:'approved',approvedAt:now},
+      ],
+      ledger:[{ts:now,type:'deposit',amount:10000,note:'Saldo dev admin',balance:10000}],
+    };
+    DB.users.push(admin);
+    saveDB();
+  }
+  // Asegurar que sea admin (por si se borro la flag)
+  admin.isAdmin=true;
+  CUR=admin;saveCur();saveDB();
+  enterApp();
+  toast('✓ Login dev admin · acceso total','success');
+}
+// Exponer en consola tambien
+window.devAdminLogin=devAdminLogin;
+
+// Mostrar botón dev admin en local + detectar codigo de referido en URL
+document.addEventListener('DOMContentLoaded',()=>{
+  if(isLocalDev()){
+    const btn=document.getElementById('dev-admin-btn');
+    if(btn)btn.style.display='';
+  }
+  // Detectar codigo de referido en la URL (?ref=ELIAS50 o /r/ELIAS50)
+  checkReferralCodeInUrl();
+  // Mostrar mensaje sutil si hay referido pendiente
+  try{
+    const code=localStorage.getItem('wc26_pending_ref');
+    if(code){
+      const ref=findReferrerByCode(code);
+      if(ref){
+        // Banner sutil en onboard
+        const obBody=document.querySelector('#screen-onboard .ob-body');
+        if(obBody&&!document.getElementById('ref-banner')){
+          const banner=document.createElement('div');
+          banner.id='ref-banner';
+          banner.style.cssText='background:linear-gradient(135deg,rgba(255,215,0,.12),rgba(255,215,0,.04));border:1px solid rgba(255,215,0,.3);border-radius:12px;padding:12px 16px;margin-bottom:16px;font-size:13px;color:var(--t);text-align:center';
+          banner.innerHTML=`<span style="color:var(--accent);font-weight:700">${ref.name}</span> te invito · Codigo <strong>${ref.code}</strong>`;
+          obBody.insertBefore(banner,obBody.firstChild);
+        }
+      }
+    }
+  }catch(e){}
+});
 function doLogout(){
   if(!confirm('Cerrar sesion?'))return;
   // Cerrar tambien en Firebase si hay sesion
@@ -2695,28 +3281,48 @@ function renderUpcomingMini(){
     const isPredicted=sc&&sc.a!==''&&sc.b!=='';
     const t=new Date(m.kickoff);
     const diffMs=m.kickoff-now;
-    let dayShort;
-    if(diffMs<MS_DAY)dayShort='HOY';
-    else if(diffMs<MS_DAY*2)dayShort='MAÑ';
+    let dayLabel;
+    if(diffMs<MS_DAY)dayLabel='HOY';
+    else if(diffMs<MS_DAY*2)dayLabel='MAÑANA';
     else {
       const days=['DOM','LUN','MAR','MIE','JUE','VIE','SAB'];
-      dayShort=days[t.getDay()];
+      dayLabel=days[t.getDay()];
     }
     const time=t.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
-    return `<div class="dash-upcoming-row" onclick="goToMatch('${m.key}', ${isPredicted})">
-      <div class="dash-up-time"><strong>${dayShort}</strong>${time}</div>
-      <div class="dash-up-teams">
-        <div class="dash-up-team">${flagImg(m.teams[0].iso,'sm')}<span class="team-code">${m.teams[0].c||m.teams[0].n}</span></div>
-        <span class="dash-up-vs">VS</span>
-        <div class="dash-up-team r"><span class="team-code">${m.teams[1].c||m.teams[1].n}</span>${flagImg(m.teams[1].iso,'sm')}</div>
+    const venue=getMatchVenue(m.letter,m.idx);
+    const a=m.teams[0],b=m.teams[1];
+    const scoreA=isPredicted?sc.a:'-';
+    const scoreB=isPredicted?sc.b:'-';
+    return `<div class="match-card ${isPredicted?'predicted':''}" onclick="goToMatch('${m.key}', ${isPredicted})" style="cursor:pointer">
+      <div class="match-card-meta">
+        <div class="match-card-meta-left">
+          <span style="color:var(--accent)">${dayLabel} · ${time}</span>
+          <span>· Grupo ${m.letter}</span>
+        </div>
+        <span style="color:${isPredicted?'var(--green-ok)':'var(--t3)'}">${isPredicted?'✓ Predicho':'Sin predecir'}</span>
       </div>
-      <div class="dash-up-status ${isPredicted?'':'pending'}">${isPredicted?'✓':'—'}</div>
+      ${venue?`<div class="match-card-venue">📍 ${venue}</div>`:''}
+      <div class="match-card-row">
+        <div class="match-card-team left">
+          ${flagImg(a.iso,'md')}
+          <span class="match-card-team-name">${a.c||a.n}</span>
+        </div>
+        <div class="match-card-score">
+          <span style="font-family:'Anton',sans-serif;font-size:22px;color:${isPredicted?'var(--accent)':'var(--t3)'}">${scoreA}</span>
+          <span class="match-card-score-sep">-</span>
+          <span style="font-family:'Anton',sans-serif;font-size:22px;color:${isPredicted?'var(--accent)':'var(--t3)'}">${scoreB}</span>
+        </div>
+        <div class="match-card-team right">
+          <span class="match-card-team-name">${b.c||b.n}</span>
+          ${flagImg(b.iso,'md')}
+        </div>
+      </div>
     </div>`;
   }).join('');
-  cont.innerHTML=`<div class="dash-upcoming-card">
-    <div class="dash-upcoming-hd">
-      <span class="dash-upcoming-hd-title">Proximos partidos</span>
-      <button onclick="navTo('grupos')">Ver todos</button>
+  cont.innerHTML=`<div class="section">
+    <div class="section-label">
+      <span>Proximos partidos</span>
+      <span class="section-label-link" onclick="navTo('grupos')">Ver todos →</span>
     </div>
     ${rows}
   </div>`;
@@ -3055,25 +3661,33 @@ function buildUpcomingUI(){
       const sc=q.scores?.[m.key]||{a:'',b:''};
       const lock=getLockStatus(m.kickoff,'group:'+m.key);
       const venue=getMatchVenue(m.letter,m.idx);
-      const cls='upcoming-card'+(lock.soon?' soon':'')+(lock.locked?' locked':'');
+      const isPredicted=sc.a!==''&&sc.b!=='';
+      const cls='match-card'+(lock.soon?' urgent':'')+(lock.locked?' locked':'')+(isPredicted&&!lock.soon?' predicted':'');
       const time=new Date(m.kickoff).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+      const lockLabel=lock.locked?'🔒 '+lock.label:lock.label;
       html+=`<div class="${cls}">
-        <div class="match-meta">
-          <span class="match-date">Grupo ${m.letter} · ${time}</span>
-          <span class="match-lock ${lock.locked?'is-locked':lock.soon?'is-soon':''}">${lock.locked?'🔒 '+lock.label:lock.label}</span>
-        </div>
-        <div class="match-venue">
-          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 14s5-4.5 5-9a5 5 0 0 0-10 0c0 4.5 5 9 5 9z"/><circle cx="8" cy="5" r="2"/></svg>
-          <span>${venueLabel(venue)}</span>
-        </div>
-        <div class="match-row-body">
-          <span class="match-team match-team-l" title="${m.teams[0].n}">${flagImg(m.teams[0].iso)} <span class="team-code">${m.teams[0].c||m.teams[0].n}</span></span>
-          <div class="score-wrap">
-            <input class="score-inp" type="number" min="0" max="20" placeholder="-" value="${sc.a}" id="sc_${m.key}_a">
-            <span class="score-sep">-</span>
-            <input class="score-inp" type="number" min="0" max="20" placeholder="-" value="${sc.b}" id="sc_${m.key}_b">
+        <div class="match-card-meta">
+          <div class="match-card-meta-left">
+            <span style="color:var(--accent)">${time}</span>
+            <span>· Grupo ${m.letter}</span>
           </div>
-          <span class="match-team match-team-r" title="${m.teams[1].n}"><span class="team-code">${m.teams[1].c||m.teams[1].n}</span> ${flagImg(m.teams[1].iso)}</span>
+          <span style="color:${lock.locked?'var(--red)':lock.soon?'var(--accent)':'var(--t3)'}">${lockLabel}</span>
+        </div>
+        ${venue?`<div class="match-card-venue">📍 ${venueLabel(venue)}</div>`:''}
+        <div class="match-card-row">
+          <div class="match-card-team left">
+            ${flagImg(m.teams[0].iso,'md')}
+            <span class="match-card-team-name">${m.teams[0].c||m.teams[0].n}</span>
+          </div>
+          <div class="match-card-score">
+            <input class="match-card-score-input" type="number" min="0" max="20" placeholder="-" value="${sc.a}" id="sc_${m.key}_a" ${lock.locked?'disabled':''}>
+            <span class="match-card-score-sep">-</span>
+            <input class="match-card-score-input" type="number" min="0" max="20" placeholder="-" value="${sc.b}" id="sc_${m.key}_b" ${lock.locked?'disabled':''}>
+          </div>
+          <div class="match-card-team right">
+            <span class="match-card-team-name">${m.teams[1].c||m.teams[1].n}</span>
+            ${flagImg(m.teams[1].iso,'md')}
+          </div>
         </div>
       </div>`;
     });
@@ -3107,6 +3721,27 @@ function onScoreChange(inp){
   if(isA)q.scores[cleanKey].a=inp.value;
   else q.scores[cleanKey].b=inp.value;
   recalcPts();sync();
+  // Log debounced (espera 1.5s para agrupar ediciones rapidas)
+  schedulePredLog('group',cleanKey,q.scores[cleanKey],CUR.activeQuinielaId);
+}
+
+/* Logs de prediccion debounced — solo guardamos despues de que el usuario
+   deja de editar 1.5s, para evitar saturar el log con cada tecla. */
+const _predLogTimers={};
+function schedulePredLog(kind,matchKey,scoreOrPick,quinielaId){
+  const k=kind+':'+matchKey+':'+quinielaId;
+  if(_predLogTimers[k])clearTimeout(_predLogTimers[k]);
+  _predLogTimers[k]=setTimeout(()=>{
+    if(!CUR)return;
+    pushLog({
+      type:'pred',
+      action:'set_'+kind,
+      targetId:CUR.id,
+      targetName:CUR.name,
+      payload:{matchKey,kind,score:scoreOrPick,quinielaId},
+    });
+    delete _predLogTimers[k];
+  },1500);
 }
 /* Event delegation handler para inputs en grupos-container */
 let _rebuildTimer=null;
@@ -3323,6 +3958,7 @@ function onKOInputChange(inp){
   if(!q.ko[k])q.ko[k]={a:'',b:''};
   q.ko[k][side]=inp.value;
   recalcPts();sync();
+  schedulePredLog('ko',k,q.ko[k],CUR.activeQuinielaId);
   // Re-render diferido para propagar ganadores a rondas siguientes
   clearTimeout(_koRebuildTimer);
   _koRebuildTimer=setTimeout(()=>{
@@ -3336,74 +3972,165 @@ function onKOInputChange(inp){
 }
 let _koRebuildTimer=null;
 
-/* ── RANKING ── */
+/* ── RANKING ──
+   Permite ver el ranking de cualquier tier sin importar la quiniela activa.
+   Tab seleccionado se guarda en _rankSelectedTier. Si no hay seleccion,
+   default = tier de la quiniela activa (o el primer tier disponible). */
+let _rankSelectedTier=null;
 function renderRanking(){
-  if(!CUR.activeQuinielaId){
+  // Determinar que liga mostrar
+  const myEntries=(CUR&&CUR.entries)?CUR.entries:[];
+  const myApprovedTiers=[...new Set(myEntries.filter(e=>(e.status||'pending')==='approved').map(e=>e.tier))];
+  const myPendingTiers=[...new Set(myEntries.filter(e=>(e.status||'pending')==='pending').map(e=>e.tier))];
+
+  // Default: tier de la quiniela activa, si no hay → primer aprobada → primer pending
+  if(!_rankSelectedTier){
+    const activeId=CUR&&CUR.activeQuinielaId;
+    if(activeId){
+      const parsed=parseQuinielaId(activeId);
+      if(parsed&&parsed.type==='tier')_rankSelectedTier=parsed.tier;
+    }
+    if(!_rankSelectedTier&&myApprovedTiers.length)_rankSelectedTier=myApprovedTiers[0];
+    if(!_rankSelectedTier&&myPendingTiers.length)_rankSelectedTier=myPendingTiers[0];
+  }
+
+  // ─── Render TABS de ligas ───
+  const tabsEl=document.getElementById('rank-tabs');
+  const allTiers=Object.keys(TIER_NAMES); // ['20','50','100','500']
+  if(tabsEl){
+    if(myApprovedTiers.length===0&&myPendingTiers.length===0){
+      tabsEl.innerHTML='';
+    } else {
+      tabsEl.innerHTML=allTiers.map(t=>{
+        const isApproved=myApprovedTiers.includes(t);
+        const isPending=myPendingTiers.includes(t);
+        const inLiga=isApproved||isPending;
+        const isActive=t===_rankSelectedTier;
+        if(!inLiga)return '';
+        const cls='rank-tab'+(isActive?' active':'')+(isPending&&!isApproved?' rank-tab-pending':'');
+        const badge=isPending&&!isApproved?' ⏳':'';
+        return `<button class="${cls}" onclick="selectRankTier('${t}')">${TIER_NAMES[t]}${badge}</button>`;
+      }).join('');
+    }
+  }
+
+  // ─── Si el usuario no esta en ninguna liga ───
+  if(!_rankSelectedTier){
     document.getElementById('rank-sub').textContent='Sin liga activa';
+    const banner=document.getElementById('rank-prize-banner');
+    if(banner)banner.outerHTML='<div class="rank-prize-banner" id="rank-prize-banner"></div>';
+    document.getElementById('rank-prize-banner').className='rank-prize-empty';
+    document.getElementById('rank-prize-banner').textContent='Inscribete en una liga con premio para ver el ranking.';
     document.getElementById('rank-podium').innerHTML='';
-    document.getElementById('rank-table').innerHTML='<div class="rank-empty">Unete a una liga primero.</div>';
+    document.getElementById('rank-table').innerHTML='';
     return;
   }
-  const activeId=CUR.activeQuinielaId;
-  const parsed=parseQuinielaId(activeId);
+
+  // ─── Construir competidores del tier seleccionado ───
+  const tier=_rankSelectedTier;
+  const tierName=TIER_NAMES[tier]||'Liga';
+  const tierAmount=parseInt(tier);
   let competitors=[];
-  let label='';
-  let pendingNote='';
-  if(parsed&&parsed.type==='free'){
-    label='Quiniela libre';
-    DB.users.forEach(u=>{
-      const q=u.quinielas?.free;
-      if(q)competitors.push({user:u,quinielaId:'free',pts:q.pts||0});
+  let approvedCount=0;
+  DB.users.forEach(u=>{
+    const entries=(u.entries||[]).filter(e=>e.tier===tier&&(e.status||'pending')==='approved');
+    entries.forEach(e=>{
+      approvedCount++;
+      competitors.push({user:u,quinielaId:e.quinielaId,pts:u.quinielas?.[e.quinielaId]?.pts||0});
     });
-  } else if(parsed&&parsed.type==='tier'){
-    label=TIER_NAMES[parsed.tier]||'Liga';
-    DB.users.forEach(u=>{
-      const userEntries=(u.entries||[]).filter(e=>e.tier===parsed.tier&&e.status==='approved');
-      userEntries.forEach(e=>{
-        competitors.push({user:u,quinielaId:e.quinielaId,pts:u.quinielas?.[e.quinielaId]?.pts||0});
-      });
-    });
-    // Si la entry actual del usuario esta pendiente, avisarle
-    const myEntry=getEntryForQuiniela(activeId);
-    if(myEntry&&(myEntry.status||'pending')!=='approved'){
-      pendingNote=' · Tu inscripcion aun no aparece (pendiente)';
-    }
-  } else {
-    label='Ranking';
-  }
+  });
   const sorted=competitors.sort((a,b)=>b.pts-a.pts);
-  document.getElementById('rank-sub').textContent=label+' · '+sorted.length+' '+(sorted.length===1?'jugador':'jugadores')+pendingNote;
-  const top3=[sorted[1],sorted[0],sorted[2]];
-  const pos=['2','1','3'];
-  document.getElementById('rank-podium').innerHTML=top3.map((c,i)=>{
-    if(!c)return '<div></div>';
-    const u=c.user;
-    const isMe=u.id===CUR.id&&c.quinielaId===activeId;
-    return `<div class="pod-item ${i===1?'p1':''}">
-      <span class="pod-rank">#${pos[i]}</span>
-      <div class="avatar pod-av">${initials(u.name)}</div>
-      <div class="pod-name">${u.name}${isMe?' (tu)':''}</div>
-      <div class="pod-pts">${c.pts} pts</div>
-    </div>`;
-  }).join('');
-  document.getElementById('rank-table').innerHTML=sorted.map((c,i)=>{
-    const u=c.user;
-    const isMe=u.id===CUR.id&&c.quinielaId===activeId;
-    let suffix='';
-    if(isMe)suffix=' (tu)';
-    else if(u.id===CUR.id){
-      // Otra entrada mía
-      const entries=(u.entries||[]).filter(e=>e.tier===parsed?.tier);
-      const idx=entries.findIndex(e=>e.quinielaId===c.quinielaId);
-      if(idx>=0)suffix=` (tu #${idx+1})`;
+  const prizePool=approvedCount*tierAmount;
+
+  // Sub label
+  const myStatusInTier=myApprovedTiers.includes(tier)?'aprobada':(myPendingTiers.includes(tier)?'pendiente':null);
+  const myEntriesInTier=myEntries.filter(e=>e.tier===tier);
+  let subText=`${tierName} · ${approvedCount} ${approvedCount===1?'jugador':'jugadores'}`;
+  if(myStatusInTier==='pending')subText+=' · Tu inscripcion esta pendiente';
+  document.getElementById('rank-sub').textContent=subText;
+
+  // ─── Banner del premio total ───
+  const banner=document.getElementById('rank-prize-banner');
+  if(banner){
+    if(approvedCount===0){
+      banner.outerHTML='<div class="rank-prize-empty" id="rank-prize-banner">Aun no hay jugadores aprobados en esta liga. El premio total se acumula segun se aprueben mas inscripciones.</div>';
+    } else {
+      banner.outerHTML=`<div class="rank-prize-banner" id="rank-prize-banner">
+        <div class="rank-prize-info">
+          <div class="rank-prize-label">Premio total acumulado</div>
+          <div class="rank-prize-amount">$${prizePool.toLocaleString()}</div>
+          <div class="rank-prize-sub">USD · ${approvedCount} inscripciones x $${tierAmount}</div>
+        </div>
+        <div class="rank-prize-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H3l1 5h2m12-5h3l-1 5h-2M6 9V4h12v5M6 9c0 4.418 2.686 8 6 8s6-3.582 6-8M9 20h6M12 18v2"/></svg>
+        </div>
+      </div>`;
     }
-    return `<div class="rank-row ${isMe?'me':''}">
-      <span class="rank-pos">${i+1}</span>
-      <div class="avatar rank-av">${initials(u.name)}</div>
-      <div class="rank-info"><div class="rank-name">${u.name}${suffix}</div><div class="rank-team">${u.team||'Sin equipo'}</div></div>
-      <span class="badge ${i<3?'badge-gold':'badge-gray'}">${c.pts}</span>
-    </div>`;
-  }).join('') || '<div style="padding:24px;text-align:center;color:var(--t2);font-size:13px">Aun no hay jugadores en esta liga.</div>';
+  }
+
+  // ─── Podio top 3 ───
+  const podiumEl=document.getElementById('rank-podium');
+  if(sorted.length===0){
+    podiumEl.innerHTML=`<div class="podium-empty" style="text-align:center;width:100%;padding:24px 0;color:var(--t2);font-size:13px">Aun no hay competidores en esta liga.</div>`;
+  } else {
+    const positions=[
+      {idx:1,medal:'2',cls:'podium-spot-2 podium-medal-2'},
+      {idx:0,medal:'1',cls:'podium-spot-1 podium-medal-1'},
+      {idx:2,medal:'3',cls:'podium-spot-3 podium-medal-3'}
+    ];
+    podiumEl.innerHTML=`<div class="podium-v2">${positions.map(p=>{
+      const c=sorted[p.idx];
+      if(!c)return `<div class="podium-spot ${p.cls.split(' ')[0]}"><div class="podium-avatar" style="opacity:.3"></div><div class="podium-name" style="color:var(--t3)">—</div></div>`;
+      const u=c.user;
+      const isMe=u.id===CUR.id;
+      // Premio estimado: 1ro 50%, 2do 30%, 3ro 20%
+      const prizeShare=p.idx===0?Math.floor(prizePool*.5):p.idx===1?Math.floor(prizePool*.3):Math.floor(prizePool*.2);
+      return `<div class="podium-spot ${p.cls.split(' ')[0]}">
+        <div class="podium-avatar">
+          ${initials(u.name)}
+          <span class="podium-medal ${p.cls.split(' ')[1]}">${p.medal}</span>
+        </div>
+        <div class="podium-name">${u.name}${isMe?' (tu)':''}</div>
+        <div class="podium-pts">${c.pts} pts</div>
+        <div style="font-size:11px;color:var(--accent);font-weight:700;margin-top:2px">$${prizeShare.toLocaleString()}</div>
+      </div>`;
+    }).join('')}</div>`;
+  }
+
+  // ─── Tabla completa ───
+  const tableEl=document.getElementById('rank-table');
+  if(sorted.length===0){
+    tableEl.innerHTML='';
+  } else {
+    tableEl.innerHTML=sorted.map((c,i)=>{
+      const u=c.user;
+      const isMe=u.id===CUR.id;
+      let suffix='';
+      if(isMe&&u.id===CUR.id){
+        const myEntriesInThisTier=myEntries.filter(e=>e.tier===tier);
+        if(myEntriesInThisTier.length>1){
+          const idx=myEntriesInThisTier.findIndex(e=>e.quinielaId===c.quinielaId);
+          if(idx>=0)suffix=` · Tu #${idx+1}`;
+        } else {
+          suffix=' (tu)';
+        }
+      }
+      return `<div class="rank-row-v2 ${isMe?'me':''}">
+        <span class="rank-row-v2-pos">${i+1}</span>
+        <div class="rank-row-v2-av">${initials(u.name)}</div>
+        <div class="rank-row-v2-info">
+          <div class="rank-row-v2-name">${u.name}${suffix}</div>
+          <div class="rank-row-v2-meta">${u.team||'Sin equipo'}</div>
+        </div>
+        <span class="rank-row-v2-pts">${c.pts}</span>
+      </div>`;
+    }).join('');
+  }
+}
+
+function selectRankTier(t){
+  _rankSelectedTier=t;
+  renderRanking();
 }
 
 /* ── MQ — vista resumen ── */
@@ -3769,6 +4496,12 @@ function confirmJoinTier(t){
   updatePts();
   updateActiveLigaBar();
   closeModal();
+  // LOG
+  pushLog({
+    type:'entry',action:'request',
+    targetId:CUR.id,targetName:CUR.name,
+    payload:{tier:t,tierName:TIER_NAMES[t],amount:parseInt(t),quinielaId},
+  });
   // Mostrar siguiente paso: contactar admin
   const tierAmount=parseInt(t);
   const tierName=TIER_NAMES[t];
@@ -3862,6 +4595,14 @@ function renderAdminPanel(){
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
       Resultados oficiales <span style="opacity:.7;font-size:11px">(${resultsCount})</span>
     </button>
+    <button class="btn btn-secondary btn-full" onclick="openAuditLog()" style="margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:8px">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+      Logs de actividad <span style="opacity:.7;font-size:11px">(${(DB.logs||[]).length})</span>
+    </button>
+    <button class="btn btn-secondary btn-full" onclick="openReferrersAdmin()" style="margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:8px">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Vendedores <span style="opacity:.7;font-size:11px">(${(DB.referrers||[]).length})</span>
+    </button>
     <button class="btn btn-secondary btn-full" onclick="openAdminConfig()" style="margin-bottom:14px;display:flex;align-items:center;justify-content:center;gap:8px">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
       Configuración ${waConfigured?'<span style="color:var(--green-ok);font-size:11px">✓</span>':'<span style="color:var(--red);font-size:11px">⚠ Pendiente</span>'}
@@ -3922,7 +4663,7 @@ function renderAdminPanel(){
         const userEntries=(u.entries||[]);
         const pendCount=userEntries.filter(e=>(e.status||'pending')==='pending').length;
         const apprCount=userEntries.filter(e=>e.status==='approved').length;
-        return `<div class="admin-user-row">
+        return `<div class="admin-user-row" onclick="openUserActivity('${u.id}')" title="Ver actividad">
           <div class="avatar admin-user-av">${initials(u.name)}</div>
           <div class="admin-user-info">
             <div class="admin-user-name">${u.name}${u.isAdmin?' <span class="admin-badge">ADMIN</span>':''}</div>
@@ -3950,8 +4691,19 @@ function approveEntry(userId,quinielaId){
   e.approvedAt=Date.now();
   e.approvedBy=CUR.id;
   saveDB();
+  pushLog({
+    type:'entry',action:'approve',
+    targetId:u.id,targetName:u.name,
+    payload:{tier:e.tier,tierName:TIER_NAMES[e.tier],amount:parseInt(e.tier),quinielaId},
+  });
+  // Generar comision si el usuario tiene vendedor asociado
+  const com=generateCommissionForEntry(u,e);
   if(u.id===CUR.id){CUR=u;saveCur();}
-  toast(`✓ Inscripcion de ${u.name} aprobada`,'success');
+  if(com){
+    toast(`✓ Aprobada · Comision $${com.commissionAmount} para ${com.referrerName}`,'success');
+  } else {
+    toast(`✓ Inscripcion de ${u.name} aprobada`,'success');
+  }
   renderAdminPanel();
   // Si el usuario aprobado es el actual, refrescar UI
   if(u.id===CUR.id){renderMyLeagues();updateActiveLigaBar();}
@@ -3965,12 +4717,18 @@ function rejectEntry(userId,quinielaId){
   const e=(u.entries||[]).find(x=>x.quinielaId===quinielaId);
   if(!e){toast('Inscripcion no encontrada','error');return;}
   if(!confirm(`Rechazar y eliminar la inscripcion de ${u.name} a ${TIER_NAMES[e.tier]}?`))return;
+  const tierSnapshot=e.tier;
   u.entries=(u.entries||[]).filter(x=>x.quinielaId!==quinielaId);
   if(u.quinielas)delete u.quinielas[quinielaId];
   if(u.activeQuinielaId===quinielaId){
     u.activeQuinielaId='free';
   }
   saveDB();
+  pushLog({
+    type:'entry',action:'reject',
+    targetId:u.id,targetName:u.name,
+    payload:{tier:tierSnapshot,tierName:TIER_NAMES[tierSnapshot],amount:parseInt(tierSnapshot),quinielaId},
+  });
   if(u.id===CUR.id){CUR=u;saveCur();}
   toast(`Inscripcion rechazada`,'success');
   renderAdminPanel();
@@ -4198,6 +4956,10 @@ function saveOfficialResult(lockKey){
   }
   saveDB();
   recalcAllUsers();
+  pushLog({
+    type:'admin',action:'set_result',
+    payload:{lockKey,score:{a:ai,b:bi},matchKey:key},
+  });
   toast('✓ Resultado guardado · Puntos recalculados','success');
   // Re-abrir modal para refresh
   closeModal();
@@ -4211,6 +4973,10 @@ function clearOfficialResult(lockKey){
   if(type==='ko'&&DB.results.ko)delete DB.results.ko[key];
   saveDB();
   recalcAllUsers();
+  pushLog({
+    type:'admin',action:'clear_result',
+    payload:{lockKey,matchKey:key},
+  });
   toast('Resultado borrado','success');
   closeModal();
   setTimeout(openResultsAdmin,100);
@@ -4286,6 +5052,457 @@ function clearOfficialTopscorer(){
 function openCreditUserModal(){closeModal();}
 function creditUser(){closeModal();}
 function adminCreditUser(){toast('Funcion removida — usa Aprobar inscripciones','success');}
+
+/* ══════════════════════════════════════════
+   AUDIT LOG VIEWS (admin)
+   - openAuditLog: vista global con filtros
+   - openUserActivity: logs de un usuario especifico
+   - openMatchActivity: quienes apostaron a este partido
+   ══════════════════════════════════════════ */
+let _logFilter='all';
+function openAuditLog(){
+  if(!isAdmin(CUR)){toast('Solo admins','error');return;}
+  renderAuditLogModal();
+}
+function setLogFilter(f){
+  _logFilter=f;
+  renderAuditLogModal();
+}
+function renderAuditLogModal(){
+  const all=getAllLogs();
+  const filtered=_logFilter==='all'?all:all.filter(l=>l.type===_logFilter);
+  const counts={
+    all:all.length,
+    auth:all.filter(l=>l.type==='auth').length,
+    pred:all.filter(l=>l.type==='pred').length,
+    entry:all.filter(l=>l.type==='entry').length,
+    admin:all.filter(l=>l.type==='admin').length,
+  };
+  const tabs=[
+    {k:'all',label:'Todos'},
+    {k:'auth',label:'Auth'},
+    {k:'pred',label:'Predicciones'},
+    {k:'entry',label:'Inscripciones'},
+    {k:'admin',label:'Admin'},
+  ];
+  const tabsHtml=tabs.map(t=>{
+    const active=_logFilter===t.k;
+    return `<button class="rank-tab ${active?'active':''}" onclick="setLogFilter('${t.k}')">${t.label} <span style="opacity:.6">(${counts[t.k]})</span></button>`;
+  }).join('');
+  const rowsHtml=filtered.length===0
+    ? '<div style="padding:24px;text-align:center;color:var(--t3);font-size:13px">Sin logs en esta categoria</div>'
+    : filtered.slice(0,200).map(l=>renderLogRow(l)).join('');
+  openModal(`<h3>Logs de actividad</h3>
+    <div class="rank-tabs" style="margin-bottom:12px">${tabsHtml}</div>
+    <div style="max-height:55vh;overflow-y:auto;margin:0 -4px">${rowsHtml}</div>
+    <button class="btn btn-secondary btn-full" style="margin-top:12px" onclick="closeModal()">Cerrar</button>
+  `);
+}
+function logActionLabel(l){
+  const map={
+    'auth.login':'Inicio sesion',
+    'auth.register':'Se registro',
+    'pred.set_group':'Predijo partido',
+    'pred.set_ko':'Predijo eliminatoria',
+    'pred.set_champion':'Eligio campeon',
+    'pred.set_topscorer':'Eligio goleador',
+    'entry.request':'Solicito inscripcion',
+    'entry.approve':'Aprobada inscripcion',
+    'entry.reject':'Rechazada inscripcion',
+    'entry.leave':'Abandono liga',
+    'admin.set_result':'Resultado oficial',
+    'admin.clear_result':'Borro resultado',
+    'admin.toggle_lock':'Lock toggled',
+    'admin.set_champion':'Campeon oficial',
+    'admin.set_topscorer':'Goleador oficial',
+    'config.update':'Cambio configuracion',
+  };
+  return map[`${l.type}.${l.action}`]||`${l.type} · ${l.action}`;
+}
+function logRowSubtitle(l){
+  const p=l.payload||{};
+  if(l.type==='pred'&&p.matchKey){
+    const sc=p.score||{};
+    if(p.kind==='group'||p.kind==='ko'){
+      const matchLabel=p.matchKey.replace(/_/g,' ').replace('vs','vs');
+      return `${matchLabel} · ${sc.a||'-'} vs ${sc.b||'-'}`;
+    }
+    return p.matchKey;
+  }
+  if(l.type==='entry'){
+    return `${p.tierName||p.tier||''} · $${p.amount||'?'}`;
+  }
+  if(l.type==='admin'&&p.lockKey){
+    const sc=p.score?` · ${p.score.a}-${p.score.b}`:'';
+    return `${p.lockKey}${sc}`;
+  }
+  if(l.payload&&typeof l.payload==='object'){
+    const keys=Object.keys(l.payload);
+    if(keys.length)return keys.map(k=>`${k}:${JSON.stringify(l.payload[k])}`).slice(0,2).join(' · ');
+  }
+  return '';
+}
+function renderLogRow(l){
+  const colors={auth:'#5BC97D',pred:'#FFD700',entry:'#FFA500',admin:'#FF6B35',config:'#A39884'};
+  const color=colors[l.type]||'#A39884';
+  const actorTxt=l.actorName||'Sistema';
+  const targetTxt=l.targetName&&l.targetName!==l.actorName?` → ${l.targetName}`:'';
+  return `<div style="display:flex;gap:10px;padding:10px 8px;border-bottom:1px solid var(--b);align-items:flex-start">
+    <div style="width:28px;height:28px;border-radius:50%;background:${color}20;color:${color};display:flex;align-items:center;justify-content:center;flex-shrink:0">
+      ${logIcon(l.type)}
+    </div>
+    <div style="flex:1;min-width:0">
+      <div style="font-size:13px;color:var(--t);font-weight:600">${logActionLabel(l)}</div>
+      <div style="font-size:11px;color:var(--t2);margin-top:2px">${actorTxt}${targetTxt}</div>
+      <div style="font-size:11px;color:var(--t3);margin-top:2px;font-family:'DM Mono',monospace">${logRowSubtitle(l)}</div>
+    </div>
+    <div style="font-size:10px;color:var(--t3);flex-shrink:0;text-align:right">${fmtLogTime(l.ts)}</div>
+  </div>`;
+}
+
+/* Logs de un usuario en particular (toda su actividad) */
+function openUserActivity(userId){
+  if(!isAdmin(CUR)){toast('Solo admins','error');return;}
+  const u=DB.users.find(x=>x.id===userId);
+  if(!u)return;
+  const logs=getAllLogs().filter(l=>l.actorId===userId||l.targetId===userId);
+  const rowsHtml=logs.length===0
+    ? '<div style="padding:24px;text-align:center;color:var(--t3);font-size:13px">Este usuario aun no tiene actividad registrada.</div>'
+    : logs.slice(0,200).map(l=>renderLogRow(l)).join('');
+  openModal(`<h3>Actividad de ${u.name}</h3>
+    <p class="pay-instr">${u.email||'Sin email'} · ${logs.length} eventos</p>
+    <div style="max-height:55vh;overflow-y:auto;margin:0 -4px">${rowsHtml}</div>
+    <button class="btn btn-secondary btn-full" style="margin-top:12px" onclick="closeModal()">Cerrar</button>
+  `);
+}
+
+/* Quienes apostaron a este partido */
+function openMatchActivity(matchKey){
+  if(!isAdmin(CUR)){toast('Solo admins','error');return;}
+  const logs=getLogsByMatchKey(matchKey);
+  // Tambien recopilar predicciones actuales de TODOS los usuarios para este match
+  const currentPreds=[];
+  DB.users.forEach(u=>{
+    if(u.id.startsWith('guest_'))return;
+    Object.entries(u.quinielas||{}).forEach(([qid,q])=>{
+      const sc=q.scores?.[matchKey];
+      if(sc&&(sc.a!==''||sc.b!=='')){
+        const e=(u.entries||[]).find(x=>x.quinielaId===qid);
+        currentPreds.push({user:u,quinielaId:qid,score:sc,entry:e});
+      }
+    });
+  });
+  const predsHtml=currentPreds.length===0
+    ? '<div style="padding:14px;text-align:center;color:var(--t3);font-size:12px">Sin predicciones para este partido</div>'
+    : currentPreds.map(p=>{
+      const tierName=p.entry?TIER_NAMES[p.entry.tier]||'Liga':'Libre';
+      const status=p.entry?(p.entry.status||'pending'):'free';
+      const stColor=status==='approved'?'var(--green-ok)':status==='pending'?'var(--accent)':'var(--t3)';
+      return `<div style="display:flex;gap:10px;padding:10px 8px;border-bottom:1px solid var(--b);align-items:center">
+        <div class="rank-row-v2-av">${initials(p.user.name)}</div>
+        <div style="flex:1">
+          <div style="font-size:13px;color:var(--t);font-weight:600">${p.user.name}</div>
+          <div style="font-size:11px;color:${stColor}">${tierName} · ${status}</div>
+        </div>
+        <div style="font-family:'Anton',sans-serif;font-size:18px;color:var(--accent)">${p.score.a||'-'} - ${p.score.b||'-'}</div>
+      </div>`;
+    }).join('');
+  const logsHtml=logs.length===0
+    ? '<div style="padding:14px;text-align:center;color:var(--t3);font-size:12px">Sin historial de cambios</div>'
+    : logs.slice(0,50).map(l=>renderLogRow(l)).join('');
+  openModal(`<h3>Predicciones del partido</h3>
+    <p class="pay-instr">${matchKey.replace(/_/g,' ')} · ${currentPreds.length} predicciones · ${logs.length} cambios registrados</p>
+    <div class="admin-section-label" style="margin-top:8px">Predicciones actuales</div>
+    <div style="max-height:30vh;overflow-y:auto;margin:0 -4px;margin-bottom:12px">${predsHtml}</div>
+    <div class="admin-section-label">Historial de cambios</div>
+    <div style="max-height:25vh;overflow-y:auto;margin:0 -4px">${logsHtml}</div>
+    <button class="btn btn-secondary btn-full" style="margin-top:12px" onclick="closeModal()">Cerrar</button>
+  `);
+}
+
+/* ══════════════════════════════════════════
+   ADMIN: panel de vendedores (referrers)
+   ══════════════════════════════════════════ */
+function openReferrersAdmin(){
+  if(!isAdmin(CUR)){toast('Solo admins','error');return;}
+  const refs=DB.referrers||[];
+  // Stats globales
+  const allCom=DB.commissions||[];
+  const totalGenerated=allCom.reduce((s,c)=>s+c.commissionAmount,0);
+  const totalPending=allCom.filter(c=>c.status==='pending').reduce((s,c)=>s+c.commissionAmount,0);
+  const totalPaid=allCom.filter(c=>c.status==='paid').reduce((s,c)=>s+c.commissionAmount,0);
+
+  const refsRows=refs.length===0
+    ? '<div style="padding:24px;text-align:center;color:var(--t3);font-size:13px">Aun no hay vendedores. Crea el primero.</div>'
+    : refs.map(r=>{
+      const stats=getReferrerStats(r.id);
+      return `<div class="admin-user-row" onclick="openReferrerDetail('${r.id}')" style="cursor:pointer">
+        <div class="avatar admin-user-av">${initials(r.name)}</div>
+        <div class="admin-user-info">
+          <div class="admin-user-name">${r.name} <span style="color:var(--accent);font-family:'DM Mono',monospace;font-size:11px">${r.code}</span></div>
+          <div class="admin-user-email">${stats.referredUsersCount} usuarios · ${(r.commissionRate*100).toFixed(0)}% del rake</div>
+        </div>
+        <div style="font-size:11px;text-align:right">
+          ${stats.totalPending>0?`<div style="color:var(--accent);font-family:'Anton',sans-serif;font-size:16px">$${stats.totalPending.toFixed(2)}</div><div style="color:var(--t3)">pendiente</div>`:'<div style="color:var(--t3)">Sin pendientes</div>'}
+        </div>
+      </div>`;
+    }).join('');
+
+  openModal(`<h3>Vendedores</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px">
+      <div style="background:var(--bg3);border:1px solid var(--b);border-radius:10px;padding:10px;text-align:center">
+        <div style="font-family:'Anton',sans-serif;font-size:20px;color:var(--t)">$${totalGenerated.toFixed(0)}</div>
+        <div style="font-size:10px;color:var(--t2);text-transform:uppercase;letter-spacing:.5px">Generado</div>
+      </div>
+      <div style="background:var(--bg3);border:1px solid rgba(255,215,0,.3);border-radius:10px;padding:10px;text-align:center">
+        <div style="font-family:'Anton',sans-serif;font-size:20px;color:var(--accent)">$${totalPending.toFixed(0)}</div>
+        <div style="font-size:10px;color:var(--accent);text-transform:uppercase;letter-spacing:.5px">Pendiente</div>
+      </div>
+      <div style="background:var(--bg3);border:1px solid rgba(91,201,125,.3);border-radius:10px;padding:10px;text-align:center">
+        <div style="font-family:'Anton',sans-serif;font-size:20px;color:var(--green-ok)">$${totalPaid.toFixed(0)}</div>
+        <div style="font-size:10px;color:var(--green-ok);text-transform:uppercase;letter-spacing:.5px">Pagado</div>
+      </div>
+    </div>
+    <button class="btn btn-primary btn-full" onclick="openCreateReferrerModal()" style="margin-bottom:14px;display:flex;align-items:center;justify-content:center;gap:6px">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Nuevo vendedor
+    </button>
+    <div class="admin-section-label">Activos (${refs.filter(r=>r.isActive).length})</div>
+    <div class="admin-users-list" style="margin-bottom:14px">${refsRows}</div>
+    <div style="font-size:11px;color:var(--t3);padding:10px;background:var(--bg3);border-radius:8px;margin-bottom:10px">
+      <strong style="color:var(--t2)">Tu rake actual:</strong> ${(getRakeRate()*100).toFixed(0)}% del monto inscrito.
+      Cada inscripcion aprobada de un usuario referido genera comision automaticamente.
+    </div>
+    <button class="btn btn-secondary btn-full" onclick="closeModal()">Cerrar</button>
+  `);
+}
+
+/* Modal: crear nuevo vendedor */
+function openCreateReferrerModal(){
+  if(!isAdmin(CUR)){toast('Solo admins','error');return;}
+  openModal(`<h3>Nuevo vendedor</h3>
+    <p class="pay-instr">Cuando crees el vendedor, recibiras un link unico que puede compartir. Cada usuario que se registre por ese link queda asociado a el.</p>
+    <div class="field">
+      <label>Nombre del vendedor</label>
+      <input type="text" id="ref-new-name" placeholder="ej. Elias" oninput="onReferrerNameInput()">
+    </div>
+    <div class="field">
+      <label>Codigo unico (autogenerado, puedes cambiarlo)</label>
+      <input type="text" id="ref-new-code" placeholder="ELIAS50" maxlength="20" style="font-family:'DM Mono',monospace;text-transform:uppercase" oninput="this.dataset.userEdited='1';this.value=this.value.toUpperCase()">
+    </div>
+    <div class="field">
+      <label>Email (opcional, para que pueda ver su panel)</label>
+      <input type="email" id="ref-new-email" placeholder="elias@example.com">
+    </div>
+    <div class="field">
+      <label>% del rake que recibe (default 30%)</label>
+      <input type="number" id="ref-new-rate" placeholder="30" value="30" min="1" max="100" step="1">
+      <div style="font-size:11px;color:var(--t3);margin-top:4px">Ejemplo: usuario inscribe $100 · rake ${(getRakeRate()*100).toFixed(0)}% = $${(100*getRakeRate()).toFixed(2)} · vendedor recibe ${30}% de eso</div>
+    </div>
+    <div class="err" id="ref-new-err"></div>
+    <button class="btn btn-primary btn-full" onclick="confirmCreateReferrer()" style="margin-bottom:8px">Crear vendedor</button>
+    <button class="btn btn-secondary btn-full" onclick="openReferrersAdmin()">Cancelar</button>
+  `);
+}
+function onReferrerNameInput(){
+  const name=document.getElementById('ref-new-name').value;
+  const codeEl=document.getElementById('ref-new-code');
+  if(codeEl&&!codeEl.dataset.userEdited){
+    codeEl.value=suggestReferralCode(name);
+  }
+}
+function confirmCreateReferrer(){
+  const name=document.getElementById('ref-new-name').value.trim();
+  const code=document.getElementById('ref-new-code').value.trim().toUpperCase();
+  const email=document.getElementById('ref-new-email').value.trim();
+  const ratePct=parseFloat(document.getElementById('ref-new-rate').value);
+  const err=document.getElementById('ref-new-err');
+  if(!name){err.textContent='Nombre requerido';return;}
+  if(!code||code.length<3){err.textContent='Codigo debe tener al menos 3 caracteres';return;}
+  if(!/^[A-Z0-9]+$/.test(code)){err.textContent='Solo letras y numeros';return;}
+  if(isNaN(ratePct)||ratePct<=0||ratePct>100){err.textContent='Porcentaje invalido (1-100)';return;}
+  try{
+    const ref=createReferrer({name,code,email,commissionRate:ratePct/100});
+    toast(`✓ Vendedor ${ref.name} creado`,'success');
+    setTimeout(()=>openReferrerDetail(ref.id),100);
+  }catch(e){
+    err.textContent=e.message||'Error al crear';
+  }
+}
+
+/* Detalle: ver un vendedor con sus comisiones */
+function openReferrerDetail(referrerId){
+  if(!isAdmin(CUR)){toast('Solo admins','error');return;}
+  const ref=findReferrerById(referrerId);
+  if(!ref){toast('Vendedor no encontrado','error');return;}
+  const stats=getReferrerStats(referrerId);
+  const link=getReferralLink(ref.code);
+  const comList=stats.commissions.sort((a,b)=>b.createdAt-a.createdAt);
+  const comRows=comList.length===0
+    ? '<div style="padding:14px;text-align:center;color:var(--t3);font-size:12px">Aun no hay comisiones generadas</div>'
+    : comList.slice(0,50).map(c=>{
+      const isPaid=c.status==='paid';
+      return `<div style="display:flex;gap:10px;padding:10px;border:1px solid var(--b);border-radius:8px;margin-bottom:6px;background:${isPaid?'rgba(91,201,125,.04)':'var(--bg3)'}">
+        <div style="flex:1;min-width:0">
+          <div style="font-size:13px;color:var(--t);font-weight:600">${c.userName}</div>
+          <div style="font-size:11px;color:var(--t2)">${c.tierName} · $${c.amountInscribed} · ${fmtLogTime(c.createdAt)}</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-family:'Anton',sans-serif;font-size:18px;color:${isPaid?'var(--green-ok)':'var(--accent)'}">$${c.commissionAmount.toFixed(2)}</div>
+          ${isPaid
+            ?`<div style="font-size:10px;color:var(--green-ok);text-transform:uppercase">✓ Pagada</div>`
+            :`<button class="btn btn-secondary" style="padding:4px 8px;font-size:10px;margin-top:2px" onclick="markCommissionPaid('${c.id}');setTimeout(()=>openReferrerDetail('${referrerId}'),100)">Pagar</button>`}
+        </div>
+      </div>`;
+    }).join('');
+
+  openModal(`<h3>${ref.name}</h3>
+    <p class="pay-instr">Codigo <strong style="color:var(--accent)">${ref.code}</strong> · ${(ref.commissionRate*100).toFixed(0)}% del rake</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px">
+      <div style="background:var(--bg3);border:1px solid rgba(255,215,0,.3);border-radius:10px;padding:12px;text-align:center">
+        <div style="font-family:'Anton',sans-serif;font-size:24px;color:var(--accent)">$${stats.totalPending.toFixed(2)}</div>
+        <div style="font-size:10px;color:var(--accent);text-transform:uppercase">Le debes</div>
+      </div>
+      <div style="background:var(--bg3);border:1px solid var(--b);border-radius:10px;padding:12px;text-align:center">
+        <div style="font-family:'Anton',sans-serif;font-size:24px;color:var(--t)">$${stats.totalPaid.toFixed(2)}</div>
+        <div style="font-size:10px;color:var(--t2);text-transform:uppercase">Pagado</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:6px;margin-bottom:14px;font-size:11px;color:var(--t2)">
+      <div style="flex:1;padding:8px;background:var(--bg3);border-radius:8px;text-align:center">
+        <div style="color:var(--t);font-weight:700">${stats.referredUsersCount}</div>
+        <div>usuarios</div>
+      </div>
+      <div style="flex:1;padding:8px;background:var(--bg3);border-radius:8px;text-align:center">
+        <div style="color:var(--t);font-weight:700">${stats.total}</div>
+        <div>inscripciones</div>
+      </div>
+      <div style="flex:1;padding:8px;background:var(--bg3);border-radius:8px;text-align:center">
+        <div style="color:var(--t);font-weight:700">$${stats.totalGenerated.toFixed(0)}</div>
+        <div>generado total</div>
+      </div>
+    </div>
+
+    <div class="admin-section-label">Link de invitacion</div>
+    <div style="display:flex;gap:6px;margin-bottom:14px">
+      <input type="text" value="${link}" id="ref-link-${referrerId}" readonly style="flex:1;font-size:12px;font-family:'DM Mono',monospace">
+      <button class="btn btn-secondary" onclick="copyReferralLink('${referrerId}')" style="padding:10px 14px;font-size:12px">Copiar</button>
+    </div>
+
+    ${stats.totalPending>0?`<button class="btn btn-primary btn-full" onclick="markAllCommissionsPaidForReferrer('${referrerId}');setTimeout(()=>openReferrerDetail('${referrerId}'),100)" style="margin-bottom:10px">Marcar todas como pagadas ($${stats.totalPending.toFixed(2)})</button>`:''}
+
+    <div class="admin-section-label">Comisiones (${comList.length})</div>
+    <div style="max-height:35vh;overflow-y:auto;margin:0 -4px">${comRows}</div>
+
+    <button class="btn btn-secondary btn-full" style="margin-top:12px" onclick="openReferrersAdmin()">← Volver</button>
+  `);
+}
+function copyReferralLink(referrerId){
+  const inp=document.getElementById('ref-link-'+referrerId);
+  if(!inp)return;
+  inp.select();
+  inp.setSelectionRange(0,99999);
+  navigator.clipboard.writeText(inp.value).then(()=>{
+    toast('Link copiado','success');
+  }).catch(()=>{
+    document.execCommand('copy');
+    toast('Link copiado','success');
+  });
+}
+
+/* ══════════════════════════════════════════
+   PERFIL: dashboard del vendedor (su propia vista)
+   ══════════════════════════════════════════ */
+function getMyReferrerRecord(){
+  if(!CUR)return null;
+  // Buscar por email primero, luego por id si en algun momento se guarda referenced
+  if(CUR.email){
+    const byEmail=findReferrerByEmail(CUR.email);
+    if(byEmail)return byEmail;
+  }
+  // Tambien admins pueden tener su propio registro de vendedor identificado
+  return null;
+}
+function renderMyReferrerDashboard(containerEl){
+  if(!containerEl)return;
+  const ref=getMyReferrerRecord();
+  if(!ref){containerEl.innerHTML='';return;}
+  const stats=getReferrerStats(ref.id);
+  const link=getReferralLink(ref.code);
+  containerEl.innerHTML=`
+    <div class="ds-card highlight" style="margin-bottom:14px">
+      <div class="dash-hero-eyebrow">PANEL DE VENDEDOR</div>
+      <div style="font-family:'Anton',sans-serif;font-size:24px;color:var(--t);margin-top:6px;text-transform:uppercase">${ref.name}</div>
+      <div style="font-size:13px;color:var(--t2);margin-bottom:12px">Codigo <strong style="color:var(--accent);font-family:'DM Mono',monospace">${ref.code}</strong> · ${(ref.commissionRate*100).toFixed(0)}% del rake</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
+        <div style="background:rgba(255,215,0,.08);border:1px solid rgba(255,215,0,.2);border-radius:10px;padding:12px;text-align:center">
+          <div style="font-family:'Anton',sans-serif;font-size:24px;color:var(--accent)">$${stats.totalPending.toFixed(2)}</div>
+          <div style="font-size:10px;color:var(--accent);text-transform:uppercase;letter-spacing:.5px">Te deben</div>
+        </div>
+        <div style="background:var(--bg3);border:1px solid var(--b);border-radius:10px;padding:12px;text-align:center">
+          <div style="font-family:'Anton',sans-serif;font-size:24px;color:var(--t)">$${stats.totalPaid.toFixed(2)}</div>
+          <div style="font-size:10px;color:var(--t2);text-transform:uppercase;letter-spacing:.5px">Cobrado</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;font-size:11px;color:var(--t2);margin-bottom:12px">
+        <div style="flex:1;padding:8px;background:var(--bg3);border-radius:8px;text-align:center">
+          <div style="color:var(--t);font-weight:700;font-size:14px">${stats.referredUsersCount}</div>
+          <div>usuarios</div>
+        </div>
+        <div style="flex:1;padding:8px;background:var(--bg3);border-radius:8px;text-align:center">
+          <div style="color:var(--t);font-weight:700;font-size:14px">${stats.total}</div>
+          <div>inscripciones</div>
+        </div>
+        <div style="flex:1;padding:8px;background:var(--bg3);border-radius:8px;text-align:center">
+          <div style="color:var(--t);font-weight:700;font-size:14px">$${stats.totalGenerated.toFixed(0)}</div>
+          <div>generado</div>
+        </div>
+      </div>
+      <div style="font-size:11px;color:var(--t2);margin-bottom:6px">Tu link de invitacion:</div>
+      <div style="display:flex;gap:6px;margin-bottom:8px">
+        <input type="text" value="${link}" id="my-ref-link" readonly style="flex:1;font-size:12px;font-family:'DM Mono',monospace">
+        <button class="btn btn-secondary" onclick="copyMyReferralLink()" style="padding:10px 14px;font-size:12px">Copiar</button>
+      </div>
+      <button class="btn btn-secondary btn-full" onclick="openMyReferrerCommissions()">Ver mis comisiones (${stats.total})</button>
+    </div>
+  `;
+}
+function copyMyReferralLink(){
+  const inp=document.getElementById('my-ref-link');
+  if(!inp)return;
+  inp.select();inp.setSelectionRange(0,99999);
+  navigator.clipboard.writeText(inp.value).then(()=>{
+    toast('Link copiado','success');
+  }).catch(()=>{
+    document.execCommand('copy');toast('Link copiado','success');
+  });
+}
+function openMyReferrerCommissions(){
+  const ref=getMyReferrerRecord();
+  if(!ref){toast('No tienes panel de vendedor','error');return;}
+  const stats=getReferrerStats(ref.id);
+  const comList=stats.commissions.sort((a,b)=>b.createdAt-a.createdAt);
+  const comRows=comList.length===0
+    ? '<div style="padding:14px;text-align:center;color:var(--t3);font-size:12px">Aun no tienes comisiones</div>'
+    : comList.map(c=>{
+      const isPaid=c.status==='paid';
+      return `<div style="display:flex;gap:10px;padding:10px;border:1px solid var(--b);border-radius:8px;margin-bottom:6px;background:${isPaid?'rgba(91,201,125,.04)':'var(--bg3)'}">
+        <div style="flex:1;min-width:0">
+          <div style="font-size:13px;color:var(--t);font-weight:600">Usuario ${c.userName}</div>
+          <div style="font-size:11px;color:var(--t2)">${c.tierName} · ${fmtLogTime(c.createdAt)}</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-family:'Anton',sans-serif;font-size:18px;color:${isPaid?'var(--green-ok)':'var(--accent)'}">$${c.commissionAmount.toFixed(2)}</div>
+          <div style="font-size:10px;color:${isPaid?'var(--green-ok)':'var(--t3)'};text-transform:uppercase">${isPaid?'✓ Pagada':'Pendiente'}</div>
+        </div>
+      </div>`;
+    }).join('');
+  openModal(`<h3>Mis comisiones</h3>
+    <p class="pay-instr">${stats.total} comisiones · $${stats.totalPending.toFixed(2)} pendiente · $${stats.totalPaid.toFixed(2)} cobrado</p>
+    <div style="max-height:55vh;overflow-y:auto;margin:0 -4px">${comRows}</div>
+    <button class="btn btn-secondary btn-full" style="margin-top:12px" onclick="closeModal()">Cerrar</button>
+  `);
+}
 
 /* ── ADMIN: Configuracion (WhatsApp, etc) ── */
 function openAdminConfig(){
@@ -4544,6 +5761,13 @@ function renderPerfil(){
   document.getElementById('pf-team').textContent=CUR.team||'Sin equipo';
   document.getElementById('pf-name').value=CUR.name;
   document.getElementById('pf-team-sel').value=CUR.team||'';
+  // Mostrar badge VENDEDOR si aplica
+  const vendorBadge=document.getElementById('pf-vendor-badge');
+  const myRef=getMyReferrerRecord();
+  if(vendorBadge)vendorBadge.style.display=myRef?'':'none';
+  // Render panel de vendedor
+  const refPanel=document.getElementById('pf-referrer-panel');
+  if(refPanel)renderMyReferrerDashboard(refPanel);
   renderAdminPanel();
 }
 
