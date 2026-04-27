@@ -2395,19 +2395,21 @@ function startResultsListener(){
  try {
  const unsub = fsListen('results', (docs)=>{
  if(!Array.isArray(docs))return;
- // Limpiar y reconstruir DB.results desde Firestore
+ // Firestore es la fuente de verdad: REEMPLAZA local con lo que esta en cloud
+ // (si admin borra un resultado, debe desaparecer en local tambien)
  if(!DB.results)DB.results={};
- if(!DB.results.groups)DB.results.groups={};
- if(!DB.results.ko)DB.results.ko={};
- // No borrar los existentes — hacer merge (en caso de offline writes)
+ const newGroups = {};
+ const newKo = {};
  docs.forEach(d=>{
  if(!d.matchKey)return;
  if(d.type==='group'){
- DB.results.groups[d.matchKey]={a:String(d.scoreA),b:String(d.scoreB)};
+ newGroups[d.matchKey]={a:String(d.scoreA),b:String(d.scoreB)};
  } else if(d.type==='ko'){
- DB.results.ko[d.matchKey]={a:String(d.scoreA),b:String(d.scoreB)};
+ newKo[d.matchKey]={a:String(d.scoreA),b:String(d.scoreB)};
  }
  });
+ DB.results.groups = newGroups;
+ DB.results.ko = newKo;
  saveDB();
  // Recalcular puntos para todos los usuarios
  if(typeof recalcAllUsers==='function')recalcAllUsers();
@@ -2745,9 +2747,8 @@ async function loadMyPredictionsFromFirestore(){
  const uid = fb.auth.currentUser.uid;
  try {
  const docs = await fsList('users/'+uid+'/predictions');
- if(!docs||!docs.length)return true; // no hay predicciones, nada que cargar
  if(!CUR.quinielas)CUR.quinielas={};
- docs.forEach(d=>{
+ (docs||[]).forEach(d=>{
  if(!d.quinielaId||!d.matchKey)return;
  if(!CUR.quinielas[d.quinielaId])CUR.quinielas[d.quinielaId]=emptyQuiniela();
  const q = CUR.quinielas[d.quinielaId];
@@ -2761,20 +2762,39 @@ async function loadMyPredictionsFromFirestore(){
  });
  // Cargar topscorers
  const tsdocs = await fsList('users/'+uid+'/tournament');
- if(tsdocs)tsdocs.forEach(t=>{
+ (tsdocs||[]).forEach(t=>{
  if(!t.quinielaId)return;
  if(!CUR.quinielas[t.quinielaId])CUR.quinielas[t.quinielaId]=emptyQuiniela();
  CUR.quinielas[t.quinielaId].topscorer = t.topscorer||'';
  });
- // Recalcular puntos
- Object.keys(CUR.quinielas).forEach(qid=>{
- const q = CUR.quinielas[qid];
- // No tenemos recalcPts global, lo hace en context. Lo ignoramos aqui.
+ // Si activeQuinielaId apunta a una quiniela vacia pero hay otra con scores, cambia
+ const activeQ = CUR.quinielas[CUR.activeQuinielaId];
+ const activeIsEmpty = !activeQ || (
+ (!activeQ.scores || Object.keys(activeQ.scores).length===0) &&
+ (!activeQ.ko || Object.keys(activeQ.ko).length===0) &&
+ !activeQ.topscorer
+ );
+ if(activeIsEmpty){
+ // Buscar primera quiniela con scores
+ const withScores = Object.entries(CUR.quinielas).find(([id,q])=>{
+ return (q.scores && Object.keys(q.scores).length>0) ||
+ (q.ko && Object.keys(q.ko).length>0) ||
+ q.topscorer;
  });
+ if(withScores){
+ // Verificar que esta quiniela tenga una entry asociada
+ const matchingEntry = (CUR.entries||[]).find(e=>e.quinielaId===withScores[0]);
+ if(matchingEntry){
+ console.log('[Step4] Cambiando activeQuinielaId a',withScores[0],'(tenia data)');
+ CUR.activeQuinielaId = withScores[0];
+ }
+ }
+ }
  saveDB();saveCur();
  if(typeof recalcPts==='function')recalcPts();
  if(typeof updatePts==='function')updatePts();
- console.log('[Step4] Loaded',docs.length,'predictions from Firestore');
+ if(typeof updateActiveLigaBar==='function')updateActiveLigaBar();
+ console.log('[Step4] Loaded',(docs||[]).length,'predictions from Firestore');
  return true;
  } catch(err) {
  console.error('[Step4] loadMyPredictions failed:',err.code||err.message);
@@ -4758,16 +4778,12 @@ function buildUpcomingUI(){
  </div>
  </div>`;
 
- // Filtrar próximos: aún no bloqueados, sin predecir o predichos pero próximos
- // Mostramos: hasta 8 partidos sin predecir más cercanos, o si todos están predichos
- // mostramos los próximos 8 que aún no se han bloqueado
+ // Mostrar los proximos 10 partidos no bloqueados, incluso si ya estan predichos
+ // (asi el usuario puede modificar su prediccion sin perder de vista la card)
  const now=Date.now();
  const upcoming=allMatches.filter(m=>{
  const lockAt=m.kickoff-LOCK_BUFFER_MS;
- if(now>=lockAt)return false; // ya bloqueado
- const sc=q.scores?.[m.key];
- const filled=sc&&sc.a!==''&&sc.b!=='';
- return !filled; // solo sin predecir
+ return now<lockAt; // solo no bloqueados, predichos o no
  }).slice(0,10);
 
  if(upcoming.length===0){
@@ -5596,10 +5612,45 @@ function openQuinielaSwitcher(){
  - Si ya tiene inscripcion(es) en ese tier → activa la primera y va a Grupos a predecir
  - Si no tiene → abre el modal de inscripcion (joinTier) directo */
 function onTierCardClick(t){
- // Click en tier del Home SIEMPRE abre modal de inscripcion.
- // Si el usuario ya tiene inscripcion(es) en este tier, joinTier muestra
- // que sera una inscripcion adicional independiente.
+ // Si ya tiene inscripcion(es) en este tier, preguntar que hacer
+ const myEntries=(CUR.entries||[]).filter(e=>e.tier===t);
+ if(myEntries.length>0){
+ // Mostrar opciones: usar existente, crear nueva, o cancelar
+ const tierName=TIER_NAMES[t]||'Liga';
+ const entryButtons = myEntries.map((e,i)=>{
+ const status = e.status==='approved'?'aprobada':'pendiente';
+ const statusColor = e.status==='approved'?'var(--green-ok)':'var(--accent)';
+ const isActive = CUR.activeQuinielaId===e.quinielaId;
+ return `<button class="btn btn-secondary btn-full" style="margin-bottom:6px;text-align:left;${isActive?'border-color:rgba(255,215,0,.5)':''}" onclick="selectExistingEntry('${e.quinielaId}')">
+ Quiniela #${i+1} ${isActive?'(activa)':''}
+ <span style="float:right;color:${statusColor};font-size:11px">${status}</span>
+ </button>`;
+ }).join('');
+ openModal(`<h3>${tierName}</h3>
+ <p class="pay-instr">Ya tienes ${myEntries.length} ${myEntries.length===1?'inscripcion':'inscripciones'} en esta liga. Que quieres hacer?</p>
+ <div style="margin:12px 0">
+ <p style="font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Tus inscripciones</p>
+ ${entryButtons}
+ </div>
+ <button class="btn btn-primary btn-full" style="margin-top:10px" onclick="closeModal();joinTier('${t}')">Crear nueva inscripcion</button>
+ <button class="btn btn-secondary btn-full" style="margin-top:6px" onclick="closeModal()">Cancelar</button>
+ `);
+ return;
+ }
+ // No tiene entries en este tier → modal de inscripcion directo
  joinTier(t);
+}
+
+/* Selecciona una entry existente y va a su quiniela */
+function selectExistingEntry(quinielaId){
+ if(!CUR)return;
+ CUR.activeQuinielaId=quinielaId;
+ sync();
+ updatePts();
+ if(typeof updateActiveLigaBar==='function')updateActiveLigaBar();
+ closeModal();
+ navTo('grupos');
+ toast('Quiniela activa cambiada','success');
 }
 
 function joinTier(t){
