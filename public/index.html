@@ -2490,6 +2490,107 @@ window.startTournamentListener = startTournamentListener;
 window.startLocksListener = startLocksListener;
 window.stopResultsListeners = stopResultsListeners;
 
+/* ══════════════════════════════════════════════════════════════
+ STEP 4 PREP: DUMP de partidos a Firestore (admin only)
+ ──────────────────────────────────────────────────────────────
+ Sube los 72 partidos del Mundial a la coleccion matches/.
+ - Solo se corre UNA vez (idempotente: si el doc ya existe, lo actualiza)
+ - Se necesita para que las reglas Firestore (Step 6 bulletproof)
+ puedan validar lockTime de cada partido
+ - Tambien util para Step 4 simple porque consolida el calendario
+ ══════════════════════════════════════════════════════════════ */
+async function dumpMatchesToFirestore(){
+ if(!window.fsMode)return {ok:false,reason:'Firestore disabled'};
+ if(!fb||!fb.auth?.currentUser)return {ok:false,reason:'No auth'};
+ if(!CUR?.isAdmin){toast('Solo admins','error');return {ok:false,reason:'Not admin'};}
+
+ const matches=[];
+ // Partidos de fase de grupos: 12 grupos x 6 partidos = 72... NO, son 12 x 6 = 72
+ // Pero en este formato son 12 x 6 = 72 partidos de grupos
+ // Realmente son 12x6=72 group + 32 ko = 104? NO. Mundial 2026 son 48 equipos:
+ // - 12 grupos x 4 equipos x 6 partidos = 72 partidos de grupos
+ // - 32 KO matches (r32 16, r16 8, qf 4, sf 2, tp 1, f 1) = 32 partidos
+ // Total 104 partidos
+ Object.entries(GD).forEach(([letter,teams])=>{
+ let idx=0;
+ for(let i=0;i<teams.length;i++){
+ for(let j=i+1;j<teams.length;j++){
+ const matchKey=`${letter}_${teams[i].n}_vs_${teams[j].n}`;
+ const kickoff=getMatchKickoff(letter,idx);
+ const lockTime=kickoff-LOCK_BUFFER_MS;
+ const venue=getMatchVenue(letter,idx);
+ matches.push({
+ docId:`group:${matchKey}`,
+ type:'group',
+ matchKey,
+ group:letter,
+ teamA:teams[i].n,
+ teamB:teams[j].n,
+ teamAIso:teams[i].iso,
+ teamBIso:teams[j].iso,
+ kickoff,
+ lockTime,
+ venue:venue||'',
+ });
+ idx++;
+ }
+ }
+ });
+ // Partidos de eliminatorias
+ KO_ROUNDS.forEach(round=>{
+ for(let i=0;i<round.count;i++){
+ const matchKey=`${round.id}_${i}`;
+ const kickoff=getKOKickoff(round.id,i);
+ const lockTime=kickoff-LOCK_BUFFER_MS;
+ matches.push({
+ docId:`ko:${matchKey}`,
+ type:'ko',
+ matchKey,
+ round:round.id,
+ roundLabel:round.label,
+ idx:i,
+ kickoff,
+ lockTime,
+ });
+ }
+ });
+
+ // Subir todo a Firestore (en serie para no saturar)
+ let success=0, failed=0;
+ const errors=[];
+ for(const m of matches){
+ try{
+ const {docId,...data}=m;
+ await fsSet('matches/'+docId, data);
+ success++;
+ }catch(err){
+ failed++;
+ errors.push(`${m.docId}: ${err.code||err.message}`);
+ if(errors.length<3)console.error('[Step4 prep] Failed:',m.docId,err);
+ }
+ }
+
+ console.log(`[Step4 prep] Dumped ${success}/${matches.length} matches to Firestore`);
+ return {ok:failed===0,success,failed,total:matches.length,errors:errors.slice(0,5)};
+}
+
+window.dumpMatchesToFirestore = dumpMatchesToFirestore;
+
+/* UI: confirma + corre dump y muestra resultado */
+async function confirmDumpMatches(){
+ if(!CUR?.isAdmin){toast('Solo admins','error');return;}
+ const ok=confirm('Subir los 104 partidos del Mundial 2026 a Firestore?\n\nEsto se hace UNA SOLA VEZ. Si los partidos ya estan, se actualizan.\n\nDuracion: ~10 segundos.');
+ if(!ok)return;
+ toast('Subiendo partidos a Firestore... espera...','success');
+ const result = await dumpMatchesToFirestore();
+ if(result.ok){
+ alert(`Listo. ${result.success} partidos subidos correctamente.`);
+ } else {
+ alert(`Hecho con errores.\nExitosos: ${result.success}/${result.total}\nFallidos: ${result.failed}\n\nPrimeros errores:\n${result.errors.join('\n')}`);
+ }
+}
+window.confirmDumpMatches = confirmDumpMatches;
+
 /* ══════════════════════════════════════════
  SISTEMA DE COMISIONES (referrals/afiliados)
  - DB.referrers: agentes activos con codigo + % comision
@@ -5411,9 +5512,13 @@ function renderAdminPanel(){
  Configuración ${waConfigured?'<span style="color:var(--green-ok);font-size:11px"></span>':'<span style="color:var(--red);font-size:11px">! Pendiente</span>'}
  </button>
  <!-- Step 1 (v18): boton de prueba Firestore para admin -->
- <button class="btn btn-secondary btn-full" onclick="openFirestoreTestModal()" style="margin-bottom:14px;display:flex;align-items:center;justify-content:center;gap:8px;border-color:rgba(91,201,125,.25);color:var(--green-ok)">
+ <button class="btn btn-secondary btn-full" onclick="openFirestoreTestModal()" style="margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:8px;border-color:rgba(91,201,125,.25);color:var(--green-ok)">
  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><circle cx="12" cy="10" r="3"/></svg>
  Test Firestore <span id="fs-status-pill" style="opacity:.85;font-size:11px;font-weight:700">${fb&&fb.firestoreReady===true?' ON':fb&&fb.firestoreReady==='no-auth'?'! login':'○'}</span>
+ </button>
+ <button class="btn btn-secondary btn-full" onclick="confirmDumpMatches()" style="margin-bottom:14px;display:flex;align-items:center;justify-content:center;gap:8px;border-color:rgba(91,201,125,.25);color:var(--green-ok)">
+ <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+ Subir 104 partidos a Firestore
  </button>
 
  <div class="admin-section-label">Inscripciones pendientes (${pendingEntries.length})</div>
