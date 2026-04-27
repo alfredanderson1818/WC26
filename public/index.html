@@ -2576,6 +2576,71 @@ async function dumpMatchesToFirestore(){
 
 window.dumpMatchesToFirestore = dumpMatchesToFirestore;
 
+/* DEBUG/UTIL: Sube TODAS mis predicciones locales a Firestore de un solo golpe.
+   Util para sincronizar datos viejos o cuando el debounce no se completo */
+async function syncAllMyPredictions(){
+ if(!window.fsMode){alert('Firestore disabled');return;}
+ if(!fb||!fb.auth?.currentUser){alert('No auth');return;}
+ if(!CUR){alert('No CUR');return;}
+ const uid = fb.auth.currentUser.uid;
+ const quinielas = CUR.quinielas||{};
+ let count=0, failed=0;
+ const errors=[];
+ for(const [quinielaId, q] of Object.entries(quinielas)){
+ // Group scores
+ if(q.scores){
+ for(const [matchKey, scoreObj] of Object.entries(q.scores)){
+ const a=scoreObj?.a, b=scoreObj?.b;
+ if(a===''||b===''||a==null||b==null)continue;
+ try{
+ await fsSet('users/'+uid+'/predictions/'+quinielaId+'_'+matchKey, {
+ type:'group',matchKey,quinielaId,
+ scoreA:a,scoreB:b,updatedAt:Date.now(),
+ });
+ count++;
+ }catch(err){
+ failed++;
+ errors.push(`${quinielaId}_${matchKey}: ${err.code||err.message}`);
+ }
+ }
+ }
+ // KO scores
+ if(q.ko){
+ for(const [matchKey, scoreObj] of Object.entries(q.ko)){
+ const a=scoreObj?.a, b=scoreObj?.b;
+ if(a===''||b===''||a==null||b==null)continue;
+ try{
+ await fsSet('users/'+uid+'/predictions/'+quinielaId+'_'+matchKey, {
+ type:'ko',matchKey,quinielaId,
+ scoreA:a,scoreB:b,updatedAt:Date.now(),
+ });
+ count++;
+ }catch(err){
+ failed++;
+ errors.push(`${quinielaId}_${matchKey}: ${err.code||err.message}`);
+ }
+ }
+ }
+ // Topscorer
+ if(q.topscorer){
+ try{
+ await fsSet('users/'+uid+'/tournament/'+quinielaId, {
+ quinielaId,topscorer:q.topscorer,updatedAt:Date.now(),
+ });
+ count++;
+ }catch(err){
+ failed++;
+ errors.push(`tournament/${quinielaId}: ${err.code||err.message}`);
+ }
+ }
+ }
+ const msg = `Sync completo:\n${count} predicciones subidas\n${failed} errores`+(errors.length?`\n\nPrimeros errores:\n${errors.slice(0,3).join('\n')}`:'');
+ alert(msg);
+ console.log('[Step4 force sync]',{count,failed,errors});
+ return {count,failed,errors};
+}
+window.syncAllMyPredictions = syncAllMyPredictions;
+
 /* UI: confirma + corre dump y muestra resultado */
 async function confirmDumpMatches(){
  if(!CUR?.isAdmin){toast('Solo admins','error');return;}
@@ -4794,10 +4859,12 @@ function onScoreChange(inp){
  const isA=id.endsWith('_a');
  const cleanKey=id.replace(/^sc_/,'').replace(/_[ab]$/,'');
  const q=getActiveQ();
+ if(!q){console.warn('[Step4 DEBUG] onScoreChange: NO HAY activeQuiniela');return;}
  if(!q.scores)q.scores={};
  if(!q.scores[cleanKey])q.scores[cleanKey]={a:'',b:''};
  if(isA)q.scores[cleanKey].a=inp.value;
  else q.scores[cleanKey].b=inp.value;
+ console.log('[Step4 DEBUG] onScoreChange:',cleanKey,'=',q.scores[cleanKey],'qid:',CUR.activeQuinielaId);
  recalcPts();sync();
  // Log debounced (espera 1.5s para agrupar ediciones rapidas)
  schedulePredLog('group',cleanKey,q.scores[cleanKey],CUR.activeQuinielaId);
