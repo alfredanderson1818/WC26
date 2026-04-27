@@ -2306,6 +2306,190 @@ window.loadUserFromFirestore = loadUserFromFirestore;
 window.startMyUserListener = startMyUserListener;
 window.stopMyUserListener = stopMyUserListener;
 
+/* ══════════════════════════════════════════════════════════════
+ STEP 3 (v29): RESULTADOS OFICIALES en Firestore
+ ──────────────────────────────────────────────────────────────
+ - Solo el ADMIN escribe (las reglas lo refuerzan)
+ - Cualquier autenticado lee
+ - Real-time: cuando admin ingresa resultado, todos los usuarios lo ven
+ al instante en sus dispositivos y sus puntos se recalculan
+ - Dual-write: localStorage sigue siendo cache, Firestore es la verdad
+ ══════════════════════════════════════════════════════════════ */
+
+window._resultsListener = null;
+window._tournamentListener = null;
+window._locksListener = null;
+
+/* Sube el resultado de un partido a Firestore.
+   matchKey ej: "A_MEX_vs_RSA" (grupos) o "r32_match_1" (eliminatoria) */
+async function syncResultToFirestore(type, matchKey, scoreObj){
+ if(!window.fsMode)return false;
+ if(!fb||!fb.auth?.currentUser)return false;
+ try {
+ const docId = type+':'+matchKey; // ej: "group:A_MEX_vs_RSA"
+ if(scoreObj){
+ await fsSet('results/'+docId, {
+ type, matchKey,
+ scoreA: scoreObj.a,
+ scoreB: scoreObj.b,
+ enteredBy: fb.auth.currentUser.uid,
+ enteredAt: Date.now(),
+ });
+ } else {
+ await fsDelete('results/'+docId);
+ }
+ console.log('[Step3] Result synced:',docId,scoreObj);
+ return true;
+ } catch(err){
+ console.error('[Step3] syncResultToFirestore failed:',err.code||'',err.message);
+ return false;
+ }
+}
+
+/* Sube champion / topscorer a tournament/main */
+async function syncTournamentToFirestore(){
+ if(!window.fsMode)return false;
+ if(!fb||!fb.auth?.currentUser)return false;
+ try {
+ await fsSet('tournament/main', {
+ champion: DB.results?.champion||'',
+ topscorer: DB.results?.topscorer||'',
+ updatedBy: fb.auth.currentUser.uid,
+ updatedAt: Date.now(),
+ });
+ console.log('[Step3] Tournament data synced');
+ return true;
+ } catch(err){
+ console.error('[Step3] syncTournamentToFirestore failed:',err.code||'',err.message);
+ return false;
+ }
+}
+
+/* Sube locks (grupos/ko) a Firestore */
+async function syncLockToFirestore(type, matchKey, locked){
+ if(!window.fsMode)return false;
+ if(!fb||!fb.auth?.currentUser)return false;
+ try {
+ const docId = type+':'+matchKey;
+ if(locked){
+ await fsSet('locks/'+docId, {
+ type, matchKey,
+ lockedAt: Date.now(),
+ lockedBy: fb.auth.currentUser.uid,
+ });
+ } else {
+ await fsDelete('locks/'+docId);
+ }
+ return true;
+ } catch(err){
+ console.error('[Step3] syncLockToFirestore failed:',err.code||'',err.message);
+ return false;
+ }
+}
+
+/* Listener real-time: cuando admin cambia results, todos los usuarios reciben el update */
+function startResultsListener(){
+ if(!window.fsMode)return null;
+ if(!fb||!fb.auth?.currentUser)return null;
+ if(window._resultsListener){try{window._resultsListener();}catch(e){}}
+ try {
+ const unsub = fsListen('results', (docs)=>{
+ if(!Array.isArray(docs))return;
+ // Limpiar y reconstruir DB.results desde Firestore
+ if(!DB.results)DB.results={};
+ if(!DB.results.groups)DB.results.groups={};
+ if(!DB.results.ko)DB.results.ko={};
+ // No borrar los existentes — hacer merge (en caso de offline writes)
+ docs.forEach(d=>{
+ if(!d.matchKey)return;
+ if(d.type==='group'){
+ DB.results.groups[d.matchKey]={a:String(d.scoreA),b:String(d.scoreB)};
+ } else if(d.type==='ko'){
+ DB.results.ko[d.matchKey]={a:String(d.scoreA),b:String(d.scoreB)};
+ }
+ });
+ saveDB();
+ // Recalcular puntos para todos los usuarios
+ if(typeof recalcAllUsers==='function')recalcAllUsers();
+ // Si esta en pagina de grupos/eliminatorias, refrescar
+ if(typeof refreshDashStats==='function')refreshDashStats();
+ console.log('[Step3] Results updated from Firestore:',docs.length,'docs');
+ });
+ window._resultsListener = unsub;
+ return unsub;
+ } catch(err){
+ console.error('[Step3] startResultsListener failed:',err.code||'',err.message);
+ return null;
+ }
+}
+
+function startTournamentListener(){
+ if(!window.fsMode)return null;
+ if(!fb||!fb.auth?.currentUser)return null;
+ if(window._tournamentListener){try{window._tournamentListener();}catch(e){}}
+ try {
+ const unsub = fsListen('tournament/main', (doc)=>{
+ if(!doc)return;
+ if(!DB.results)DB.results={};
+ DB.results.champion = doc.champion||'';
+ DB.results.topscorer = doc.topscorer||'';
+ saveDB();
+ if(typeof recalcAllUsers==='function')recalcAllUsers();
+ console.log('[Step3] Tournament updated:',doc);
+ });
+ window._tournamentListener = unsub;
+ return unsub;
+ } catch(err){
+ console.error('[Step3] startTournamentListener failed:',err.code||'',err.message);
+ return null;
+ }
+}
+
+function startLocksListener(){
+ if(!window.fsMode)return null;
+ if(!fb||!fb.auth?.currentUser)return null;
+ if(window._locksListener){try{window._locksListener();}catch(e){}}
+ try {
+ const unsub = fsListen('locks', (docs)=>{
+ if(!Array.isArray(docs))return;
+ if(!DB.locks)DB.locks={};
+ if(!DB.locks.groups)DB.locks.groups={};
+ if(!DB.locks.ko)DB.locks.ko={};
+ // Reconstruir locks desde Firestore
+ const newGroups = {};
+ const newKo = {};
+ docs.forEach(d=>{
+ if(!d.matchKey||!d.type)return;
+ if(d.type==='group')newGroups[d.matchKey]=d.lockedAt;
+ if(d.type==='ko')newKo[d.matchKey]=d.lockedAt;
+ });
+ DB.locks.groups = newGroups;
+ DB.locks.ko = newKo;
+ saveDB();
+ console.log('[Step3] Locks updated from Firestore');
+ });
+ window._locksListener = unsub;
+ return unsub;
+ } catch(err){
+ console.error('[Step3] startLocksListener failed:',err.code||'',err.message);
+ return null;
+ }
+}
+
+function stopResultsListeners(){
+ if(window._resultsListener){try{window._resultsListener();}catch(e){}window._resultsListener=null;}
+ if(window._tournamentListener){try{window._tournamentListener();}catch(e){}window._tournamentListener=null;}
+ if(window._locksListener){try{window._locksListener();}catch(e){}window._locksListener=null;}
+}
+
+window.syncResultToFirestore = syncResultToFirestore;
+window.syncTournamentToFirestore = syncTournamentToFirestore;
+window.syncLockToFirestore = syncLockToFirestore;
+window.startResultsListener = startResultsListener;
+window.startTournamentListener = startTournamentListener;
+window.startLocksListener = startLocksListener;
+window.stopResultsListeners = stopResultsListeners;
+
 /* ══════════════════════════════════════════
  SISTEMA DE COMISIONES (referrals/afiliados)
  - DB.referrers: agentes activos con codigo + % comision
@@ -3105,7 +3289,10 @@ function doRegister(){
  err.textContent='';
  pushLog({type:'auth',action:'register',targetId:u.id,targetName:u.name,payload:{method:'email',tycVersion:LEGAL_VERSION}});
  // Step 2: subir a Firestore inmediatamente
- syncUserToFirestore(u).then(()=>startMyUserListener());
+ syncUserToFirestore(u).then(()=>{
+ startMyUserListener();
+ startResultsListener();startTournamentListener();startLocksListener();
+ });
  enterApp();
  toast('Cuenta creada · Bienvenido '+name,'success');
  cred.user.sendEmailVerification().catch(()=>{});
@@ -3141,6 +3328,7 @@ function doLogin(){
  }
  CUR=u;saveCur();
  startMyUserListener();
+ startResultsListener();startTournamentListener();startLocksListener();
  err.textContent='';
  pushLog({type:'auth',action:'login',targetId:u.id,targetName:u.name,payload:{method:'email'}});
  enterApp();
@@ -3181,7 +3369,10 @@ function doGoogleLogin(){
  }
  CUR=u;saveCur();
  // Step 2: sync a Firestore (crea si no existe, actualiza si existe)
- syncUserToFirestore(u).then(()=>startMyUserListener());
+ syncUserToFirestore(u).then(()=>{
+ startMyUserListener();
+ startResultsListener();startTournamentListener();startLocksListener();
+ });
  if(err)err.textContent='';
  pushLog({type:'auth',action:'login',targetId:u.id,targetName:u.name,payload:{method:'google'}});
  enterApp();
@@ -3326,8 +3517,9 @@ document.addEventListener('DOMContentLoaded',()=>{
 });
 function doLogout(){
  if(!confirm('Cerrar sesion?'))return;
- // Step 2: detener listener Firestore antes de cerrar sesion
+ // Step 2 + 3: detener todos los listeners Firestore antes de cerrar sesion
  stopMyUserListener();
+ stopResultsListeners();
  // Cerrar tambien en Firebase si hay sesion
  fb.auth.signOut().catch(()=>{});
  CUR=null;
@@ -3374,6 +3566,10 @@ fb.auth.onAuthStateChanged(async user=>{
  }
  // Iniciar listener real-time de mi propio doc
  startMyUserListener();
+ // Step 3: arrancar listeners de results, tournament, locks (todos los users los necesitan)
+ startResultsListener();
+ startTournamentListener();
+ startLocksListener();
  // Si estamos en pantalla de auth, navegar a app
  const onAuth=['screen-onboard','screen-register','screen-login']
  .some(s=>document.getElementById(s)?.classList.contains('active'));
@@ -5559,21 +5755,23 @@ function saveOfficialResult(lockKey){
  const ai=parseInt(a),bi=parseInt(b);
  if(isNaN(ai)||isNaN(bi)||ai<0||bi<0){toast('Marcadores invalidos','error');return;}
  const [type,key]=lockKey.split(':');
+ const scoreObj={a:String(ai),b:String(bi)};
  if(type==='group'){
  if(!DB.results.groups)DB.results.groups={};
- DB.results.groups[key]={a:String(ai),b:String(bi)};
+ DB.results.groups[key]=scoreObj;
  } else if(type==='ko'){
  if(!DB.results.ko)DB.results.ko={};
- DB.results.ko[key]={a:String(ai),b:String(bi)};
+ DB.results.ko[key]=scoreObj;
  }
  saveDB();
  recalcAllUsers();
+ // Step 3: sync a Firestore (todos los usuarios reciben el update en tiempo real)
+ syncResultToFirestore(type, key, scoreObj);
  pushLog({
  type:'admin',action:'set_result',
  payload:{lockKey,score:{a:ai,b:bi},matchKey:key},
  });
- toast(' Resultado guardado · Puntos recalculados','success');
- // Re-abrir modal para refresh
+ toast('Resultado guardado · Puntos recalculados','success');
  closeModal();
  setTimeout(openResultsAdmin,100);
 }
@@ -5585,6 +5783,8 @@ function clearOfficialResult(lockKey){
  if(type==='ko'&&DB.results.ko)delete DB.results.ko[key];
  saveDB();
  recalcAllUsers();
+ // Step 3: borrar de Firestore
+ syncResultToFirestore(type, key, null);
  pushLog({
  type:'admin',action:'clear_result',
  payload:{lockKey,matchKey:key},
@@ -5597,14 +5797,17 @@ function clearOfficialResult(lockKey){
 function toggleAdminLock(lockKey){
  const [type,key]=lockKey.split(':');
  if(!DB.locks[type])DB.locks[type]={};
- if(DB.locks[type][key]){
+ const wasLocked = !!DB.locks[type][key];
+ if(wasLocked){
  delete DB.locks[type][key];
  toast('Desbloqueado','success');
  } else {
  DB.locks[type][key]=Date.now();
- toast(' Bloqueado manualmente','success');
+ toast('Bloqueado manualmente','success');
  }
  saveDB();
+ // Step 3: sync lock a Firestore
+ syncLockToFirestore(type, key, !wasLocked);
  closeModal();
  setTimeout(openResultsAdmin,100);
 }
@@ -5613,13 +5816,15 @@ function saveOfficialChampion(){
  const v=document.getElementById('adm-champ-inp').value;
  DB.results.champion=v;
  saveDB();recalcAllUsers();
- toast(v?` Campeon: ${v}`:'Campeon borrado','success');
+ syncTournamentToFirestore();
+ toast(v?`Campeon: ${v}`:'Campeon borrado','success');
  closeModal();setTimeout(openResultsAdmin,100);
 }
 function clearOfficialChampion(){
  if(!confirm('Borrar campeon oficial?'))return;
  DB.results.champion='';
  saveDB();recalcAllUsers();
+ syncTournamentToFirestore();
  toast('Campeon borrado','success');
  closeModal();setTimeout(openResultsAdmin,100);
 }
@@ -5648,13 +5853,15 @@ function saveOfficialTopscorer(){
  }
  DB.results.topscorer=v;
  saveDB();recalcAllUsers();
- toast(v?` Goleador: ${v}`:'Goleador borrado','success');
+ syncTournamentToFirestore();
+ toast(v?`Goleador: ${v}`:'Goleador borrado','success');
  closeModal();setTimeout(openResultsAdmin,100);
 }
 function clearOfficialTopscorer(){
  if(!confirm('Borrar goleador oficial?'))return;
  DB.results.topscorer='';
  saveDB();recalcAllUsers();
+ syncTournamentToFirestore();
  toast('Goleador borrado','success');
  closeModal();setTimeout(openResultsAdmin,100);
 }
