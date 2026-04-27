@@ -301,6 +301,38 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
 /* ── BOTTOM NAV (4 items uniformes) ── */
 .app-bnav{position:fixed;bottom:0;left:0;right:0;z-index:100;background:rgba(11,9,5,.97);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--b);display:flex;padding-bottom:var(--sb);padding-top:6px}
 .bnav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 4px 6px;background:none;border:none;cursor:pointer;color:var(--t3);gap:3px;-webkit-tap-highlight-color:transparent;touch-action:manipulation;transition:color .15s;font-family:'DM Sans',sans-serif}
+
+/* Admin page — centro de control */
+.admin-hero{background:linear-gradient(135deg,rgba(255,215,0,.15),rgba(255,215,0,.04));border:1px solid rgba(255,215,0,.3);border-radius:14px;padding:18px;margin-bottom:18px}
+.admin-hero-label{font-size:11px;color:var(--accent);text-transform:uppercase;letter-spacing:1px;font-weight:800;margin-bottom:4px}
+.admin-hero-amount{font-family:'Anton',sans-serif;font-size:48px;color:var(--accent);line-height:1;letter-spacing:.5px}
+.admin-hero-sub{font-size:12px;color:var(--t2);margin-top:6px}
+.admin-hero-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,215,0,.15)}
+.admin-hero-mini{text-align:center}
+.admin-hero-mini-num{font-family:'Anton',sans-serif;font-size:22px;color:var(--t)}
+.admin-hero-mini-lbl{font-size:10px;color:var(--t2);text-transform:uppercase;letter-spacing:.5px}
+
+.admin-cards{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.admin-card{background:var(--bg3);border:1px solid var(--b);border-radius:12px;padding:14px;cursor:pointer;transition:transform .15s, border-color .15s;position:relative;display:flex;flex-direction:column;justify-content:space-between;min-height:100px}
+.admin-card:hover{border-color:rgba(255,215,0,.3);transform:translateY(-1px)}
+.admin-card:active{transform:translateY(1px)}
+.admin-card-ico{width:36px;height:36px;border-radius:8px;background:rgba(255,215,0,.1);border:1px solid rgba(255,215,0,.2);display:flex;align-items:center;justify-content:center;color:var(--accent);margin-bottom:8px}
+.admin-card-ico svg{width:18px;height:18px}
+.admin-card-title{font-size:13px;font-weight:700;color:var(--t);margin-bottom:2px}
+.admin-card-sub{font-size:11px;color:var(--t2);line-height:1.4}
+.admin-card-badge{position:absolute;top:10px;right:10px;background:var(--accent);color:#000;font-size:10px;font-weight:800;padding:2px 7px;border-radius:10px;letter-spacing:.3px}
+.admin-card.alert{border-color:rgba(255,107,53,.3)}
+.admin-card.alert .admin-card-ico{background:rgba(255,107,53,.1);border-color:rgba(255,107,53,.2);color:#FF6B35}
+.admin-card.alert .admin-card-badge{background:#FF6B35;color:#fff}
+
+/* Admin pending section */
+.admin-pending-card{background:var(--bg3);border:1px solid var(--b);border-left:3px solid var(--accent);border-radius:8px;padding:12px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.admin-pending-info{flex:1;min-width:0}
+.admin-pending-name{font-size:13px;font-weight:600;color:var(--t)}
+.admin-pending-meta{font-size:11px;color:var(--t2);margin-top:2px}
+.admin-pending-actions{display:flex;gap:6px;flex-shrink:0}
+.admin-pending-actions button{font-size:11px;padding:6px 10px}
+
 .bnav-btn.active{color:var(--gold)}
 .bnav-btn svg{width:22px;height:22px;flex-shrink:0}
 /* Botón centrado: mismo tamaño que los demás, solo con un punto dorado debajo cuando NO está activo */
@@ -1569,6 +1601,23 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
  <button class="btn btn-secondary btn-full" style="margin-top:14px" onclick="doLogout()">Cerrar sesion</button>
  </div>
 
+ <!-- ═══════════════════════════════════════════
+ PÁGINA ADMIN (solo visible si CUR.isAdmin)
+ ═══════════════════════════════════════════ -->
+ <div id="page-admin" class="page">
+ <div class="dash-hero-eyebrow" style="color:var(--accent)">PANEL ADMIN · MUNDIAL 2026</div>
+ <div class="sec-title" style="margin-top:6px">Centro de control</div>
+
+ <!-- Big stat hero -->
+ <div id="admin-hero" style="margin-top:14px"></div>
+
+ <!-- Quick action cards -->
+ <div class="admin-cards" id="admin-cards"></div>
+
+ <!-- Pending inscripciones (si hay) -->
+ <div id="admin-pending-section" style="margin-top:20px"></div>
+ </div>
+
  </div><!-- /app-content -->
 
  <!-- BOTTOM NAV: Inicio | Grupos | Mi Quiniela (centrado destacado) | Ranking | Perfil -->
@@ -1594,6 +1643,10 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
  <button class="bnav-btn" data-page="perfil" onclick="navTo('perfil')">
  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
  <span class="bnav-label">Perfil</span>
+ </button>
+ <button class="bnav-btn bnav-admin hidden" id="bnav-admin-btn" data-page="admin" onclick="navTo('admin')" style="color:var(--accent)">
+ <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1l3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></svg>
+ <span class="bnav-label">Admin</span>
  </button>
  </nav>
 </div>
@@ -2280,6 +2333,7 @@ function startMyUserListener(){
  console.log('[Step2] Admin status changed:',CUR.isAdmin);
  if(typeof renderAdminPanel==='function')renderAdminPanel();
  if(typeof renderPerfil==='function')renderPerfil();
+ if(typeof refreshAdminNavBtn==='function')refreshAdminNavBtn();
  toast(CUR.isAdmin?'Eres admin ahora':'Ya no eres admin','success');
  }
  });
@@ -3189,7 +3243,10 @@ function consumePendingReferral(){
  }catch(e){return null;}
 }
 function getReferralLink(code){
- const origin=window.location.origin;
+ // Si la app esta en file:// (desarrollo local) usar siempre la URL de produccion
+ const origin = window.location.protocol === 'file:'
+ ? 'https://qupa26-a019a.web.app'
+ : window.location.origin;
  return `${origin}/?ref=${code}`;
 }
 
@@ -3558,6 +3615,7 @@ function navTo(page){
  }
  if(page==='ranking')renderRanking();
  if(page==='perfil')renderPerfil();
+ if(page==='admin')renderAdminDashboard();
 }
 
 /* ── AUTH (Firebase Auth + DB.users sincronizados por email) ──
@@ -3959,6 +4017,8 @@ function enterApp(){
  sync();
  updatePts();
  updateActiveLigaBar();
+ // Mostrar/ocultar tab Admin segun rol
+ if(typeof refreshAdminNavBtn==='function')refreshAdminNavBtn();
  navTo('dashboard');
  Object.entries(TIER_SPOTS).forEach(([t,s])=>{
  const el=document.getElementById('dl-'+t);
@@ -5757,6 +5817,137 @@ function getEntryStatus(quinielaId){
 function isEntryApproved(quinielaId){
  return getEntryStatus(quinielaId)==='approved';
 }
+
+/* ══════════════════════════════════════════════════════════════
+ ADMIN DASHBOARD (página dedicada accesible desde bottom nav)
+ - Hero: ganancia neta + KPIs
+ - Cards de acción rápida hacia cada sección admin
+ - Inscripciones pendientes destacadas
+ ══════════════════════════════════════════════════════════════ */
+function renderAdminDashboard(){
+ if(!isAdmin(CUR))return;
+ const hero=document.getElementById('admin-hero');
+ const cards=document.getElementById('admin-cards');
+ const pendSec=document.getElementById('admin-pending-section');
+ if(!hero||!cards)return;
+
+ const rakeRate=getRakeRate();
+ let totalRecaudado=0, totalUsers=0, pendingCount=0, approvedCount=0;
+ DB.users.forEach(u=>{
+ if(u.id&&u.id.startsWith('guest_'))return;
+ totalUsers++;
+ (u.entries||[]).forEach(e=>{
+ const status=e.status||'pending';
+ if(status==='approved'){
+ approvedCount++;
+ totalRecaudado+=parseInt(e.tier||0);
+ } else if(status==='pending'){
+ pendingCount++;
+ }
+ });
+ });
+ const allCom=DB.commissions||[];
+ const totalCommissions=allCom.reduce((s,c)=>s+c.commissionAmount,0);
+ const grandRake=totalRecaudado*rakeRate;
+ const netProfit=grandRake-totalCommissions;
+ const claimedPayouts=(DB.payouts||[]).filter(p=>p.status==='claimed').length;
+ const refsCount=(DB.referrers||[]).length;
+ const logsCount=(DB.logs||[]).length;
+ const waConfigured=!!getAdminWhatsApp();
+
+ hero.innerHTML=`<div class="admin-hero">
+ <div class="admin-hero-label">Mi ganancia neta</div>
+ <div class="admin-hero-amount">$${netProfit.toLocaleString()}</div>
+ <div class="admin-hero-sub">${approvedCount} ${approvedCount===1?'inscripcion aprobada':'inscripciones aprobadas'} · ${totalUsers} ${totalUsers===1?'usuario':'usuarios'}</div>
+ <div class="admin-hero-row">
+ <div class="admin-hero-mini">
+ <div class="admin-hero-mini-num">$${totalRecaudado.toLocaleString()}</div>
+ <div class="admin-hero-mini-lbl">Recaudado</div>
+ </div>
+ <div class="admin-hero-mini">
+ <div class="admin-hero-mini-num">$${grandRake.toFixed(0).toLocaleString()}</div>
+ <div class="admin-hero-mini-lbl">Mi rake (${(rakeRate*100).toFixed(0)}%)</div>
+ </div>
+ </div>
+ </div>`;
+
+ const cardData=[
+ {ico:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
+ title:'Resultados',sub:'Ingresar resultados oficiales',onclick:'openResultsAdmin()',badge:null},
+ {ico:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>',
+ title:'Inscripciones',sub:`${pendingCount} pendientes · ${approvedCount} aprobadas`,onclick:'scrollToPending()',badge:pendingCount>0?String(pendingCount):null,alert:pendingCount>0},
+ {ico:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>',
+ title:'Ingresos',sub:'Mi ganancia detallada',onclick:'openIngresosAdmin()',badge:null},
+ {ico:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
+ title:'Agentes',sub:`${refsCount} ${refsCount===1?'agente activo':'agentes activos'}`,onclick:'openReferrersAdmin()',badge:null},
+ {ico:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H3l1 5h2m12-5h3l-1 5h-2M6 9V4h12v5M6 9c0 4.418 2.686 8 6 8s6-3.582 6-8M9 20h6M12 18v2"/></svg>',
+ title:'Premios',sub:claimedPayouts>0?`${claimedPayouts} reclamados`:'Liberar y pagar premios',onclick:'openPayoutsAdmin()',badge:claimedPayouts>0?String(claimedPayouts):null,alert:claimedPayouts>0},
+ {ico:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/></svg>',
+ title:'Configuración',sub:waConfigured?'Rake, comisiones, WhatsApp':'Configurar WhatsApp',onclick:'openAdminConfig()',badge:!waConfigured?'!':null,alert:!waConfigured},
+ {ico:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>',
+ title:'Logs',sub:`${logsCount} eventos auditados`,onclick:'openAuditLog()',badge:null},
+ {ico:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><circle cx="12" cy="10" r="3"/></svg>',
+ title:'Firestore',sub:'Test conexion + dump partidos',onclick:'openFirestoreTestModal()',badge:null},
+ ];
+ cards.innerHTML=cardData.map(c=>`<div class="admin-card${c.alert?' alert':''}" onclick="${c.onclick}">
+ ${c.badge?`<div class="admin-card-badge">${c.badge}</div>`:''}
+ <div class="admin-card-ico">${c.ico}</div>
+ <div>
+ <div class="admin-card-title">${c.title}</div>
+ <div class="admin-card-sub">${c.sub}</div>
+ </div>
+ </div>`).join('');
+
+ if(pendSec){
+ if(pendingCount>0){
+ const pending=[];
+ DB.users.forEach(u=>{
+ if(u.id&&u.id.startsWith('guest_'))return;
+ (u.entries||[]).forEach(e=>{
+ if((e.status||'pending')==='pending')pending.push({user:u,entry:e});
+ });
+ });
+ pending.sort((a,b)=>(b.entry.joinedAt||0)-(a.entry.joinedAt||0));
+ pendSec.innerHTML=`<div id="admin-pending-anchor"></div>
+ <div class="admin-section-label" style="color:var(--accent)">Inscripciones pendientes (${pendingCount})</div>
+ ${pending.slice(0,10).map(({user,entry})=>{
+ const tierName=TIER_NAMES[entry.tier]||'Liga';
+ const days=Math.floor((Date.now()-(entry.joinedAt||0))/86400000);
+ const dateLabel=days===0?'Hoy':days===1?'Ayer':`Hace ${days}d`;
+ return `<div class="admin-pending-card">
+ <div class="admin-pending-info">
+ <div class="admin-pending-name">${user.name}</div>
+ <div class="admin-pending-meta">${tierName} · $${entry.tier} · ${dateLabel}</div>
+ </div>
+ <div class="admin-pending-actions">
+ <button class="btn btn-primary" onclick="approveEntry('${user.id}','${entry.quinielaId}')">Aprobar</button>
+ <button class="btn btn-secondary" onclick="rejectEntry('${user.id}','${entry.quinielaId}')">Rechazar</button>
+ </div>
+ </div>`;
+ }).join('')}`;
+ } else {
+ pendSec.innerHTML='';
+ }
+ }
+}
+
+/* Helper para scrollear a pending desde el card */
+function scrollToPending(){
+ const a=document.getElementById('admin-pending-anchor');
+ if(a)a.scrollIntoView({behavior:'smooth',block:'start'});
+ else toast('No hay pendientes','success');
+}
+
+/* Mostrar/ocultar tab Admin del bottom nav segun rol */
+function refreshAdminNavBtn(){
+ const btn=document.getElementById('bnav-admin-btn');
+ if(!btn)return;
+ if(CUR&&CUR.isAdmin)btn.classList.remove('hidden');
+ else btn.classList.add('hidden');
+}
+window.renderAdminDashboard=renderAdminDashboard;
+window.scrollToPending=scrollToPending;
+window.refreshAdminNavBtn=refreshAdminNavBtn;
 
 /* ── PANEL ADMIN — Acreditar saldo a usuarios ──
  El admin elige un usuario, ingresa el monto, opcionalmente una nota,
