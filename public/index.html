@@ -4890,11 +4890,14 @@ function schedulePredLog(kind,matchKey,scoreOrPick,quinielaId){
  delete _predLogTimers[k];
  },1500);
 }
-/* Event delegation handler para inputs en grupos-container */
+/* Event delegation handler para inputs en grupos-container y upcoming-container */
 let _rebuildTimer=null;
 function handleScoreInput(e){
  const t=e.target;
- if(!t.classList||!t.classList.contains('score-inp'))return;
+ if(!t.classList)return;
+ // Aceptar tanto la clase 'score-inp' (vista grupos) como 'match-card-score-input' (vista upcoming)
+ const isScoreInput = t.classList.contains('score-inp') || t.classList.contains('match-card-score-input');
+ if(!isScoreInput)return;
  onScoreChange(t);
  // Re-render diferido sin perder focus
  clearTimeout(_rebuildTimer);
