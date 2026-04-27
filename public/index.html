@@ -2591,6 +2591,169 @@ async function confirmDumpMatches(){
 }
 window.confirmDumpMatches = confirmDumpMatches;
 
+/* ══════════════════════════════════════════════════════════════
+ STEP 4 (v31): PREDICCIONES en Firestore (version simple)
+ ──────────────────────────────────────────────────────────────
+ Estructura en Firestore:
+ - users/{uid}/predictions/{quinielaId}_{matchKey}
+ → {scoreA, scoreB, type:'group'|'ko', updatedAt}
+ - users/{uid}/tournament/{quinielaId}
+ → {topscorer, updatedAt}
+
+ Privacidad (version simple, en cliente):
+ - El cliente solo MUESTRA predicciones de OTROS si el partido esta locked
+ - Admin siempre puede ver todo
+ - Las reglas Firestore permiten read a cualquier autenticado (Step 6 lo
+ vuelve bulletproof por servidor con timestamps)
+
+ Debounce: 1.5s para no saturar Firestore con cada tecla
+ ══════════════════════════════════════════════════════════════ */
+
+const _fsPredTimers = {};
+const FS_PRED_DEBOUNCE_MS = 1500;
+
+/* Sube una prediccion (group o ko) a Firestore con debounce */
+function schedulePredictionSync(type, matchKey, scoreObj, quinielaId){
+ if(!window.fsMode)return;
+ if(!fb||!fb.auth?.currentUser)return;
+ const uid = fb.auth.currentUser.uid;
+ const docId = quinielaId+'_'+matchKey;
+ const k = type+':'+docId;
+ if(_fsPredTimers[k])clearTimeout(_fsPredTimers[k]);
+ _fsPredTimers[k] = setTimeout(async ()=>{
+ try {
+ // Si los dos scores estan vacios, borrar el doc
+ const a=scoreObj?.a, b=scoreObj?.b;
+ if((a===''||a==null) && (b===''||b==null)){
+ await fsDelete('users/'+uid+'/predictions/'+docId);
+ } else {
+ await fsSet('users/'+uid+'/predictions/'+docId, {
+ type,
+ matchKey,
+ quinielaId,
+ scoreA: a||'',
+ scoreB: b||'',
+ updatedAt: Date.now(),
+ });
+ }
+ console.log('[Step4] Pred synced:',docId);
+ } catch(err) {
+ console.error('[Step4] Pred sync failed:',docId,err.code||err.message);
+ }
+ delete _fsPredTimers[k];
+ }, FS_PRED_DEBOUNCE_MS);
+}
+
+/* Sube el goleador del usuario */
+const _fsTsTimer = {};
+function scheduleTopScorerSync(topscorer, quinielaId){
+ if(!window.fsMode)return;
+ if(!fb||!fb.auth?.currentUser)return;
+ const uid = fb.auth.currentUser.uid;
+ const k = 'ts:'+quinielaId;
+ if(_fsTsTimer[k])clearTimeout(_fsTsTimer[k]);
+ _fsTsTimer[k] = setTimeout(async ()=>{
+ try {
+ await fsSet('users/'+uid+'/tournament/'+quinielaId, {
+ quinielaId,
+ topscorer: topscorer||'',
+ updatedAt: Date.now(),
+ });
+ console.log('[Step4] Topscorer synced:',quinielaId,topscorer);
+ } catch(err) {
+ console.error('[Step4] Topscorer sync failed:',err.code||err.message);
+ }
+ delete _fsTsTimer[k];
+ }, FS_PRED_DEBOUNCE_MS);
+}
+
+/* Carga TODAS las predicciones del usuario actual desde Firestore al loguearse.
+   Mergea con localStorage (cloud es autoridad). */
+async function loadMyPredictionsFromFirestore(){
+ if(!window.fsMode)return false;
+ if(!fb||!fb.auth?.currentUser)return false;
+ if(!CUR)return false;
+ const uid = fb.auth.currentUser.uid;
+ try {
+ const docs = await fsList('users/'+uid+'/predictions');
+ if(!docs||!docs.length)return true; // no hay predicciones, nada que cargar
+ if(!CUR.quinielas)CUR.quinielas={};
+ docs.forEach(d=>{
+ if(!d.quinielaId||!d.matchKey)return;
+ if(!CUR.quinielas[d.quinielaId])CUR.quinielas[d.quinielaId]=emptyQuiniela();
+ const q = CUR.quinielas[d.quinielaId];
+ if(d.type==='group'){
+ if(!q.scores)q.scores={};
+ q.scores[d.matchKey]={a:d.scoreA||'',b:d.scoreB||''};
+ } else if(d.type==='ko'){
+ if(!q.ko)q.ko={};
+ q.ko[d.matchKey]={a:d.scoreA||'',b:d.scoreB||''};
+ }
+ });
+ // Cargar topscorers
+ const tsdocs = await fsList('users/'+uid+'/tournament');
+ if(tsdocs)tsdocs.forEach(t=>{
+ if(!t.quinielaId)return;
+ if(!CUR.quinielas[t.quinielaId])CUR.quinielas[t.quinielaId]=emptyQuiniela();
+ CUR.quinielas[t.quinielaId].topscorer = t.topscorer||'';
+ });
+ // Recalcular puntos
+ Object.keys(CUR.quinielas).forEach(qid=>{
+ const q = CUR.quinielas[qid];
+ // No tenemos recalcPts global, lo hace en context. Lo ignoramos aqui.
+ });
+ saveDB();saveCur();
+ if(typeof recalcPts==='function')recalcPts();
+ if(typeof updatePts==='function')updatePts();
+ console.log('[Step4] Loaded',docs.length,'predictions from Firestore');
+ return true;
+ } catch(err) {
+ console.error('[Step4] loadMyPredictions failed:',err.code||err.message);
+ return false;
+ }
+}
+
+/* Lee predicciones de OTRO usuario para un partido especifico (despues del lock).
+   Usado para mostrar "que predijeron los demas" en partidos bloqueados. */
+async function fetchOthersPredictionsForMatch(type, matchKey){
+ if(!window.fsMode)return [];
+ if(!fb||!fb.auth?.currentUser)return [];
+ try {
+ // Obtener todos los users (necesario para iterar predicciones de cada uno)
+ const users = await fsList('users');
+ const results = [];
+ // Por cada user, listar sus predicciones que coincidan con matchKey
+ for(const u of users){
+ if(u.id===fb.auth.currentUser.uid)continue; // saltar mi propio user
+ try {
+ const preds = await fsList('users/'+u.id+'/predictions');
+ const matches = preds.filter(p=>p.matchKey===matchKey&&p.type===type);
+ matches.forEach(p=>{
+ results.push({
+ userId: u.id,
+ userName: u.name||'Usuario',
+ quinielaId: p.quinielaId,
+ scoreA: p.scoreA,
+ scoreB: p.scoreB,
+ updatedAt: p.updatedAt,
+ });
+ });
+ } catch(e){
+ // Algunos users pueden no tener subcoleccion, continuamos
+ }
+ }
+ return results;
+ } catch(err){
+ console.error('[Step4] fetchOthers failed:',err.code||err.message);
+ return [];
+ }
+}
+
+window.schedulePredictionSync = schedulePredictionSync;
+window.scheduleTopScorerSync = scheduleTopScorerSync;
+window.loadMyPredictionsFromFirestore = loadMyPredictionsFromFirestore;
+window.fetchOthersPredictionsForMatch = fetchOthersPredictionsForMatch;
+
 /* ══════════════════════════════════════════
  SISTEMA DE COMISIONES (referrals/afiliados)
  - DB.referrers: agentes activos con codigo + % comision
@@ -3430,6 +3593,8 @@ function doLogin(){
  CUR=u;saveCur();
  startMyUserListener();
  startResultsListener();startTournamentListener();startLocksListener();
+ // Step 4: cargar mis predicciones del cloud
+ loadMyPredictionsFromFirestore();
  err.textContent='';
  pushLog({type:'auth',action:'login',targetId:u.id,targetName:u.name,payload:{method:'email'}});
  enterApp();
@@ -3473,6 +3638,8 @@ function doGoogleLogin(){
  syncUserToFirestore(u).then(()=>{
  startMyUserListener();
  startResultsListener();startTournamentListener();startLocksListener();
+ // Step 4: cargar predicciones del cloud
+ loadMyPredictionsFromFirestore();
  });
  if(err)err.textContent='';
  pushLog({type:'auth',action:'login',targetId:u.id,targetName:u.name,payload:{method:'google'}});
@@ -3671,6 +3838,8 @@ fb.auth.onAuthStateChanged(async user=>{
  startResultsListener();
  startTournamentListener();
  startLocksListener();
+ // Step 4: cargar predicciones del cloud
+ loadMyPredictionsFromFirestore();
  // Si estamos en pantalla de auth, navegar a app
  const onAuth=['screen-onboard','screen-register','screen-login']
  .some(s=>document.getElementById(s)?.classList.contains('active'));
@@ -4628,6 +4797,8 @@ function onScoreChange(inp){
  recalcPts();sync();
  // Log debounced (espera 1.5s para agrupar ediciones rapidas)
  schedulePredLog('group',cleanKey,q.scores[cleanKey],CUR.activeQuinielaId);
+ // Step 4: sync a Firestore (mismo debounce)
+ schedulePredictionSync('group',cleanKey,q.scores[cleanKey],CUR.activeQuinielaId);
 }
 
 /* Logs de prediccion debounced — solo guardamos despues de que el usuario
@@ -4799,11 +4970,15 @@ function buildKOUI(){
  tsInp.focus();
  q.topscorer='';
  recalcPts();sync();
+ // Step 4: sync a Firestore
+ scheduleTopScorerSync('',CUR.activeQuinielaId);
  } else {
  tsInp.style.display='none';
  tsInp.value='';
  q.topscorer=v;
  recalcPts();sync();
+ // Step 4: sync a Firestore
+ scheduleTopScorerSync(v,CUR.activeQuinielaId);
  }
  };
  // Escritura en input custom
@@ -4811,6 +4986,8 @@ function buildKOUI(){
  if(this.disabled)return;
  q.topscorer=this.value.trim();
  recalcPts();sync();
+ // Step 4: sync a Firestore
+ scheduleTopScorerSync(q.topscorer,CUR.activeQuinielaId);
  };
  }
  KO_ROUNDS.forEach(r=>{
@@ -4864,6 +5041,8 @@ function onKOInputChange(inp){
  q.ko[k][side]=inp.value;
  recalcPts();sync();
  schedulePredLog('ko',k,q.ko[k],CUR.activeQuinielaId);
+ // Step 4: sync a Firestore
+ schedulePredictionSync('ko',k,q.ko[k],CUR.activeQuinielaId);
  // Re-render diferido para propagar ganadores a rondas siguientes
  clearTimeout(_koRebuildTimer);
  _koRebuildTimer=setTimeout(()=>{
