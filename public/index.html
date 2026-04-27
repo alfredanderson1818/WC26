@@ -179,6 +179,34 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
 .ob-stat-l{font-size:10px;color:var(--t2);margin-top:2px;text-transform:uppercase;letter-spacing:.5px}
 .ob-btns{display:flex;flex-direction:column;gap:10px}
 
+/* === v44: Onboard rediseñado === */
+.ob-countdown{display:inline-flex;align-items:center;gap:6px;background:rgba(255,215,0,.08);border:1px solid rgba(255,215,0,.2);border-radius:20px;padding:6px 14px;margin-top:14px;font-size:11px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.8px}
+.ob-countdown::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--gold);box-shadow:0 0 8px var(--gold);animation:obPulse 2s ease-in-out infinite}
+@keyframes obPulse{0%,100%{opacity:1}50%{opacity:.4}}
+.ob-tagline-new{font-size:11px;color:var(--t3);margin-top:8px;letter-spacing:.5px}
+
+.ob-vprops{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:24px;background:linear-gradient(135deg,rgba(255,215,0,.04),rgba(255,215,0,.01));border:1px solid rgba(255,215,0,.15);border-radius:14px;padding:14px 10px}
+.ob-vprop{text-align:center}
+.ob-vprop-num{font-family:'Anton',sans-serif;font-size:24px;color:var(--gold);line-height:1;letter-spacing:.5px}
+.ob-vprop-lbl{font-size:9.5px;color:var(--t2);text-transform:uppercase;letter-spacing:.6px;margin-top:4px;line-height:1.3}
+
+.ob-how{margin-top:8px;margin-bottom:24px;background:var(--bg3);border:1px solid var(--b);border-radius:14px;padding:18px}
+.ob-how-label{font-size:11px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:14px;text-align:center}
+.ob-how-step{display:flex;align-items:flex-start;gap:12px;margin-bottom:14px}
+.ob-how-step:last-child{margin-bottom:0}
+.ob-how-num{flex-shrink:0;width:32px;height:32px;border-radius:50%;background:rgba(255,215,0,.1);border:1px solid rgba(255,215,0,.3);display:flex;align-items:center;justify-content:center;color:var(--gold);font-family:'Anton',sans-serif;font-size:16px;line-height:1}
+.ob-how-num.green{background:rgba(91,201,125,.1);border-color:rgba(91,201,125,.3);color:var(--green-ok)}
+.ob-how-text{flex:1}
+.ob-how-text strong{display:block;font-size:13.5px;color:var(--t);font-weight:700;margin-bottom:2px}
+.ob-how-text span{display:block;font-size:11.5px;color:var(--t2);line-height:1.45}
+
+.ob-cta-main{font-size:15px !important;padding:14px 20px !important;font-weight:700 !important;letter-spacing:.3px;display:flex !important;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(255,215,0,.15)}
+.ob-cta-main:active{transform:scale(.98)}
+
+.ob-trust{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin-top:14px;padding:12px 8px;background:var(--bg3);border:1px solid var(--b);border-radius:10px}
+.ob-trust-item{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;color:var(--t2);font-weight:500}
+.ob-trust-item svg{color:var(--green-ok);flex-shrink:0}
+
 /* ── SISTEMA DE PUNTOS (perfil) ── */
 .pts-system{background:var(--bg3);border:1px solid var(--b);border-radius:var(--r);padding:16px;margin-top:24px}
 .pts-title{font-size:14px;font-weight:600;margin-bottom:4px;color:var(--t)}
@@ -1210,47 +1238,132 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
 <div id="screen-onboard" class="screen active">
  <div class="ob-bg"></div>
  <div class="ob-grid"></div>
+
+ <!-- HERO -->
  <div class="ob-hero">
  <div class="ob-logo-wrap">
  <div class="ob-logo-text">WC<span>26</span></div>
  </div>
  <div class="ob-title">Quiniela<span>Mundial 2026</span></div>
+ <div id="ob-countdown" class="ob-countdown"></div>
+ <div class="ob-tagline-new">USA · Canada · Mexico · 11 jun - 19 jul</div>
  </div>
+
  <div class="ob-body">
- <div style="margin-bottom:20px">
- <div class="leagues-label">Ligas con premio</div>
+
+ <!-- VALUE PROPS -->
+ <div class="ob-vprops">
+ <div class="ob-vprop">
+ <div class="ob-vprop-num">104</div>
+ <div class="ob-vprop-lbl">Partidos para predecir</div>
+ </div>
+ <div class="ob-vprop">
+ <div class="ob-vprop-num">$110K</div>
+ <div class="ob-vprop-lbl">Premio máximo posible</div>
+ </div>
+ <div class="ob-vprop">
+ <div class="ob-vprop-num">30d</div>
+ <div class="ob-vprop-lbl">Pago tras la final</div>
+ </div>
+ </div>
+
+ <!-- LIGAS -->
+ <div style="margin-bottom:18px">
+ <div class="leagues-label">Elige tu liga · Click para empezar</div>
  <div class="leagues-grid">
  <div class="lt a" onclick="goTo('screen-register')">
  <div class="lt-price">$20</div>
  <div class="lt-name">Liga Iniciados</div>
  <div class="lt-prize">Premio hasta $4,400</div>
- <div class="lt-users"><div class="lt-users-bar"><div class="lt-users-fill" style="width:21.6%"></div></div><span>108/500</span></div>
+ <div class="lt-users"><div class="lt-users-bar"><div class="lt-users-fill" id="ob-bar-20" style="width:21.6%"></div></div><span id="ob-users-20">108/500</span></div>
  </div>
  <div class="lt b" onclick="goTo('screen-register')">
  <div class="lt-price">$50</div>
  <div class="lt-name">Liga Bronce</div>
  <div class="lt-prize">Premio hasta $11,000</div>
- <div class="lt-users"><div class="lt-users-bar"><div class="lt-users-fill" style="width:37.6%"></div></div><span>188/500</span></div>
+ <div class="lt-users"><div class="lt-users-bar"><div class="lt-users-fill" id="ob-bar-50" style="width:37.6%"></div></div><span id="ob-users-50">188/500</span></div>
  </div>
  <div class="lt c hot" onclick="goTo('screen-register')">
  <div class="lt-hot">POPULAR</div>
  <div class="lt-price">$100</div>
  <div class="lt-name">Liga Plata</div>
  <div class="lt-prize">Premio hasta $22,000</div>
- <div class="lt-users"><div class="lt-users-bar"><div class="lt-users-fill" style="width:60.4%"></div></div><span>302/500</span></div>
+ <div class="lt-users"><div class="lt-users-bar"><div class="lt-users-fill" id="ob-bar-100" style="width:60.4%"></div></div><span id="ob-users-100">302/500</span></div>
  </div>
  <div class="lt d" onclick="goTo('screen-register')">
  <div class="lt-price">$500</div>
  <div class="lt-name">Liga Diamante</div>
  <div class="lt-prize">Premio hasta $110,000</div>
- <div class="lt-users"><div class="lt-users-bar"><div class="lt-users-fill" style="width:85.2%"></div></div><span>426/500</span></div>
+ <div class="lt-users"><div class="lt-users-bar"><div class="lt-users-fill" id="ob-bar-500" style="width:85.2%"></div></div><span id="ob-users-500">426/500</span></div>
  </div>
  </div>
  </div>
+
+ <!-- CÓMO FUNCIONA -->
+ <div class="ob-how">
+ <div class="ob-how-label">Cómo funciona</div>
+ <div class="ob-how-step">
+ <div class="ob-how-num">1</div>
+ <div class="ob-how-text">
+ <strong>Inscríbete</strong>
+ <span>Elige tu liga, paga al admin por Zelle, Binance o Pago Móvil</span>
+ </div>
+ </div>
+ <div class="ob-how-step">
+ <div class="ob-how-num">2</div>
+ <div class="ob-how-text">
+ <strong>Predice los 104 partidos</strong>
+ <span>Resultados de grupos + bracket eliminatorias + campeón + goleador</span>
+ </div>
+ </div>
+ <div class="ob-how-step">
+ <div class="ob-how-num">3</div>
+ <div class="ob-how-text">
+ <strong>Acumula puntos en vivo</strong>
+ <span>Cada acierto suma. Ranking en tiempo real desde el primer partido</span>
+ </div>
+ </div>
+ <div class="ob-how-step">
+ <div class="ob-how-num green">4</div>
+ <div class="ob-how-text">
+ <strong>Cobra tu premio</strong>
+ <span>Top 3 de cada liga reciben 50% / 30% / 20% del pool. Pago hasta 30 días tras la final</span>
+ </div>
+ </div>
+ </div>
+
+ <!-- CTA GRANDE -->
  <div class="ob-btns">
- <button class="btn btn-primary btn-full" onclick="goTo('screen-register')">Crear cuenta gratis</button>
+ <button class="btn btn-primary btn-full ob-cta-main" onclick="goTo('screen-register')">
+ <span>Crear cuenta gratis</span>
+ <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="margin-left:6px"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+ </button>
  <button class="btn btn-secondary btn-full" onclick="goTo('screen-login')">Ya tengo cuenta</button>
  <button id="dev-admin-btn" class="btn btn-secondary btn-full" onclick="devAdminLogin()" style="display:none;border-color:#FF6B35;color:#FF6B35;margin-top:6px;font-size:13px"> Dev Admin (local only)</button>
+
+ <!-- TRUST INDICATORS -->
+ <div class="ob-trust">
+ <div class="ob-trust-item">
+ <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+ Datos protegidos
+ </div>
+ <div class="ob-trust-item">
+ <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+ Pagos rápidos
+ </div>
+ <div class="ob-trust-item">
+ <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+ Resultados oficiales
+ </div>
+ </div>
+
+ <div style="display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:14px;font-size:11px;color:var(--t3)">
+ <span onclick="openAboutModal()" style="cursor:pointer;text-decoration:underline">Acerca de WC26</span>
+ <span style="opacity:.4">·</span>
+ <span onclick="openFAQModal()" style="cursor:pointer;text-decoration:underline">Cómo funciona</span>
+ <span style="opacity:.4">·</span>
+ <span onclick="openTermsModal()" style="cursor:pointer;text-decoration:underline">Términos</span>
+ </div>
  </div>
  </div>
 </div>
@@ -1345,17 +1458,35 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
 
  <!-- INICIO -->
  <div id="page-dashboard" class="page active">
+ <!-- Banner de verificacion de email (oculto si esta verificado) -->
+ <div class="email-verify-banner hidden" id="dash-verify-banner" style="background:rgba(255,215,0,.08);border:1px solid rgba(255,215,0,.3);border-radius:10px;padding:12px;margin-bottom:14px;display:flex;gap:10px;align-items:flex-start">
+ <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><line x1="12" y1="11" x2="12" y2="11"/><line x1="12" y1="15" x2="12.01" y2="15"/></svg>
+ <div style="flex:1;font-size:13px;line-height:1.4">
+ <strong style="color:var(--accent)">Verifica tu email</strong>
+ <p style="margin:4px 0 8px;color:var(--t2);font-size:12px">No podras inscribirte a ligas con dinero real hasta confirmar tu correo.</p>
+ <div style="display:flex;gap:6px;flex-wrap:wrap">
+ <button class="btn btn-secondary" style="padding:6px 12px;font-size:11px" onclick="resendVerificationEmail()">Reenviar email</button>
+ <button class="btn btn-secondary" style="padding:6px 12px;font-size:11px" onclick="checkEmailVerificationStatus().then(v=>{if(v)toast('Verificado','success');else toast('Aun no verificado','error')})">Ya verifique</button>
+ </div>
+ </div>
+ </div>
  <div class="dash-hero">
  <div class="dash-hero-eyebrow">MUNDIAL 2026 · USA · CANADA · MEXICO</div>
  <div class="dash-hero-name" id="dash-name">Bienvenido</div>
  <div class="dash-hero-sub" id="dash-sub">Tu quiniela activa</div>
  <div class="dash-kpis">
- <div class="dash-kpi pts"><div class="dash-kpi-n" id="kpi-pts">0</div><div class="dash-kpi-l">Puntos</div></div>
- <div class="dash-kpi pos"><div class="dash-kpi-n" id="kpi-pos">#-</div><div class="dash-kpi-l">Posicion</div></div>
+ <div class="dash-kpi pts" onclick="openMyStatsModal()" style="cursor:pointer"><div class="dash-kpi-n" id="kpi-pts">0</div><div class="dash-kpi-l">Puntos</div></div>
+ <div class="dash-kpi pos" onclick="openMyStatsModal()" style="cursor:pointer"><div class="dash-kpi-n" id="kpi-pos">#-</div><div class="dash-kpi-l">Posicion</div></div>
  <div class="dash-kpi cls"><div class="dash-kpi-n" id="kpi-cls">0/24</div><div class="dash-kpi-l">Clasificados</div></div>
  <div class="dash-kpi pct"><div class="dash-kpi-n" id="kpi-pct">0%</div><div class="dash-kpi-l">Completado</div></div>
  </div>
  </div>
+
+ <!-- v45: Boton "Mi Rendimiento" - solo aparece si tiene quiniela activa con datos -->
+ <button id="dash-stats-btn" class="btn btn-secondary btn-full hidden" onclick="openMyStatsModal()" style="margin-top:10px;display:flex;align-items:center;justify-content:center;gap:8px;background:rgba(255,215,0,.04);border-color:rgba(255,215,0,.2)">
+ <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+ <span>Ver mi rendimiento detallado</span>
+ </button>
 
  <!-- 4 ligas con premio: click directo abre el modal de inscripcion -->
  <div class="dash-leagues" style="margin-top:14px;margin-bottom:18px">
@@ -1589,8 +1720,10 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
  Invitar amigos
  </button>
 
- <!-- Footer legal: FAQ, Terminos, Privacidad -->
- <div style="display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:18px;font-size:11px;color:var(--t3)">
+ <!-- Footer legal: Acerca de, FAQ, Terminos, Privacidad -->
+ <div style="display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:18px;font-size:11px;color:var(--t3)">
+ <span onclick="openAboutModal()" style="cursor:pointer;text-decoration:underline">Acerca de</span>
+ <span style="opacity:.4">·</span>
  <span onclick="openFAQModal()" style="cursor:pointer;text-decoration:underline">Ayuda · FAQ</span>
  <span style="opacity:.4">·</span>
  <span onclick="openTermsModal()" style="cursor:pointer;text-decoration:underline">Terminos</span>
@@ -2897,6 +3030,897 @@ window.scheduleTopScorerSync = scheduleTopScorerSync;
 window.loadMyPredictionsFromFirestore = loadMyPredictionsFromFirestore;
 window.fetchOthersPredictionsForMatch = fetchOthersPredictionsForMatch;
 
+/* ══════════════════════════════════════════════════════════════
+ STEP 5 (v38): ENTRIES, AGENTES, COMISIONES, PREMIOS, LOGS, CONFIG
+ ──────────────────────────────────────────────────────────────
+ Migracion completa multi-dispositivo:
+ - DB.users[].entries → coleccion entries/{entryId} en Firestore
+ - DB.referrers → coleccion referrers/{refId}
+ - DB.commissions → coleccion commissions/{comId}
+ - DB.payouts → coleccion payouts/{payoutId}
+ - DB.logs → coleccion logs/{logId}
+ - DB.config → doc config/global
+ ══════════════════════════════════════════════════════════════ */
+
+window._entriesListener = null;
+window._referrersListener = null;
+window._commissionsListener = null;
+window._payoutsListener = null;
+window._configListener = null;
+window._logsListener = null;
+
+/* ────────────── CONFIG GLOBAL ────────────── */
+async function syncConfigToFirestore(){
+ if(!window.fsMode||!fb?.auth?.currentUser)return false;
+ try{
+ await fsSet('config/global', {
+ rakeRate: getRakeRate(),
+ defaultCommission: getDefaultCommission(),
+ adminWhatsapp: DB.config?.adminWhatsapp||'',
+ payoutsReleased: DB.config?.payoutsReleased||DB.payoutsReleased||{},
+ updatedAt: Date.now(),
+ });
+ console.log('[Step5] Config synced to Firestore');
+ return true;
+ }catch(err){
+ console.error('[Step5] Config sync failed:',err.code||err.message);
+ return false;
+ }
+}
+function startConfigListener(){
+ if(!window.fsMode||!fb?.auth?.currentUser)return null;
+ if(window._configListener){try{window._configListener();}catch(e){}}
+ try{
+ const unsub = fsListen('config/global', (doc)=>{
+ if(!doc)return;
+ if(!DB.config)DB.config={};
+ DB.config.rakeRate = typeof doc.rakeRate==='number'?doc.rakeRate:DB.config.rakeRate;
+ DB.config.defaultCommission = typeof doc.defaultCommission==='number'?doc.defaultCommission:DB.config.defaultCommission;
+ DB.config.adminWhatsapp = doc.adminWhatsapp||DB.config.adminWhatsapp||'';
+ DB.config.payoutsReleased = doc.payoutsReleased||{};
+ // Tambien sincronizar el campo legacy
+ DB.payoutsReleased = doc.payoutsReleased||{};
+ saveDB();
+ console.log('[Step5] Config updated from Firestore');
+ });
+ window._configListener = unsub;
+ return unsub;
+ }catch(err){
+ console.error('[Step5] startConfigListener failed:',err.code||err.message);
+ return null;
+ }
+}
+
+/* ────────────── ENTRIES (inscripciones) ────────────── */
+async function syncEntryToFirestore(userId, entry){
+ if(!window.fsMode||!fb?.auth?.currentUser)return false;
+ if(!entry||!entry.quinielaId)return false;
+ const user = DB.users.find(u=>u.id===userId);
+ if(!user)return false;
+ try{
+ await fsSet('entries/'+entry.quinielaId, {
+ quinielaId: entry.quinielaId,
+ userId: userId,
+ userAuthUid: user.email===CUR?.email?fb.auth.currentUser.uid:(user.authUid||null),
+ userName: user.name,
+ userEmail: user.email||'',
+ tier: entry.tier,
+ tierName: TIER_NAMES[entry.tier]||'Liga',
+ status: entry.status||'pending',
+ referrerId: entry.referrerId||user.referrerId||null,
+ joinedAt: entry.joinedAt||Date.now(),
+ approvedAt: entry.approvedAt||null,
+ approvedBy: entry.approvedBy||null,
+ updatedAt: Date.now(),
+ });
+ console.log('[Step5] Entry synced:',entry.quinielaId);
+ return true;
+ }catch(err){
+ console.error('[Step5] Entry sync failed:',entry.quinielaId,err.code||err.message);
+ return false;
+ }
+}
+async function deleteEntryFromFirestore(quinielaId){
+ if(!window.fsMode||!fb?.auth?.currentUser)return false;
+ try{
+ await fsDelete('entries/'+quinielaId);
+ return true;
+ }catch(err){
+ console.error('[Step5] Entry delete failed:',quinielaId,err.code||err.message);
+ return false;
+ }
+}
+function startEntriesListener(){
+ if(!window.fsMode||!fb?.auth?.currentUser)return null;
+ if(window._entriesListener){try{window._entriesListener();}catch(e){}}
+ try{
+ const unsub = fsListen('entries', (docs)=>{
+ if(!Array.isArray(docs))return;
+ // Aplicar a usuarios locales: cada doc se mappea al user.entries[]
+ docs.forEach(d=>{
+ if(!d.userId||!d.quinielaId)return;
+ // Buscar user local por id o por email
+ let u = DB.users.find(x=>x.id===d.userId);
+ if(!u&&d.userEmail)u = DB.users.find(x=>x.email===d.userEmail);
+ if(!u){
+ // No existe local — solo lo guardamos si sera relevante (admin lo necesita)
+ return;
+ }
+ if(!u.entries)u.entries=[];
+ const existing = u.entries.find(e=>e.quinielaId===d.quinielaId);
+ if(existing){
+ // Actualizar solo campos que vienen de cloud
+ existing.status = d.status;
+ existing.tier = d.tier;
+ existing.referrerId = d.referrerId;
+ existing.joinedAt = d.joinedAt;
+ existing.approvedAt = d.approvedAt;
+ existing.approvedBy = d.approvedBy;
+ } else {
+ u.entries.push({
+ quinielaId: d.quinielaId,
+ tier: d.tier,
+ status: d.status,
+ referrerId: d.referrerId,
+ joinedAt: d.joinedAt,
+ approvedAt: d.approvedAt,
+ approvedBy: d.approvedBy,
+ });
+ // Crear quiniela si no existe
+ if(!u.quinielas)u.quinielas={};
+ if(!u.quinielas[d.quinielaId])u.quinielas[d.quinielaId]=emptyQuiniela();
+ }
+ });
+ saveDB();
+ // Refrescar UI relevante
+ if(typeof renderAdminDashboard==='function')renderAdminDashboard();
+ if(typeof renderMyLeagues==='function')renderMyLeagues();
+ // Detectar nuevas entries y notificar al admin
+ if(typeof detectNewEntriesAndNotify==='function')detectNewEntriesAndNotify();
+ console.log('[Step5] Entries updated:',docs.length,'docs');
+ });
+ window._entriesListener = unsub;
+ return unsub;
+ }catch(err){
+ console.error('[Step5] startEntriesListener failed:',err.code||err.message);
+ return null;
+ }
+}
+
+/* ────────────── REFERRERS (agentes) ────────────── */
+async function syncReferrerToFirestore(ref){
+ if(!window.fsMode||!fb?.auth?.currentUser)return false;
+ if(!ref||!ref.id)return false;
+ try{
+ await fsSet('referrers/'+ref.id, {
+ id: ref.id,
+ code: ref.code,
+ name: ref.name,
+ email: (ref.email||'').toLowerCase(),
+ commissionRate: ref.commissionRate,
+ isActive: ref.isActive!==false,
+ createdAt: ref.createdAt||Date.now(),
+ updatedAt: Date.now(),
+ });
+ return true;
+ }catch(err){
+ console.error('[Step5] Referrer sync failed:',ref.id,err.code||err.message);
+ return false;
+ }
+}
+async function deleteReferrerFromFirestore(refId){
+ if(!window.fsMode||!fb?.auth?.currentUser)return false;
+ try{ await fsDelete('referrers/'+refId); return true; }
+ catch(err){ console.error('[Step5] Referrer delete failed:',err.code||err.message); return false; }
+}
+function startReferrersListener(){
+ if(!window.fsMode||!fb?.auth?.currentUser)return null;
+ if(window._referrersListener){try{window._referrersListener();}catch(e){}}
+ try{
+ const unsub = fsListen('referrers', (docs)=>{
+ if(!Array.isArray(docs))return;
+ // Reemplazar DB.referrers completamente con lo que viene de Firestore
+ if(!DB.referrers)DB.referrers=[];
+ const newRefs = docs.map(d=>({
+ id: d.id,
+ code: d.code,
+ name: d.name,
+ email: d.email,
+ commissionRate: d.commissionRate,
+ isActive: d.isActive!==false,
+ createdAt: d.createdAt,
+ }));
+ DB.referrers = newRefs;
+ saveDB();
+ console.log('[Step5] Referrers updated:',newRefs.length);
+ if(typeof renderAdminDashboard==='function')renderAdminDashboard();
+ });
+ window._referrersListener = unsub;
+ return unsub;
+ }catch(err){
+ console.error('[Step5] startReferrersListener failed:',err.code||err.message);
+ return null;
+ }
+}
+
+/* ────────────── COMMISSIONS ────────────── */
+async function syncCommissionToFirestore(com){
+ if(!window.fsMode||!fb?.auth?.currentUser)return false;
+ if(!com||!com.id)return false;
+ try{
+ await fsSet('commissions/'+com.id, {
+ ...com,
+ updatedAt: Date.now(),
+ });
+ return true;
+ }catch(err){
+ console.error('[Step5] Commission sync failed:',err.code||err.message);
+ return false;
+ }
+}
+function startCommissionsListener(){
+ if(!window.fsMode||!fb?.auth?.currentUser)return null;
+ if(window._commissionsListener){try{window._commissionsListener();}catch(e){}}
+ try{
+ const unsub = fsListen('commissions', (docs)=>{
+ if(!Array.isArray(docs))return;
+ DB.commissions = docs.map(d=>{
+ const {updatedAt, ...rest} = d;
+ return rest;
+ });
+ saveDB();
+ console.log('[Step5] Commissions updated:',docs.length);
+ if(typeof renderAdminDashboard==='function')renderAdminDashboard();
+ if(typeof renderMyReferrerDashboard==='function'){
+ const panel=document.getElementById('pf-referrer-panel');
+ if(panel)renderMyReferrerDashboard(panel);
+ }
+ });
+ window._commissionsListener = unsub;
+ return unsub;
+ }catch(err){
+ console.error('[Step5] startCommissionsListener failed:',err.code||err.message);
+ return null;
+ }
+}
+
+/* ────────────── PAYOUTS (premios reclamados) ────────────── */
+async function syncPayoutToFirestore(payout){
+ if(!window.fsMode||!fb?.auth?.currentUser)return false;
+ if(!payout||!payout.id)return false;
+ try{
+ await fsSet('payouts/'+payout.id, {
+ ...payout,
+ updatedAt: Date.now(),
+ });
+ return true;
+ }catch(err){
+ console.error('[Step5] Payout sync failed:',err.code||err.message);
+ return false;
+ }
+}
+function startPayoutsListener(){
+ if(!window.fsMode||!fb?.auth?.currentUser)return null;
+ if(window._payoutsListener){try{window._payoutsListener();}catch(e){}}
+ try{
+ const unsub = fsListen('payouts', (docs)=>{
+ if(!Array.isArray(docs))return;
+ DB.payouts = docs.map(d=>{
+ const {updatedAt, ...rest} = d;
+ return rest;
+ });
+ saveDB();
+ console.log('[Step5] Payouts updated:',docs.length);
+ if(typeof renderAdminDashboard==='function')renderAdminDashboard();
+ if(typeof renderMyPayouts==='function')renderMyPayouts();
+ // Detectar nuevos payouts y notificar al admin
+ if(typeof detectNewPayoutsAndNotify==='function')detectNewPayoutsAndNotify();
+ });
+ window._payoutsListener = unsub;
+ return unsub;
+ }catch(err){
+ console.error('[Step5] startPayoutsListener failed:',err.code||err.message);
+ return null;
+ }
+}
+
+/* ────────────── LOGS (audit log, solo admin) ────────────── */
+async function syncLogToFirestore(log){
+ if(!window.fsMode||!fb?.auth?.currentUser)return false;
+ if(!CUR?.isAdmin)return false; // solo admin puede escribir logs
+ if(!log||!log.id)return false;
+ try{
+ await fsSet('logs/'+log.id, log);
+ return true;
+ }catch(err){
+ // Silencioso: si las reglas bloquean, no pasa nada (solo admin puede)
+ return false;
+ }
+}
+function startLogsListener(){
+ if(!window.fsMode||!fb?.auth?.currentUser)return null;
+ if(!CUR?.isAdmin)return null; // solo admin lee logs
+ if(window._logsListener){try{window._logsListener();}catch(e){}}
+ try{
+ const unsub = fsListen('logs', (docs)=>{
+ if(!Array.isArray(docs))return;
+ // Cap de 1000 logs para no saturar memoria
+ docs.sort((a,b)=>(b.ts||0)-(a.ts||0));
+ DB.logs = docs.slice(0,1000);
+ saveDB();
+ console.log('[Step5] Logs updated:',docs.length);
+ });
+ window._logsListener = unsub;
+ return unsub;
+ }catch(err){
+ // No es critico si falla
+ return null;
+ }
+}
+
+/* ────────────── BULK UPLOAD: subir DB local entera a Firestore (admin) ────────────── */
+async function uploadAllLocalDataToFirestore(){
+ if(!window.fsMode){toast('Firestore disabled','error');return;}
+ if(!fb?.auth?.currentUser){toast('No auth','error');return;}
+ if(!CUR?.isAdmin){toast('Solo admins','error');return;}
+ const ok = confirm('Subir TODOS los datos locales (entries, agentes, comisiones, premios, logs, config) a Firestore?\n\nEsto sirve para migrar datos viejos de localStorage al cloud. Es seguro: si algo ya esta arriba, lo actualiza.');
+ if(!ok)return;
+ toast('Subiendo todo...','success');
+ const stats = {entries:0,referrers:0,commissions:0,payouts:0,logs:0,config:0,errors:[]};
+
+ // Config
+ try{ await syncConfigToFirestore(); stats.config++; }
+ catch(e){ stats.errors.push('config: '+e.message); }
+
+ // Entries (todas las de todos los users)
+ for(const u of (DB.users||[])){
+ if(u.id&&u.id.startsWith('guest_'))continue;
+ for(const e of (u.entries||[])){
+ try{ await syncEntryToFirestore(u.id, e); stats.entries++; }
+ catch(err){ stats.errors.push('entry '+e.quinielaId+': '+err.message); }
+ }
+ }
+
+ // Referrers
+ for(const r of (DB.referrers||[])){
+ try{ await syncReferrerToFirestore(r); stats.referrers++; }
+ catch(err){ stats.errors.push('ref '+r.id+': '+err.message); }
+ }
+
+ // Commissions
+ for(const c of (DB.commissions||[])){
+ try{ await syncCommissionToFirestore(c); stats.commissions++; }
+ catch(err){ stats.errors.push('com '+c.id+': '+err.message); }
+ }
+
+ // Payouts
+ for(const p of (DB.payouts||[])){
+ try{ await syncPayoutToFirestore(p); stats.payouts++; }
+ catch(err){ stats.errors.push('payout '+p.id+': '+err.message); }
+ }
+
+ // Logs (solo los ultimos 200 para no saturar)
+ for(const l of (DB.logs||[]).slice(-200)){
+ if(!l.id)l.id='log_'+Date.now().toString(36)+Math.random().toString(36).slice(2,5);
+ try{ await syncLogToFirestore(l); stats.logs++; }
+ catch(err){ /* silencioso */ }
+ }
+
+ console.log('[Step5 bulk]',stats);
+ alert(`Migracion completa:\n\n${stats.entries} entries\n${stats.referrers} agentes\n${stats.commissions} comisiones\n${stats.payouts} premios\n${stats.logs} logs\nConfig: OK\n\n${stats.errors.length} errores`);
+}
+
+/* Arrancar TODOS los listeners de Step 5 a la vez */
+function startAllStep5Listeners(){
+ startConfigListener();
+ startEntriesListener();
+ startReferrersListener();
+ startCommissionsListener();
+ startPayoutsListener();
+ if(CUR?.isAdmin)startLogsListener();
+}
+
+/* Detener todos */
+function stopAllStep5Listeners(){
+ [_entriesListener,_referrersListener,_commissionsListener,_payoutsListener,_configListener,_logsListener].forEach(fn=>{
+ if(typeof fn==='function'){try{fn();}catch(e){}}
+ });
+ window._entriesListener=null;
+ window._referrersListener=null;
+ window._commissionsListener=null;
+ window._payoutsListener=null;
+ window._configListener=null;
+ window._logsListener=null;
+}
+
+window.syncConfigToFirestore = syncConfigToFirestore;
+window.syncEntryToFirestore = syncEntryToFirestore;
+window.deleteEntryFromFirestore = deleteEntryFromFirestore;
+window.syncReferrerToFirestore = syncReferrerToFirestore;
+window.deleteReferrerFromFirestore = deleteReferrerFromFirestore;
+window.syncCommissionToFirestore = syncCommissionToFirestore;
+window.syncPayoutToFirestore = syncPayoutToFirestore;
+window.syncLogToFirestore = syncLogToFirestore;
+window.startAllStep5Listeners = startAllStep5Listeners;
+window.stopAllStep5Listeners = stopAllStep5Listeners;
+window.uploadAllLocalDataToFirestore = uploadAllLocalDataToFirestore;
+
+/* ══════════════════════════════════════════════════════════════
+ NOTIFICACIONES (admin) — Browser notifications + audio + titulo parpadeante
+ - Solicita permiso la primera vez que el admin entra al panel
+ - Cuando llega una nueva entry pendiente, notifica
+ - Cuando llega un premio reclamado, notifica
+ - Funciona mientras la tab esta abierta (incluso en background)
+ ══════════════════════════════════════════════════════════════ */
+window._lastSeenEntries = new Set();
+window._lastSeenPayouts = new Set();
+window._origTitle = document.title;
+window._titleBlinkTimer = null;
+window._notifyAudioCtx = null;
+
+/* Pedir permiso de notificaciones (solo admin) */
+async function requestAdminNotifPermission(){
+ if(!CUR?.isAdmin)return false;
+ if(!('Notification' in window))return false;
+ if(Notification.permission==='granted')return true;
+ if(Notification.permission==='denied')return false;
+ try{
+ const result = await Notification.requestPermission();
+ return result==='granted';
+ }catch(e){return false;}
+}
+window.requestAdminNotifPermission = requestAdminNotifPermission;
+
+/* Reproducir sonido corto de notificacion (Web Audio API, sin archivos) */
+function playNotifSound(){
+ try{
+ if(!window._notifyAudioCtx){
+ window._notifyAudioCtx = new (window.AudioContext||window.webkitAudioContext)();
+ }
+ const ctx = window._notifyAudioCtx;
+ const now = ctx.currentTime;
+ // 2 tonos: 880Hz (A5) → 1320Hz (E6)
+ [{f:880,t:0},{f:1320,t:0.12}].forEach(({f,t})=>{
+ const osc = ctx.createOscillator();
+ const gain = ctx.createGain();
+ osc.frequency.value = f;
+ osc.type = 'sine';
+ gain.gain.setValueAtTime(0,now+t);
+ gain.gain.linearRampToValueAtTime(0.15,now+t+0.02);
+ gain.gain.exponentialRampToValueAtTime(0.001,now+t+0.18);
+ osc.connect(gain).connect(ctx.destination);
+ osc.start(now+t);
+ osc.stop(now+t+0.2);
+ });
+ }catch(e){/* silencioso */}
+}
+
+/* Hacer parpadear el titulo del tab cuando hay notificacion pendiente */
+function startTitleBlink(text){
+ stopTitleBlink();
+ let on = true;
+ window._titleBlinkTimer = setInterval(()=>{
+ document.title = on ? text : window._origTitle;
+ on = !on;
+ }, 1000);
+ // Si el usuario regresa a la tab, parar
+ const stopOnFocus = ()=>{
+ stopTitleBlink();
+ window.removeEventListener('focus',stopOnFocus);
+ };
+ window.addEventListener('focus',stopOnFocus);
+}
+function stopTitleBlink(){
+ if(window._titleBlinkTimer){
+ clearInterval(window._titleBlinkTimer);
+ window._titleBlinkTimer = null;
+ document.title = window._origTitle;
+ }
+}
+
+/* Mostrar notificacion del navegador (silencioso si no hay permiso) */
+function showAdminNotif(title, body, tag){
+ if(!CUR?.isAdmin)return;
+ // Browser notification (si tiene permiso y la tab no esta enfocada)
+ if('Notification' in window && Notification.permission==='granted' && !document.hasFocus()){
+ try{
+ const n = new Notification(title, {
+ body, tag: tag||'wc26',
+ icon: '/favicon.ico',
+ badge: '/favicon.ico',
+ requireInteraction: false,
+ });
+ n.onclick = ()=>{ window.focus(); n.close(); };
+ setTimeout(()=>{try{n.close();}catch(e){}}, 8000);
+ }catch(e){}
+ }
+ // Audio + titulo parpadeante (siempre, incluso si la tab esta enfocada)
+ playNotifSound();
+ if(!document.hasFocus())startTitleBlink('● '+title);
+}
+window.showAdminNotif = showAdminNotif;
+
+/* Detector: cuando entries cambia, comparar con lo ultimo que vimos.
+   Si hay nuevas pending → notificar */
+function detectNewEntriesAndNotify(){
+ if(!CUR?.isAdmin)return;
+ const currentPending = new Set();
+ DB.users.forEach(u=>{
+ if(u.id&&u.id.startsWith('guest_'))return;
+ (u.entries||[]).forEach(e=>{
+ if((e.status||'pending')==='pending'){
+ currentPending.add(u.id+':'+e.quinielaId);
+ }
+ });
+ });
+ // Calcular nuevas (presentes ahora pero no antes)
+ const newOnes = [...currentPending].filter(k=>!window._lastSeenEntries.has(k));
+ // En la primera carga (lastSeen vacio) no notificamos para no spammear al login
+ if(window._lastSeenEntries.size>0 && newOnes.length>0){
+ const first = newOnes[0].split(':');
+ const u = DB.users.find(x=>x.id===first[0]);
+ const e = u?.entries?.find(x=>x.quinielaId===first[1]);
+ if(u && e){
+ const title = newOnes.length===1 ? 'Nueva inscripcion' : `${newOnes.length} nuevas inscripciones`;
+ const body = newOnes.length===1
+ ? `${u.name} se inscribio a ${TIER_NAMES[e.tier]} ($${e.tier})`
+ : `Hay ${newOnes.length} pendientes de aprobar`;
+ showAdminNotif(title, body, 'entry-'+Date.now());
+ }
+ }
+ window._lastSeenEntries = currentPending;
+}
+
+/* Detector: cuando hay un nuevo payout reclamado (no pagado) */
+function detectNewPayoutsAndNotify(){
+ if(!CUR?.isAdmin)return;
+ const currentClaimed = new Set();
+ (DB.payouts||[]).forEach(p=>{
+ if(p.status==='claimed')currentClaimed.add(p.id);
+ });
+ const newOnes = [...currentClaimed].filter(id=>!window._lastSeenPayouts.has(id));
+ if(window._lastSeenPayouts.size>0 && newOnes.length>0){
+ const p = (DB.payouts||[]).find(x=>x.id===newOnes[0]);
+ if(p){
+ const title = newOnes.length===1 ? 'Premio reclamado' : `${newOnes.length} premios reclamados`;
+ const body = newOnes.length===1
+ ? `${p.userName} reclamo $${p.prizeAmount} (${TIER_NAMES[p.tier]} #${p.position})`
+ : `Hay ${newOnes.length} premios para procesar`;
+ showAdminNotif(title, body, 'payout-'+Date.now());
+ }
+ }
+ window._lastSeenPayouts = currentClaimed;
+}
+window.detectNewEntriesAndNotify = detectNewEntriesAndNotify;
+window.detectNewPayoutsAndNotify = detectNewPayoutsAndNotify;
+
+/* ══════════════════════════════════════════════════════════════
+ v40: VERIFICACION DE EMAIL + RATE LIMITING (anti-fraude)
+ ══════════════════════════════════════════════════════════════ */
+
+/* Devuelve true si el email del usuario actual esta verificado en Firebase Auth */
+function isMyEmailVerified(){
+ if(!fb||!fb.auth?.currentUser)return false;
+ // Si la cuenta es de Google (provider google.com), ya viene verificada
+ const provs = fb.auth.currentUser.providerData||[];
+ const isGoogle = provs.some(p=>p.providerId==='google.com');
+ if(isGoogle)return true;
+ return fb.auth.currentUser.emailVerified===true;
+}
+window.isMyEmailVerified = isMyEmailVerified;
+
+/* Reenviar email de verificacion al usuario actual */
+async function resendVerificationEmail(){
+ if(!fb||!fb.auth?.currentUser){toast('Sesion no encontrada','error');return;}
+ if(isMyEmailVerified()){toast('Tu email ya esta verificado','success');return;}
+ try{
+ await fb.auth.currentUser.sendEmailVerification();
+ toast('Email enviado · Revisa tu bandeja','success');
+ }catch(e){
+ console.error('[verify] sendEmailVerification failed:',e);
+ if(e.code==='auth/too-many-requests'){
+ toast('Espera unos minutos antes de reenviar','error');
+ } else {
+ toast('Error al enviar email','error');
+ }
+ }
+}
+window.resendVerificationEmail = resendVerificationEmail;
+
+/* Recargar el estado del user de Firebase para detectar verificacion reciente */
+async function checkEmailVerificationStatus(){
+ if(!fb||!fb.auth?.currentUser)return false;
+ try{
+ await fb.auth.currentUser.reload();
+ const verified = isMyEmailVerified();
+ // Refrescar UI de banners
+ if(typeof updateVerificationBanners==='function')updateVerificationBanners();
+ return verified;
+ }catch(e){return false;}
+}
+window.checkEmailVerificationStatus = checkEmailVerificationStatus;
+
+/* Actualiza la visibilidad de banners de verificacion en perfil/dashboard */
+function updateVerificationBanners(){
+ const verified = isMyEmailVerified();
+ const banners = document.querySelectorAll('.email-verify-banner');
+ banners.forEach(b=>{
+ if(verified)b.classList.add('hidden');
+ else b.classList.remove('hidden');
+ });
+}
+window.updateVerificationBanners = updateVerificationBanners;
+
+/* ────────────── RATE LIMITING ────────────── */
+window._rateLimits = {
+ entries: [], // timestamps de inscripciones recientes
+ payouts: [], // timestamps de reclamos de premio
+ predictions: 0, // ultimo timestamp de cambio de prediccion
+};
+
+const RL_LIMITS = {
+ entries: {max:3, windowMs:60*60*1000}, // 3 inscripciones por hora
+ payouts: {max:5, windowMs:60*60*1000}, // 5 reclamos por hora
+ predictionMinIntervalMs: 200, // min 200ms entre cambios (anti-bot)
+};
+
+/* Verifica si una accion esta dentro del rate limit
+   Retorna {ok:true} o {ok:false, retryAfterMs, message} */
+function checkRateLimit(action){
+ const now = Date.now();
+ if(action==='entry'){
+ // Limpiar viejos
+ const limit = RL_LIMITS.entries;
+ window._rateLimits.entries = window._rateLimits.entries.filter(t=>now-t<limit.windowMs);
+ if(window._rateLimits.entries.length>=limit.max){
+ const oldest = window._rateLimits.entries[0];
+ const retryMs = limit.windowMs-(now-oldest);
+ return {ok:false, retryAfterMs:retryMs,
+ message:`Limite alcanzado: ${limit.max} inscripciones por hora. Intenta en ${Math.ceil(retryMs/60000)} min.`};
+ }
+ return {ok:true};
+ }
+ if(action==='payout'){
+ const limit = RL_LIMITS.payouts;
+ window._rateLimits.payouts = window._rateLimits.payouts.filter(t=>now-t<limit.windowMs);
+ if(window._rateLimits.payouts.length>=limit.max){
+ const oldest = window._rateLimits.payouts[0];
+ const retryMs = limit.windowMs-(now-oldest);
+ return {ok:false, retryAfterMs:retryMs,
+ message:`Limite alcanzado: ${limit.max} reclamos por hora.`};
+ }
+ return {ok:true};
+ }
+ if(action==='prediction'){
+ const since = now-window._rateLimits.predictions;
+ if(since<RL_LIMITS.predictionMinIntervalMs){
+ return {ok:false, retryAfterMs:RL_LIMITS.predictionMinIntervalMs-since,
+ message:'Demasiado rapido'};
+ }
+ return {ok:true};
+ }
+ return {ok:true};
+}
+
+/* Registrar accion exitosa en rate limiter */
+function trackRateLimit(action){
+ const now = Date.now();
+ if(action==='entry')window._rateLimits.entries.push(now);
+ if(action==='payout')window._rateLimits.payouts.push(now);
+ if(action==='prediction')window._rateLimits.predictions = now;
+}
+window.checkRateLimit = checkRateLimit;
+window.trackRateLimit = trackRateLimit;
+
+/* ══════════════════════════════════════════════════════════════
+ v41: BACKUP / RESTORE del DB completo
+ - Descarga JSON con todo (localStorage + estado de Firestore)
+ - Restore: reemplaza local Y sube a Firestore
+ - Recordatorio cada 7 dias
+ ══════════════════════════════════════════════════════════════ */
+
+const BACKUP_VERSION = '1.0';
+
+/* Genera el objeto backup completo */
+async function generateBackupData(){
+ const localData = {
+ schemaVersion: DB.schemaVersion,
+ users: DB.users||[],
+ nextId: DB.nextId,
+ results: DB.results||{},
+ locks: DB.locks||{},
+ config: DB.config||{},
+ logs: DB.logs||[],
+ referrers: DB.referrers||[],
+ commissions: DB.commissions||[],
+ payouts: DB.payouts||[],
+ payoutsReleased: DB.payoutsReleased||{},
+ };
+
+ // Tambien agarrar lo de Firestore para tener todo en un solo backup
+ let firestoreData = null;
+ if(window.fsMode && fb?.auth?.currentUser){
+ try{
+ const [users, results, locks, matches, entries, referrers, commissions, payouts, configDoc, tournament] = await Promise.all([
+ fsList('users').catch(()=>[]),
+ fsList('results').catch(()=>[]),
+ fsList('locks').catch(()=>[]),
+ fsList('matches').catch(()=>[]),
+ fsList('entries').catch(()=>[]),
+ fsList('referrers').catch(()=>[]),
+ fsList('commissions').catch(()=>[]),
+ fsList('payouts').catch(()=>[]),
+ fsGet('config/global').catch(()=>null),
+ fsGet('tournament/main').catch(()=>null),
+ ]);
+ // Logs solo si admin
+ let logs = [];
+ if(CUR?.isAdmin){
+ logs = await fsList('logs').catch(()=>[]);
+ }
+ firestoreData = {users, results, locks, matches, entries, referrers, commissions, payouts, configDoc, tournament, logs};
+ }catch(e){
+ console.warn('[backup] firestore fetch partial fail:',e);
+ }
+ }
+
+ return {
+ backupVersion: BACKUP_VERSION,
+ appVersion: 'v41',
+ createdAt: Date.now(),
+ createdAtIso: new Date().toISOString(),
+ createdBy: CUR?{id:CUR.id,name:CUR.name,email:CUR.email,isAdmin:!!CUR.isAdmin}:null,
+ local: localData,
+ firestore: firestoreData,
+ stats: {
+ users: localData.users.length,
+ entries: localData.users.reduce((s,u)=>s+(u.entries||[]).length,0),
+ referrers: localData.referrers.length,
+ commissions: localData.commissions.length,
+ payouts: localData.payouts.length,
+ logs: localData.logs.length,
+ },
+ };
+}
+
+/* Descarga el backup como archivo .json */
+async function downloadBackup(){
+ if(!CUR?.isAdmin){toast('Solo admins','error');return;}
+ toast('Generando backup...','success');
+ try{
+ const data = await generateBackupData();
+ const json = JSON.stringify(data, null, 2);
+ const blob = new Blob([json], {type:'application/json'});
+ const url = URL.createObjectURL(blob);
+ const a = document.createElement('a');
+ const ts = new Date();
+ const pad = n=>String(n).padStart(2,'0');
+ const fname = `wc26-backup-${ts.getFullYear()}-${pad(ts.getMonth()+1)}-${pad(ts.getDate())}-${pad(ts.getHours())}${pad(ts.getMinutes())}.json`;
+ a.href = url;
+ a.download = fname;
+ document.body.appendChild(a);
+ a.click();
+ document.body.removeChild(a);
+ setTimeout(()=>URL.revokeObjectURL(url),2000);
+ // Marcar fecha de ultimo backup
+ try{ localStorage.setItem('wc26v5_last_backup',String(Date.now())); }catch(e){}
+ toast(`Backup descargado: ${data.stats.users} users, ${data.stats.entries} entries`,'success');
+ console.log('[backup]',data.stats);
+ }catch(err){
+ console.error('[backup] failed:',err);
+ toast('Error al generar backup','error');
+ }
+}
+window.downloadBackup = downloadBackup;
+
+/* Abre selector de archivo para restaurar */
+function openRestoreModal(){
+ if(!CUR?.isAdmin){toast('Solo admins','error');return;}
+ openModal(`<h3>Restaurar backup</h3>
+ <div style="background:rgba(231,76,60,.1);border:1px solid rgba(231,76,60,.3);border-radius:10px;padding:12px;margin-bottom:14px">
+ <strong style="color:#E74C3C;font-size:13px">Atencion</strong>
+ <p style="margin:4px 0 0;font-size:12px;color:var(--t2);line-height:1.4">Esta accion <strong>reemplazara TODOS los datos locales</strong> con los del archivo. Si tu backup es viejo, podrias perder informacion reciente. Asegurate primero de tener un backup fresco.</p>
+ </div>
+
+ <p style="font-size:13px;color:var(--t2);margin-bottom:8px">Selecciona el archivo .json del backup:</p>
+ <input type="file" id="restore-file" accept=".json,application/json" class="inp" style="margin-bottom:10px;padding:8px">
+
+ <div id="restore-preview" style="margin-bottom:10px"></div>
+
+ <p id="restore-err" style="color:var(--red);font-size:12px;min-height:16px"></p>
+
+ <button class="btn btn-secondary btn-full" id="restore-confirm-btn" style="background:rgba(231,76,60,.15);border-color:rgba(231,76,60,.4);color:#E74C3C;display:none" onclick="confirmRestore()">Confirmar restauracion</button>
+ <button class="btn btn-secondary btn-full" style="margin-top:6px" onclick="closeModal()">Cancelar</button>
+ `);
+ // Listener para preview cuando seleccionan archivo
+ setTimeout(()=>{
+ const inp = document.getElementById('restore-file');
+ if(!inp)return;
+ inp.onchange = async (e)=>{
+ const file = e.target.files?.[0];
+ if(!file)return;
+ const err = document.getElementById('restore-err');
+ const preview = document.getElementById('restore-preview');
+ const btn = document.getElementById('restore-confirm-btn');
+ try{
+ const text = await file.text();
+ const data = JSON.parse(text);
+ // Validar que es un backup WC26
+ if(!data.backupVersion||!data.local){
+ if(err)err.textContent='Archivo invalido (no es backup WC26)';
+ if(preview)preview.innerHTML='';
+ if(btn)btn.style.display='none';
+ return;
+ }
+ if(err)err.textContent='';
+ const s = data.stats||{};
+ const created = data.createdAtIso?new Date(data.createdAtIso).toLocaleString():'?';
+ if(preview)preview.innerHTML=`<div style="background:var(--bg4);border-radius:10px;padding:12px;font-size:12px;line-height:1.6">
+ <div style="color:var(--t3);text-transform:uppercase;letter-spacing:.5px;font-size:10px;margin-bottom:6px">Contenido del backup</div>
+ <div><strong>${s.users||0}</strong> usuarios · <strong>${s.entries||0}</strong> inscripciones</div>
+ <div><strong>${s.referrers||0}</strong> agentes · <strong>${s.commissions||0}</strong> comisiones</div>
+ <div><strong>${s.payouts||0}</strong> premios · <strong>${s.logs||0}</strong> logs</div>
+ <div style="color:var(--t3);margin-top:6px">Creado: ${created}</div>
+ ${data.createdBy?`<div style="color:var(--t3)">Por: ${data.createdBy.name}</div>`:''}
+ </div>`;
+ if(btn)btn.style.display='block';
+ // Guardar el data en variable global temporal
+ window._pendingRestore = data;
+ }catch(parseErr){
+ if(err)err.textContent='No se pudo leer el archivo: '+parseErr.message;
+ if(preview)preview.innerHTML='';
+ if(btn)btn.style.display='none';
+ }
+ };
+ },100);
+}
+window.openRestoreModal = openRestoreModal;
+
+/* Confirma y ejecuta la restauracion */
+async function confirmRestore(){
+ const data = window._pendingRestore;
+ if(!data){toast('No hay backup cargado','error');return;}
+ if(!CUR?.isAdmin){toast('Solo admins','error');return;}
+ const ok = confirm(`Vas a REEMPLAZAR todos los datos locales con el backup.\n\nUsers: ${data.stats?.users||0}\nEntries: ${data.stats?.entries||0}\n\nEsta accion NO se puede deshacer (excepto restaurando otro backup). Continuar?`);
+ if(!ok)return;
+ try{
+ // Reemplazar DB local
+ const ld = data.local;
+ DB.schemaVersion = ld.schemaVersion;
+ DB.users = ld.users||[];
+ DB.nextId = ld.nextId||1;
+ DB.results = ld.results||{};
+ DB.locks = ld.locks||{};
+ DB.config = ld.config||{};
+ DB.logs = ld.logs||[];
+ DB.referrers = ld.referrers||[];
+ DB.commissions = ld.commissions||[];
+ DB.payouts = ld.payouts||[];
+ DB.payoutsReleased = ld.payoutsReleased||{};
+ saveDB();
+ // Si hay datos de Firestore en el backup, opcionalmente subir tambien
+ // Por defecto no subimos para no pisar lo que esta en cloud actualmente
+ // (el admin puede usar "Migrar todo" despues si quiere)
+ closeModal();
+ toast('Backup restaurado · Recargando...','success');
+ setTimeout(()=>window.location.reload(),1500);
+ }catch(err){
+ console.error('[restore] failed:',err);
+ toast('Error al restaurar: '+err.message,'error');
+ }
+}
+window.confirmRestore = confirmRestore;
+
+/* Verifica si han pasado >7 dias del ultimo backup */
+function getDaysSinceLastBackup(){
+ try{
+ const last = parseInt(localStorage.getItem('wc26v5_last_backup')||'0');
+ if(!last)return Infinity;
+ return Math.floor((Date.now()-last)/(86400000));
+ }catch(e){return Infinity;}
+}
+window.getDaysSinceLastBackup = getDaysSinceLastBackup;
+
 /* ══════════════════════════════════════════
  SISTEMA DE COMISIONES (referrals/afiliados)
  - DB.referrers: agentes activos con codigo + % comision
@@ -2960,6 +3984,8 @@ function createReferrer({name,code,email,commissionRate}){
  saveDB();
  pushLog({type:'admin',action:'create_referrer',targetId:ref.id,targetName:ref.name,
  payload:{code:ref.code,commissionRate:ref.commissionRate}});
+ // STEP 5: sync a Firestore
+ if(typeof syncReferrerToFirestore==='function')syncReferrerToFirestore(ref);
  return ref;
 }
 
@@ -2974,6 +4000,8 @@ function attachReferrer(user,referrerId){
  pushLog({type:'admin',action:'attach_referrer',
  targetId:user.id,targetName:user.name,
  payload:{referrerId,referrerName:ref?ref.name:'?',referrerCode:ref?ref.code:'?'}});
+ // STEP 5: sync user para que referrerId se persista en cloud
+ if(typeof syncUserToFirestore==='function')syncUserToFirestore(user);
 }
 
 /* Cuando una inscripcion se aprueba: genera la comision pendiente */
@@ -3031,7 +4059,9 @@ function markCommissionPaid(commissionId){
  pushLog({type:'admin',action:'pay_commission',
  targetId:com.referrerId,targetName:com.referrerName,
  payload:{commissionId:com.id,amount:com.commissionAmount}});
- toast(` Comision $${com.commissionAmount} marcada como pagada`,'success');
+ // STEP 5: sync
+ if(typeof syncCommissionToFirestore==='function')syncCommissionToFirestore(com);
+ toast(`Comision $${com.commissionAmount} marcada como pagada`,'success');
  return com;
 }
 function markAllCommissionsPaidForReferrer(referrerId){
@@ -3046,7 +4076,11 @@ function markAllCommissionsPaidForReferrer(referrerId){
  pushLog({type:'admin',action:'pay_all_commissions',
  targetId:referrerId,targetName:ref?ref.name:'?',
  payload:{count:pending.length,total}});
- toast(` ${pending.length} comisiones pagadas — $${total.toFixed(2)}`,'success');
+ // STEP 5: sync cada uno
+ if(typeof syncCommissionToFirestore==='function'){
+ pending.forEach(c=>syncCommissionToFirestore(c));
+ }
+ toast(`${pending.length} comisiones pagadas — $${total.toFixed(2)}`,'success');
 }
 
 /* Stats de un agente */
@@ -3146,6 +4180,9 @@ function getMyPendingPayouts(userId){
 /* Usuario reclama un premio: guarda datos de cobro */
 function claimPayout(tier,position,method,details){
  if(!CUR)return null;
+ // Rate limit
+ const rl = checkRateLimit('payout');
+ if(!rl.ok){toast(rl.message,'error');return null;}
  if(!DB.payouts)DB.payouts=[];
  const winners=getTierWinners(tier);
  const w=winners.find(x=>x.userId===CUR.id&&x.position===position);
@@ -3160,6 +4197,7 @@ function claimPayout(tier,position,method,details){
  saveDB();
  return existing;
  }
+ trackRateLimit('payout');
  const payout={
  id:'payout_'+Date.now().toString(36)+Math.random().toString(36).slice(2,5),
  userId:CUR.id,
@@ -3180,6 +4218,8 @@ function claimPayout(tier,position,method,details){
  saveDB();
  pushLog({type:'admin',action:'claim_payout',targetId:CUR.id,targetName:CUR.name,
  payload:{tier,position,amount:w.prize,method}});
+ // STEP 5: sync a Firestore (admin lo ve al instante)
+ if(typeof syncPayoutToFirestore==='function')syncPayoutToFirestore(payout);
  return payout;
 }
 
@@ -3194,6 +4234,8 @@ function markPayoutAsPaid(payoutId,paymentRef){
  saveDB();
  pushLog({type:'admin',action:'pay_payout',targetId:payout.userId,targetName:payout.userName,
  payload:{tier:payout.tier,position:payout.position,amount:payout.prizeAmount,ref:paymentRef}});
+ // STEP 5: sync a Firestore
+ if(typeof syncPayoutToFirestore==='function')syncPayoutToFirestore(payout);
 }
 
 /* Admin libera/retiene premios de un tier completo */
@@ -3202,7 +4244,11 @@ function toggleTierPayouts(tier){
  if(!DB.payoutsReleased)DB.payoutsReleased={};
  const newState=!DB.payoutsReleased[tier];
  DB.payoutsReleased[tier]=newState;
+ if(!DB.config)DB.config={};
+ DB.config.payoutsReleased = DB.payoutsReleased;
  saveDB();
+ // STEP 5: sync config
+ if(typeof syncConfigToFirestore==='function')syncConfigToFirestore();
  pushLog({type:'admin',action:'toggle_payouts',
  payload:{tier,released:newState}});
  toast(newState?'Premios liberados — los ganadores ya pueden reclamar':'Premios retenidos','success');
@@ -3580,6 +4626,10 @@ function goTo(id){
  if(id==='screen-register'&&typeof updateRegisterButton==='function'){
  setTimeout(updateRegisterButton,10);
  }
+ // v44: si vamos al onboard, arrancar countdown + stats
+ if(id==='screen-onboard'&&typeof initOnboard==='function'){
+ setTimeout(initOnboard,50);
+ }
 }
 function navTo(page){
  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
@@ -3703,6 +4753,7 @@ function doRegister(){
  syncUserToFirestore(u).then(()=>{
  startMyUserListener();
  startResultsListener();startTournamentListener();startLocksListener();
+        startAllStep5Listeners();
  });
  enterApp();
  toast('Cuenta creada · Bienvenido '+name,'success');
@@ -3740,6 +4791,7 @@ function doLogin(){
  CUR=u;saveCur();
  startMyUserListener();
  startResultsListener();startTournamentListener();startLocksListener();
+        startAllStep5Listeners();
  // Step 4: cargar mis predicciones del cloud
  loadMyPredictionsFromFirestore();
  err.textContent='';
@@ -3785,6 +4837,7 @@ function doGoogleLogin(){
  syncUserToFirestore(u).then(()=>{
  startMyUserListener();
  startResultsListener();startTournamentListener();startLocksListener();
+        startAllStep5Listeners();
  // Step 4: cargar predicciones del cloud
  loadMyPredictionsFromFirestore();
  });
@@ -3935,6 +4988,7 @@ function doLogout(){
  // Step 2 + 3: detener todos los listeners Firestore antes de cerrar sesion
  stopMyUserListener();
  stopResultsListeners();
+ stopAllStep5Listeners();
  // Cerrar tambien en Firebase si hay sesion
  fb.auth.signOut().catch(()=>{});
  CUR=null;
@@ -4026,11 +5080,32 @@ function enterApp(){
  });
  // Disparar verificación de locks inmediatamente al entrar
  setTimeout(checkUpcomingLocks, 1500);
+ // v40: refrescar banners de email verification
+ setTimeout(()=>{
+ if(typeof updateVerificationBanners==='function')updateVerificationBanners();
+ // Re-check periodicamente por si el usuario verifica en otra tab
+ if(!window._verifyCheckTimer){
+ window._verifyCheckTimer = setInterval(()=>{
+ if(fb?.auth?.currentUser && !isMyEmailVerified()){
+ checkEmailVerificationStatus();
+ }
+ }, 30000); // cada 30 seg
+ }
+ },1000);
 }
 function initials(n){return n.slice(0,2).toUpperCase();}
 function updatePts(){
  const q=getActiveQ();
  document.getElementById('header-pts').textContent=q?q.pts:0;
+ // v45: mostrar boton de stats si hay quiniela activa
+ const statsBtn = document.getElementById('dash-stats-btn');
+ if(statsBtn){
+ if(CUR?.activeQuinielaId && q){
+ statsBtn.classList.remove('hidden');
+ } else {
+ statsBtn.classList.add('hidden');
+ }
+ }
 }
 function updateActiveLigaBar(){
  // Los q-tabs viejos fueron eliminados. La liga activa ahora se cambia
@@ -4932,6 +6007,10 @@ function onScoreChange(inp){
  const id=inp.id;
  // Si el partido ya está bloqueado, ignora el cambio
  if(inp.disabled)return;
+ // Rate limit anti-bot (200ms minimo entre cambios)
+ const rl = typeof checkRateLimit==='function'?checkRateLimit('prediction'):{ok:true};
+ if(!rl.ok)return; // silencioso, no toast
+ if(typeof trackRateLimit==='function')trackRateLimit('prediction');
  const isA=id.endsWith('_a');
  const cleanKey=id.replace(/^sc_/,'').replace(/_[ab]$/,'');
  const q=getActiveQ();
@@ -5714,6 +6793,27 @@ function selectExistingEntry(quinielaId){
 }
 
 function joinTier(t){
+ // Verificar email antes de permitir inscripcion (admin esta exento)
+ if(!CUR?.isAdmin && !isMyEmailVerified()){
+ openModal(`<h3>Verifica tu email primero</h3>
+ <p class="pay-instr">Para inscribirte a una liga con dinero real necesitas confirmar tu correo electronico. Es un requisito para evitar fraudes y proteger los premios.</p>
+ <div style="background:var(--bg4);border-radius:10px;padding:12px;margin:12px 0">
+ <div style="font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px">Tu email</div>
+ <div style="font-size:14px;font-weight:600;color:var(--t)">${CUR.email||fb.auth?.currentUser?.email||''}</div>
+ </div>
+ <p style="font-size:12px;color:var(--t2);margin-bottom:14px">Te enviaremos un correo con un link. Click el link y vuelve aqui.</p>
+ <button class="btn btn-primary btn-full" onclick="resendVerificationEmail();closeModal()">Reenviar email de verificacion</button>
+ <button class="btn btn-secondary btn-full" style="margin-top:6px" onclick="checkEmailVerificationStatus().then(v=>{if(v){closeModal();toast('Verificado · Intenta de nuevo','success');}else{toast('Aun no verificado','error')}})">Ya verifique, recargar</button>
+ <button class="btn btn-secondary btn-full" style="margin-top:6px" onclick="closeModal()">Cancelar</button>
+ `);
+ return;
+ }
+ // Rate limit
+ const rl = checkRateLimit('entry');
+ if(!rl.ok){
+ toast(rl.message,'error');
+ return;
+ }
  const tierAmount=parseInt(t);
  const tierName=TIER_NAMES[t];
  const myEntries=(CUR.entries||[]).filter(e=>e.tier===t).length;
@@ -5742,11 +6842,16 @@ function joinTier(t){
 }
 
 function confirmJoinTier(t){
+ // Re-validar rate limit (por si llamaron directo a confirmJoinTier)
+ const rl = checkRateLimit('entry');
+ if(!rl.ok){toast(rl.message,'error');closeModal();return;}
+ trackRateLimit('entry');
  const entryId=newEntryId();
  const quinielaId='tier_'+t+'_'+entryId;
  // Agregar entry con status PENDING
  if(!CUR.entries)CUR.entries=[];
- CUR.entries.push({id:entryId,tier:t,quinielaId,joinedAt:Date.now(),status:'pending'});
+ const newEntry={id:entryId,tier:t,quinielaId,joinedAt:Date.now(),status:'pending',referrerId:CUR.referrerId||null};
+ CUR.entries.push(newEntry);
  // Crear quiniela vacia
  if(!CUR.quinielas)CUR.quinielas={};
  CUR.quinielas[quinielaId]=emptyQuiniela();
@@ -5756,6 +6861,8 @@ function confirmJoinTier(t){
  updatePts();
  updateActiveLigaBar();
  closeModal();
+ // STEP 5: subir entry a Firestore (admin lo ve al instante en cualquier device)
+ syncEntryToFirestore(CUR.id, newEntry);
  // LOG
  pushLog({
  type:'entry',action:'request',
@@ -5826,6 +6933,11 @@ function isEntryApproved(quinielaId){
  ══════════════════════════════════════════════════════════════ */
 function renderAdminDashboard(){
  if(!isAdmin(CUR))return;
+ // Pedir permiso de notificaciones la primera vez que admin entra al panel
+ if('Notification' in window && Notification.permission==='default'){
+ // Pedir despues de un pequeno delay para que la pagina se renderice primero
+ setTimeout(()=>requestAdminNotifPermission(),800);
+ }
  const hero=document.getElementById('admin-hero');
  const cards=document.getElementById('admin-cards');
  const pendSec=document.getElementById('admin-pending-section');
@@ -5888,6 +7000,12 @@ function renderAdminDashboard(){
  title:'Logs',sub:`${logsCount} eventos auditados`,onclick:'openAuditLog()',badge:null},
  {ico:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><circle cx="12" cy="10" r="3"/></svg>',
  title:'Firestore',sub:'Test conexion + dump partidos',onclick:'openFirestoreTestModal()',badge:null},
+ {ico:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>',
+ title:'Migrar todo',sub:'Subir DB local entera al cloud',onclick:'uploadAllLocalDataToFirestore()',badge:null},
+ {ico:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>',
+ title:'Backup',sub:(()=>{const d=getDaysSinceLastBackup();return d===Infinity?'Descargar todo en JSON':d===0?'Hoy · descargar nuevo':`Hace ${d}d · descargar nuevo`;})(),onclick:'downloadBackup()',badge:getDaysSinceLastBackup()>7?'!':null,alert:getDaysSinceLastBackup()>7},
+ {ico:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M3 21v-5h5"/></svg>',
+ title:'Restaurar',sub:'Importar backup .json',onclick:'openRestoreModal()',badge:null},
  ];
  cards.innerHTML=cardData.map(c=>`<div class="admin-card${c.alert?' alert':''}" onclick="${c.onclick}">
  ${c.badge?`<div class="admin-card-badge">${c.badge}</div>`:''}
@@ -6089,12 +7207,82 @@ function renderAdminPanel(){
 }
 
 /* Aprobar inscripcion: cambia status pending→approved */
+/* Click "Aprobar": abre modal pidiendo registro del pago recibido.
+   Solo después confirma con confirmApproveEntry */
 function approveEntry(userId,quinielaId){
  if(!isAdmin(CUR)){toast('Solo admins','error');return;}
  const u=DB.users.find(x=>x.id===userId);
  if(!u){toast('Usuario no encontrado','error');return;}
  const e=(u.entries||[]).find(x=>x.quinielaId===quinielaId);
  if(!e){toast('Inscripcion no encontrada','error');return;}
+ const tierAmount=parseInt(e.tier);
+ const tierName=TIER_NAMES[e.tier]||'Liga';
+ // Si tiene agente, mostrar comision esperada
+ const ref=u.referrerId?findReferrerById(u.referrerId):null;
+ const expectedCommission=ref?Math.round(tierAmount*getRakeRate()*ref.commissionRate*100)/100:0;
+ openModal(`<h3>Aprobar inscripcion</h3>
+ <div style="background:var(--bg4);border-radius:10px;padding:12px;margin-bottom:14px">
+ <div style="font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px">Usuario</div>
+ <div style="font-size:15px;font-weight:700;color:var(--t)">${u.name}</div>
+ ${u.email?`<div style="font-size:12px;color:var(--t2);margin-top:2px">${u.email}</div>`:''}
+ <div style="margin-top:8px;display:flex;gap:14px">
+ <div><span style="color:var(--t3);font-size:11px">Liga:</span> <strong>${tierName}</strong></div>
+ <div><span style="color:var(--t3);font-size:11px">Monto:</span> <strong style="color:var(--accent)">$${tierAmount}</strong></div>
+ </div>
+ ${ref?`<div style="margin-top:6px;font-size:11px;color:var(--t3)">Agente: ${ref.name} · Comision: $${expectedCommission.toFixed(2)}</div>`:''}
+ </div>
+
+ <p style="font-size:13px;color:var(--t2);margin-bottom:10px">Registra los datos del pago recibido:</p>
+
+ <label class="lbl" style="font-size:11px">Metodo de pago</label>
+ <select id="apr-method" class="inp" style="margin-bottom:10px">
+ <option value="zelle">Zelle</option>
+ <option value="binance">Binance Pay</option>
+ <option value="pago_movil">Pago Movil</option>
+ <option value="cash">Efectivo</option>
+ <option value="otro">Otro</option>
+ </select>
+
+ <label class="lbl" style="font-size:11px">Referencia / ID transaccion</label>
+ <input id="apr-ref" class="inp" type="text" placeholder="ej. ZL123456789" style="margin-bottom:10px">
+
+ <label class="lbl" style="font-size:11px">Monto recibido (USD)</label>
+ <input id="apr-amount" class="inp" type="number" step="0.01" value="${tierAmount}" style="margin-bottom:10px">
+
+ <label class="lbl" style="font-size:11px">Notas (opcional)</label>
+ <textarea id="apr-notes" class="inp" rows="2" style="margin-bottom:14px;resize:vertical;font-family:inherit"></textarea>
+
+ <p id="apr-err" style="color:var(--red);font-size:12px;min-height:16px;margin-bottom:8px"></p>
+
+ <button class="btn btn-primary btn-full" onclick="confirmApproveEntry('${userId}','${quinielaId}')">Confirmar y aprobar</button>
+ <button class="btn btn-secondary btn-full" style="margin-top:6px" onclick="closeModal()">Cancelar</button>
+ `);
+}
+
+/* Confirma la aprobacion despues de leer datos del modal */
+function confirmApproveEntry(userId,quinielaId){
+ const u=DB.users.find(x=>x.id===userId);
+ if(!u)return;
+ const e=(u.entries||[]).find(x=>x.quinielaId===quinielaId);
+ if(!e)return;
+ const method=document.getElementById('apr-method')?.value||'';
+ const ref=(document.getElementById('apr-ref')?.value||'').trim();
+ const amount=parseFloat(document.getElementById('apr-amount')?.value||'0');
+ const notes=(document.getElementById('apr-notes')?.value||'').trim();
+ const err=document.getElementById('apr-err');
+ // Validaciones
+ if(!ref&&method!=='cash'){if(err)err.textContent='Referencia requerida (excepto efectivo)';return;}
+ if(isNaN(amount)||amount<=0){if(err)err.textContent='Monto invalido';return;}
+ const expected=parseInt(e.tier);
+ if(amount<expected){
+ const ok=confirm(`Atencion: el monto recibido ($${amount}) es menor al de la liga ($${expected}). Aprobar de todos modos?`);
+ if(!ok)return;
+ }
+ // Guardar registro de pago dentro de la entry
+ e.payment={
+ method,reference:ref,amountReceived:amount,notes,
+ receivedAt:Date.now(),receivedBy:CUR.id,
+ };
  e.status='approved';
  e.approvedAt=Date.now();
  e.approvedBy=CUR.id;
@@ -6102,46 +7290,96 @@ function approveEntry(userId,quinielaId){
  pushLog({
  type:'entry',action:'approve',
  targetId:u.id,targetName:u.name,
- payload:{tier:e.tier,tierName:TIER_NAMES[e.tier],amount:parseInt(e.tier),quinielaId},
+ payload:{tier:e.tier,tierName:TIER_NAMES[e.tier],amount:expected,quinielaId,
+ paymentMethod:method,paymentRef:ref,amountReceived:amount,notes},
  });
- // Generar comision si el usuario tiene agente asociado
  const com=generateCommissionForEntry(u,e);
  if(u.id===CUR.id){CUR=u;saveCur();}
+ syncEntryToFirestore(u.id, e);
+ if(com)syncCommissionToFirestore(com);
+ closeModal();
  if(com){
- toast(` Aprobada · Comision $${com.commissionAmount} para ${com.referrerName}`,'success');
+ toast(`Aprobada · Comision $${com.commissionAmount} para ${com.referrerName}`,'success');
  } else {
- toast(` Inscripcion de ${u.name} aprobada`,'success');
+ toast(`Inscripcion de ${u.name} aprobada`,'success');
  }
  renderAdminPanel();
- // Si el usuario aprobado es el actual, refrescar UI
+ if(typeof renderAdminDashboard==='function')renderAdminDashboard();
  if(u.id===CUR.id){renderMyLeagues();updateActiveLigaBar();}
 }
 
-/* Rechazar inscripcion: la elimina por completo */
+/* Click "Rechazar": abre modal pidiendo razon */
 function rejectEntry(userId,quinielaId){
  if(!isAdmin(CUR)){toast('Solo admins','error');return;}
  const u=DB.users.find(x=>x.id===userId);
  if(!u){toast('Usuario no encontrado','error');return;}
  const e=(u.entries||[]).find(x=>x.quinielaId===quinielaId);
  if(!e){toast('Inscripcion no encontrada','error');return;}
- if(!confirm(`Rechazar y eliminar la inscripcion de ${u.name} a ${TIER_NAMES[e.tier]}?`))return;
+ const tierName=TIER_NAMES[e.tier]||'Liga';
+ const tierAmount=parseInt(e.tier);
+ openModal(`<h3>Rechazar inscripcion</h3>
+ <div style="background:var(--bg4);border-radius:10px;padding:12px;margin-bottom:14px">
+ <div style="font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px">Usuario</div>
+ <div style="font-size:15px;font-weight:700;color:var(--t)">${u.name}</div>
+ ${u.email?`<div style="font-size:12px;color:var(--t2);margin-top:2px">${u.email}</div>`:''}
+ <div style="margin-top:8px"><span style="color:var(--t3);font-size:11px">Liga:</span> <strong>${tierName}</strong> · <strong style="color:var(--accent)">$${tierAmount}</strong></div>
+ </div>
+
+ <p style="font-size:13px;color:var(--t2);margin-bottom:10px">Razon del rechazo (queda registrada):</p>
+
+ <label class="lbl" style="font-size:11px">Motivo</label>
+ <select id="rej-reason" class="inp" style="margin-bottom:10px">
+ <option value="no_payment">No realizo el pago</option>
+ <option value="wrong_amount">Monto incorrecto</option>
+ <option value="duplicate">Inscripcion duplicada</option>
+ <option value="suspicious">Actividad sospechosa</option>
+ <option value="user_request">Solicitud del usuario</option>
+ <option value="other">Otro</option>
+ </select>
+
+ <label class="lbl" style="font-size:11px">Notas (opcional)</label>
+ <textarea id="rej-notes" class="inp" rows="2" style="margin-bottom:14px;resize:vertical;font-family:inherit"></textarea>
+
+ <div style="background:rgba(255,107,53,.1);border:1px solid rgba(255,107,53,.3);border-radius:8px;padding:10px;margin-bottom:10px;font-size:12px;color:var(--t2)">
+ <strong style="color:#FF6B35">Atencion:</strong> esto eliminara la inscripcion. Si ya pago, debes coordinar el reembolso por fuera.
+ </div>
+
+ <button class="btn btn-secondary btn-full" style="background:rgba(231,76,60,.15);border-color:rgba(231,76,60,.4);color:#E74C3C" onclick="confirmRejectEntry('${userId}','${quinielaId}')">Confirmar rechazo</button>
+ <button class="btn btn-secondary btn-full" style="margin-top:6px" onclick="closeModal()">Cancelar</button>
+ `);
+}
+
+/* Confirma el rechazo despues de leer datos del modal */
+function confirmRejectEntry(userId,quinielaId){
+ const u=DB.users.find(x=>x.id===userId);
+ if(!u)return;
+ const e=(u.entries||[]).find(x=>x.quinielaId===quinielaId);
+ if(!e)return;
+ const reason=document.getElementById('rej-reason')?.value||'other';
+ const notes=(document.getElementById('rej-notes')?.value||'').trim();
  const tierSnapshot=e.tier;
  u.entries=(u.entries||[]).filter(x=>x.quinielaId!==quinielaId);
  if(u.quinielas)delete u.quinielas[quinielaId];
  if(u.activeQuinielaId===quinielaId){
- u.activeQuinielaId='free';
+ u.activeQuinielaId=null;
  }
  saveDB();
  pushLog({
  type:'entry',action:'reject',
  targetId:u.id,targetName:u.name,
- payload:{tier:tierSnapshot,tierName:TIER_NAMES[tierSnapshot],amount:parseInt(tierSnapshot),quinielaId},
+ payload:{tier:tierSnapshot,tierName:TIER_NAMES[tierSnapshot],amount:parseInt(tierSnapshot),quinielaId,reason,notes},
  });
  if(u.id===CUR.id){CUR=u;saveCur();}
+ deleteEntryFromFirestore(quinielaId);
+ closeModal();
  toast(`Inscripcion rechazada`,'success');
  renderAdminPanel();
+ if(typeof renderAdminDashboard==='function')renderAdminDashboard();
  if(u.id===CUR.id){renderMyLeagues();updateActiveLigaBar();updatePts();}
 }
+
+window.confirmApproveEntry=confirmApproveEntry;
+window.confirmRejectEntry=confirmRejectEntry;
 
 /* Revocar aprobacion: vuelve a pending */
 function confirmRevokeEntry(userId,quinielaId){
@@ -6497,23 +7735,51 @@ function renderAuditLogModal(){
  entry:all.filter(l=>l.type==='entry').length,
  admin:all.filter(l=>l.type==='admin').length,
  };
+ // Stats por tiempo
+ const day = 86400000;
+ const today = all.filter(l=>(Date.now()-l.ts)<day).length;
+ const week = all.filter(l=>(Date.now()-l.ts)<7*day).length;
+
  const tabs=[
  {k:'all',label:'Todos'},
- {k:'auth',label:'Auth'},
- {k:'pred',label:'Predicciones'},
  {k:'entry',label:'Inscripciones'},
  {k:'admin',label:'Admin'},
+ {k:'auth',label:'Auth'},
+ {k:'pred',label:'Predicciones'},
  ];
  const tabsHtml=tabs.map(t=>{
  const active=_logFilter===t.k;
  return `<button class="rank-tab ${active?'active':''}" onclick="setLogFilter('${t.k}')">${t.label} <span style="opacity:.6">(${counts[t.k]})</span></button>`;
  }).join('');
  const rowsHtml=filtered.length===0
- ? '<div style="padding:24px;text-align:center;color:var(--t3);font-size:13px">Sin logs en esta categoria</div>'
+ ? `<div style="padding:32px 16px;text-align:center;background:var(--bg3);border:1px dashed var(--b);border-radius:12px">
+ <div style="color:var(--t2);font-size:13px;font-weight:600">Sin eventos en esta categoria</div>
+ <div style="color:var(--t3);font-size:11px;margin-top:4px">Cuando ocurra actividad, apareceran aqui</div>
+ </div>`
  : filtered.slice(0,200).map(l=>renderLogRow(l)).join('');
  openModal(`<h3>Logs de actividad</h3>
+
+ <!-- Stats hero -->
+ <div style="background:linear-gradient(135deg,rgba(255,215,0,.08),rgba(255,215,0,.02));border:1px solid rgba(255,215,0,.2);border-radius:12px;padding:14px;margin-bottom:14px">
+ <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center">
+ <div>
+ <div style="font-family:'Anton',sans-serif;font-size:22px;color:var(--t);line-height:1">${all.length}</div>
+ <div style="font-size:10px;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;margin-top:2px">Total</div>
+ </div>
+ <div>
+ <div style="font-family:'Anton',sans-serif;font-size:22px;color:var(--accent);line-height:1">${today}</div>
+ <div style="font-size:10px;color:var(--accent);text-transform:uppercase;letter-spacing:.5px;margin-top:2px">Hoy</div>
+ </div>
+ <div>
+ <div style="font-family:'Anton',sans-serif;font-size:22px;color:var(--t2);line-height:1">${week}</div>
+ <div style="font-size:10px;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;margin-top:2px">7 dias</div>
+ </div>
+ </div>
+ </div>
+
  <div class="rank-tabs" style="margin-bottom:12px">${tabsHtml}</div>
  <div style="max-height:55vh;overflow-y:auto;margin:0 -4px">${rowsHtml}</div>
+ ${filtered.length>200?`<div style="text-align:center;font-size:11px;color:var(--t3);margin-top:8px">Mostrando los 200 mas recientes de ${filtered.length}</div>`:''}
  <button class="btn btn-secondary btn-full" style="margin-top:12px" onclick="closeModal()">Cerrar</button>
  `);
 }
@@ -6731,58 +7997,93 @@ function openPayoutsAdmin(){
  const released=DB.payoutsReleased||{};
  const claims=(DB.payouts||[]).filter(p=>p.status==='claimed');
  const paid=(DB.payouts||[]).filter(p=>p.status==='paid');
+ const totalClaimed = claims.reduce((s,p)=>s+p.prizeAmount,0);
+ const totalPaid = paid.reduce((s,p)=>s+p.prizeAmount,0);
 
  const tierStatus=Object.keys(TIER_NAMES).map(t=>{
  const isReleased=!!released[t];
  const winners=getTierWinners(t);
  const tierName=TIER_NAMES[t];
  const totalPrize=winners.reduce((s,w)=>s+w.prize,0);
- return `<div style="background:var(--bg3);border:1px solid var(--b);border-radius:10px;padding:12px;margin-bottom:8px">
- <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
- <strong style="font-size:13px">${tierName}</strong>
- <span style="font-size:11px;color:${isReleased?'var(--green-ok)':'var(--t3)'}">${isReleased?'Liberado':'Retenido'}</span>
+ const winnersCount = winners.length;
+ return `<div style="background:var(--bg3);border:1px solid ${isReleased?'rgba(91,201,125,.3)':'var(--b)'};border-radius:10px;padding:12px;margin-bottom:8px">
+ <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+ <div>
+ <div style="font-size:14px;font-weight:700;color:var(--t)">${tierName}</div>
+ <div style="font-size:11px;color:var(--t2);margin-top:2px">${winnersCount} ${winnersCount===1?'ganador':'ganadores'} · $${totalPrize.toLocaleString()} en premios</div>
  </div>
- <div style="font-size:11px;color:var(--t2);margin-bottom:8px">${winners.length} ganador${winners.length===1?'':'es'} · $${totalPrize.toLocaleString()} en premios</div>
- ${winners.map(w=>`<div style="font-size:11px;color:var(--t3);padding:2px 0">${w.position}° · ${w.userName} · $${w.prize.toLocaleString()}</div>`).join('')}
- <button class="btn btn-secondary btn-full" style="margin-top:8px;font-size:11px;padding:6px;${isReleased?'border-color:rgba(91,201,125,.3);color:var(--green-ok)':''}" onclick="confirmToggleTierPayouts('${t}')">${isReleased?'Retener premios':'Liberar premios'}</button>
+ <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:3px 8px;border-radius:10px;${isReleased?'background:rgba(91,201,125,.15);color:var(--green-ok);border:1px solid rgba(91,201,125,.3)':'background:var(--bg4);color:var(--t3);border:1px solid var(--b)'}">${isReleased?'Liberado':'Retenido'}</span>
+ </div>
+ ${winners.length>0?`<div style="background:var(--bg4);border-radius:6px;padding:6px 8px;margin-bottom:8px">
+ ${winners.map((w,i)=>`<div style="font-size:11px;color:var(--t2);padding:2px 0;display:flex;justify-content:space-between">
+ <span><strong style="color:${i===0?'#FFD700':i===1?'#C0C0C0':'#CD7F32'}">${w.position}°</strong> ${w.userName}</span>
+ <span style="color:var(--accent);font-weight:600">$${w.prize.toLocaleString()}</span>
+ </div>`).join('')}
+ </div>`:'<div style="font-size:11px;color:var(--t3);padding:6px;text-align:center">Sin ganadores aun</div>'}
+ <button class="btn btn-secondary btn-full" style="font-size:11px;padding:7px;${isReleased?'border-color:rgba(231,76,60,.3);color:#E74C3C':'border-color:rgba(91,201,125,.3);color:var(--green-ok)'}" onclick="confirmToggleTierPayouts('${t}')">${isReleased?'Retener premios':'Liberar premios'}</button>
  </div>`;
  }).join('');
 
  const claimRows=claims.length?claims.map(p=>{
- const detailLines=Object.entries(p.details||{}).map(([k,v])=>`<div style="font-size:11px;color:var(--t2)"><strong style="color:var(--t)">${k}:</strong> ${v}</div>`).join('');
- return `<div style="background:var(--bg3);border:1px solid var(--b);border-radius:10px;padding:12px;margin-bottom:8px">
- <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
- <div>
- <strong style="font-size:13px">${p.userName}</strong>
- <span style="font-size:11px;color:var(--accent);margin-left:6px">${p.tierName} · ${p.position}°</span>
+ const detailLines=Object.entries(p.details||{}).map(([k,v])=>`<div style="font-size:11px;color:var(--t2);padding:1px 0"><strong style="color:var(--t)">${k}:</strong> ${v}</div>`).join('');
+ const claimedDate = new Date(p.claimedAt);
+ const daysAgo = Math.floor((Date.now()-p.claimedAt)/86400000);
+ return `<div style="background:var(--bg3);border:1px solid var(--b);border-left:3px solid var(--accent);border-radius:10px;padding:12px;margin-bottom:8px">
+ <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;gap:8px">
+ <div style="flex:1">
+ <div style="font-size:14px;font-weight:700;color:var(--t)">${p.userName}</div>
+ <div style="font-size:11px;color:var(--t2);margin-top:2px">${p.tierName} · ${p.position}° lugar · ${daysAgo===0?'Hoy':daysAgo===1?'Ayer':`Hace ${daysAgo}d`}</div>
  </div>
- <div style="font-family:'Anton',sans-serif;font-size:18px;color:var(--accent)">$${p.prizeAmount.toLocaleString()}</div>
+ <div style="text-align:right">
+ <div style="font-family:'Anton',sans-serif;font-size:20px;color:var(--accent);line-height:1">$${p.prizeAmount.toLocaleString()}</div>
+ <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-top:1px">a pagar</div>
+ </div>
  </div>
  <div style="background:var(--bg4);border-radius:6px;padding:8px;margin:6px 0">
- <div style="font-size:11px;color:var(--accent);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px">${p.method.replace('_',' ')}</div>
+ <div style="font-size:11px;color:var(--accent);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px;font-weight:700">${(p.method||'').replace('_',' ')}</div>
  ${detailLines}
  </div>
- <div style="font-size:10px;color:var(--t3);margin-top:4px">Reclamado ${new Date(p.claimedAt).toLocaleDateString()} ${new Date(p.claimedAt).toLocaleTimeString().slice(0,5)}</div>
  <div style="display:flex;gap:6px;margin-top:8px">
- <button class="btn btn-primary" style="flex:1;font-size:11px;padding:6px" onclick="confirmMarkPaid('${p.id}')">Marcar como pagado</button>
- <button class="btn btn-secondary" style="font-size:11px;padding:6px" onclick="contactWinnerWa('${p.id}')">WhatsApp</button>
+ <button class="btn btn-primary" style="flex:1;font-size:11px;padding:8px" onclick="confirmMarkPaid('${p.id}')">Marcar pagado</button>
+ <button class="btn btn-secondary" style="font-size:11px;padding:8px;background:#25D366;border-color:#25D366;color:#fff" onclick="contactWinnerWa('${p.id}')">WhatsApp</button>
  </div>
  </div>`;
- }).join(''):'<div style="padding:14px;text-align:center;color:var(--t3);font-size:12px">No hay premios reclamados pendientes</div>';
+ }).join(''):`<div style="padding:24px;text-align:center;background:var(--bg3);border:1px dashed var(--b);border-radius:10px">
+ <div style="color:var(--t2);font-size:13px;font-weight:600">Sin reclamos pendientes</div>
+ <div style="color:var(--t3);font-size:11px;margin-top:4px">Cuando los ganadores reclamen, apareceran aqui</div>
+ </div>`;
 
- const paidSection=paid.length?`<div class="admin-section-label" style="margin-top:18px">Pagados (${paid.length})</div>
- ${paid.map(p=>`<div style="background:rgba(91,201,125,.05);border:1px solid rgba(91,201,125,.2);border-radius:8px;padding:8px;margin-bottom:4px;display:flex;justify-content:space-between;font-size:11px">
- <span>${p.userName} · ${p.tierName} · ${p.position}°</span>
- <span style="color:var(--green-ok)">$${p.prizeAmount.toLocaleString()}</span>
- </div>`).join('')}`:'';
+ const paidSection=paid.length?`<div style="font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-top:18px;margin-bottom:8px">Pagados · $${totalPaid.toLocaleString()} (${paid.length})</div>
+ <div style="display:flex;flex-direction:column;gap:4px;margin-bottom:14px">
+ ${paid.map(p=>`<div style="background:rgba(91,201,125,.05);border:1px solid rgba(91,201,125,.2);border-radius:8px;padding:8px 10px;display:flex;justify-content:space-between;font-size:11px;align-items:center">
+ <div>
+ <strong style="color:var(--t)">${p.userName}</strong>
+ <span style="color:var(--t3);margin-left:6px">${p.tierName} · ${p.position}°</span>
+ </div>
+ <span style="color:var(--green-ok);font-weight:700">$${p.prizeAmount.toLocaleString()}</span>
+ </div>`).join('')}
+ </div>`:'';
 
  openModal(`<h3>Premios</h3>
- <p class="pay-instr">Gestiona la liberacion y pago de premios al final del torneo.</p>
 
- <div class="admin-section-label" style="margin-top:0">Estado por tier</div>
+ <!-- Stats hero -->
+ <div style="background:linear-gradient(135deg,rgba(255,215,0,.08),rgba(255,215,0,.02));border:1px solid rgba(255,215,0,.2);border-radius:12px;padding:14px;margin-bottom:14px">
+ <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;text-align:center">
+ <div>
+ <div style="font-family:'Anton',sans-serif;font-size:24px;color:var(--accent);line-height:1">$${totalClaimed.toLocaleString()}</div>
+ <div style="font-size:10px;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;margin-top:2px">Por pagar (${claims.length})</div>
+ </div>
+ <div>
+ <div style="font-family:'Anton',sans-serif;font-size:24px;color:var(--green-ok);line-height:1">$${totalPaid.toLocaleString()}</div>
+ <div style="font-size:10px;color:var(--green-ok);text-transform:uppercase;letter-spacing:.5px;margin-top:2px">Ya pagado (${paid.length})</div>
+ </div>
+ </div>
+ </div>
+
+ <div style="font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:8px">Estado por liga</div>
  ${tierStatus}
 
- <div class="admin-section-label" style="margin-top:18px">Reclamos pendientes (${claims.length})</div>
+ <div style="font-size:11px;color:var(--accent);text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-top:18px;margin-bottom:8px">Reclamos pendientes (${claims.length})</div>
  ${claimRows}
 
  ${paidSection}
@@ -6903,79 +8204,82 @@ function openIngresosAdmin(){
  const netPendingPayout=totalCommissionsPending;
 
  openModal(`<h3>Ingresos · Mi ganancia</h3>
- <p class="pay-instr">Solo tu (admin) ves esta info. Calculado con rake del <strong style="color:var(--accent)">${(rakeRate*100).toFixed(0)}%</strong>.</p>
 
  <!-- BIG NUMBER: Tu ganancia neta -->
- <div style="background:linear-gradient(135deg,rgba(255,215,0,.15),rgba(255,215,0,.04));border:1px solid rgba(255,215,0,.3);border-radius:12px;padding:18px;margin-bottom:14px;text-align:center">
- <div style="font-size:11px;color:var(--accent);text-transform:uppercase;letter-spacing:1px;font-weight:800;margin-bottom:4px">Mi ganancia neta</div>
- <div style="font-family:'Anton',sans-serif;font-size:42px;color:var(--accent);line-height:1">$${netProfit.toLocaleString()}</div>
- <div style="font-size:11px;color:var(--t2);margin-top:4px">Despues de comisiones a agentes</div>
+ <div style="background:linear-gradient(135deg,rgba(255,215,0,.18),rgba(255,215,0,.04));border:1px solid rgba(255,215,0,.3);border-radius:14px;padding:20px;margin-bottom:14px;text-align:center;position:relative;overflow:hidden">
+ <div style="font-size:11px;color:var(--accent);text-transform:uppercase;letter-spacing:1.5px;font-weight:800;margin-bottom:6px">Mi ganancia neta</div>
+ <div style="font-family:'Anton',sans-serif;font-size:52px;color:var(--accent);line-height:1;letter-spacing:.5px">$${netProfit.toLocaleString()}</div>
+ <div style="font-size:11px;color:var(--t2);margin-top:6px">Despues de comisiones a agentes · Rake del <strong style="color:var(--accent)">${(rakeRate*100).toFixed(0)}%</strong></div>
+ ${totalCommissionsPending>0?`<div style="margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,215,0,.15);font-size:11px;color:var(--t2)">
+ Disponible AHORA: <strong style="color:var(--accent)">$${netPaidNow.toLocaleString()}</strong> · Por pagar a agentes: <strong style="color:#FF6B35">$${totalCommissionsPending.toFixed(0)}</strong>
+ </div>`:''}
  </div>
 
  <!-- Resumen ejecutivo -->
- <div style="background:var(--bg3);border:1px solid var(--b);border-radius:10px;padding:14px;margin-bottom:14px">
- <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
- <div style="text-align:center;padding:8px;background:var(--bg4);border-radius:8px">
- <div style="font-family:'Anton',sans-serif;font-size:22px;color:var(--t)">$${grandTotal.toLocaleString()}</div>
- <div style="font-size:10px;color:var(--t2);text-transform:uppercase;letter-spacing:.5px">Total recaudado</div>
+ <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px">
+ <div style="background:var(--bg3);border:1px solid var(--b);border-radius:10px;padding:12px;text-align:center">
+ <div style="font-family:'Anton',sans-serif;font-size:24px;color:var(--t);line-height:1">$${grandTotal.toLocaleString()}</div>
+ <div style="font-size:10px;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;margin-top:3px">Total recaudado</div>
  </div>
- <div style="text-align:center;padding:8px;background:var(--bg4);border-radius:8px">
- <div style="font-family:'Anton',sans-serif;font-size:22px;color:var(--t2)">$${grandPool.toLocaleString()}</div>
- <div style="font-size:10px;color:var(--t2);text-transform:uppercase;letter-spacing:.5px">Pool premios</div>
+ <div style="background:var(--bg3);border:1px solid var(--b);border-radius:10px;padding:12px;text-align:center">
+ <div style="font-family:'Anton',sans-serif;font-size:24px;color:var(--t2);line-height:1">$${grandPool.toLocaleString()}</div>
+ <div style="font-size:10px;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;margin-top:3px">Pool premios</div>
  </div>
- <div style="text-align:center;padding:8px;background:rgba(255,215,0,.06);border-radius:8px;border:1px solid rgba(255,215,0,.15)">
- <div style="font-family:'Anton',sans-serif;font-size:22px;color:var(--accent)">$${grandRake.toLocaleString()}</div>
- <div style="font-size:10px;color:var(--accent);text-transform:uppercase;letter-spacing:.5px">Mi rake bruto</div>
+ <div style="background:rgba(255,215,0,.06);border:1px solid rgba(255,215,0,.25);border-radius:10px;padding:12px;text-align:center">
+ <div style="font-family:'Anton',sans-serif;font-size:24px;color:var(--accent);line-height:1">$${grandRake.toLocaleString()}</div>
+ <div style="font-size:10px;color:var(--accent);text-transform:uppercase;letter-spacing:.5px;margin-top:3px">Mi rake bruto</div>
  </div>
- <div style="text-align:center;padding:8px;background:var(--bg4);border-radius:8px">
- <div style="font-family:'Anton',sans-serif;font-size:22px;color:#FF6B35">$${totalCommissionsGenerated.toLocaleString()}</div>
- <div style="font-size:10px;color:#FF6B35;text-transform:uppercase;letter-spacing:.5px">Comisiones</div>
- </div>
+ <div style="background:rgba(255,107,53,.05);border:1px solid rgba(255,107,53,.2);border-radius:10px;padding:12px;text-align:center">
+ <div style="font-family:'Anton',sans-serif;font-size:24px;color:#FF6B35;line-height:1">$${totalCommissionsGenerated.toLocaleString()}</div>
+ <div style="font-size:10px;color:#FF6B35;text-transform:uppercase;letter-spacing:.5px;margin-top:3px">Comisiones</div>
  </div>
  </div>
-
- <!-- Estado de pagos -->
- ${totalCommissionsPending>0?`<div style="background:rgba(255,215,0,.06);border:1px solid rgba(255,215,0,.2);border-radius:10px;padding:12px;margin-bottom:14px;font-size:12px;color:var(--t)">
- <strong style="color:var(--accent)">Atencion:</strong> Debes <strong>$${totalCommissionsPending.toFixed(2)}</strong> en comisiones pendientes a agentes. Cuando pagues, tu ganancia disponible AHORA es <strong style="color:var(--accent)">$${netPaidNow.toLocaleString()}</strong>.
- </div>`:''}
 
  <!-- Desglose por tier -->
- <div class="admin-section-label">Por liga</div>
+ <div style="font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:8px">Por liga</div>
  ${tierRows}
 
  <!-- Lista de agentes con ganancias -->
- <div class="admin-section-label" style="margin-top:18px">Agentes · Sus ganancias</div>
+ <div style="font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-top:18px;margin-bottom:8px">Agentes · Sus ganancias</div>
  ${(function(){
  const refs=DB.referrers||[];
  if(!refs.length){
- return '<div style="padding:14px;text-align:center;color:var(--t3);font-size:12px;background:var(--bg3);border:1px solid var(--b);border-radius:10px">Aun no has creado agentes. Cuando crees uno, veras aqui cuanto generan.</div>';
+ return '<div style="padding:18px;text-align:center;color:var(--t3);font-size:12px;background:var(--bg3);border:1px dashed var(--b);border-radius:10px">Aun no hay agentes. Cuando crees uno, veras aqui cuanto generan.</div>';
  }
- // Sort por totalGenerated descendente
  const refsWithStats=refs.map(ref=>{
  const stats=getReferrerStats(ref.id);
  return {ref,stats};
  }).sort((a,b)=>b.stats.totalGenerated-a.stats.totalGenerated);
  return refsWithStats.map(({ref,stats})=>{
  return `<div onclick="openReferrerDetail('${ref.id}')" style="background:var(--bg3);border:1px solid var(--b);border-radius:10px;padding:12px;margin-bottom:8px;cursor:pointer;transition:border-color .15s" onmouseover="this.style.borderColor='rgba(255,215,0,.3)'" onmouseout="this.style.borderColor='var(--b)'">
- <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
- <div>
+ <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+ <div style="display:flex;align-items:center;gap:8px">
  <strong style="font-size:14px">${ref.name}</strong>
- <span style="font-size:11px;color:var(--accent);margin-left:6px">${ref.code}</span>
+ <code style="background:rgba(255,215,0,.1);color:var(--accent);font-family:'DM Mono',monospace;font-size:10px;padding:2px 6px;border-radius:4px">${ref.code}</code>
  </div>
- <span style="font-size:11px;color:var(--t2)">${(ref.commissionRate*100).toFixed(0)}% del rake</span>
+ <span style="font-size:11px;color:var(--t2)">${(ref.commissionRate*100).toFixed(0)}%</span>
  </div>
- <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;font-size:11px;color:var(--t2)">
- <div>Generado: <strong style="color:var(--t)">$${stats.totalGenerated.toFixed(2)}</strong></div>
- <div>Pagado: <strong style="color:var(--green-ok)">$${stats.totalPaid.toFixed(2)}</strong></div>
- <div>Pendiente: <strong style="color:${stats.totalPending>0?'var(--accent)':'var(--t3)'}">$${stats.totalPending.toFixed(2)}</strong></div>
+ <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;font-size:11px">
+ <div style="text-align:center;background:var(--bg4);border-radius:6px;padding:6px">
+ <div style="color:var(--t);font-weight:700">$${stats.totalGenerated.toFixed(0)}</div>
+ <div style="color:var(--t3);font-size:9px;text-transform:uppercase;letter-spacing:.5px;margin-top:1px">Generado</div>
+ </div>
+ <div style="text-align:center;background:rgba(91,201,125,.06);border-radius:6px;padding:6px">
+ <div style="color:var(--green-ok);font-weight:700">$${stats.totalPaid.toFixed(0)}</div>
+ <div style="color:var(--green-ok);font-size:9px;text-transform:uppercase;letter-spacing:.5px;margin-top:1px">Pagado</div>
+ </div>
+ <div style="text-align:center;background:${stats.totalPending>0?'rgba(255,215,0,.06)':'var(--bg4)'};border-radius:6px;padding:6px">
+ <div style="color:${stats.totalPending>0?'var(--accent)':'var(--t3)'};font-weight:700">$${stats.totalPending.toFixed(0)}</div>
+ <div style="color:${stats.totalPending>0?'var(--accent)':'var(--t3)'};font-size:9px;text-transform:uppercase;letter-spacing:.5px;margin-top:1px">Pendiente</div>
+ </div>
  </div>
  <div style="font-size:10px;color:var(--t3);margin-top:6px">${stats.referredUsersCount} ${stats.referredUsersCount===1?'usuario referido':'usuarios referidos'} · ${stats.total} ${stats.total===1?'comision':'comisiones'}</div>
  </div>`;
  }).join('');
  })()}
 
- <p style="font-size:11px;color:var(--t3);margin-top:14px;line-height:1.5">
- Solo se cuentan inscripciones <strong>aprobadas</strong>. Las pendientes no han generado dinero todavia.
+ <p style="font-size:11px;color:var(--t3);margin-top:14px;line-height:1.5;text-align:center">
+ Solo se cuentan inscripciones <strong>aprobadas</strong>. Las pendientes no se contabilizan.
  </p>
  <button class="btn btn-secondary btn-full" style="margin-top:12px" onclick="closeModal()">Cerrar</button>
  `);
@@ -6992,48 +8296,70 @@ function openReferrersAdmin(){
  const totalGenerated=allCom.reduce((s,c)=>s+c.commissionAmount,0);
  const totalPending=allCom.filter(c=>c.status==='pending').reduce((s,c)=>s+c.commissionAmount,0);
  const totalPaid=allCom.filter(c=>c.status==='paid').reduce((s,c)=>s+c.commissionAmount,0);
+ const activeCount = refs.filter(r=>r.isActive).length;
+ const inactiveCount = refs.length - activeCount;
 
  const refsRows=refs.length===0
- ? '<div style="padding:24px;text-align:center;color:var(--t3);font-size:13px">Aun no hay agentes. Crea el primero.</div>'
+ ? `<div style="padding:32px 16px;text-align:center;background:var(--bg3);border:1px dashed var(--b);border-radius:12px">
+ <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="opacity:.5;margin-bottom:8px"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+ <div style="color:var(--t2);font-size:13px;font-weight:600">Sin agentes todavia</div>
+ <div style="color:var(--t3);font-size:11px;margin-top:4px">Crea el primero para empezar a recibir referidos</div>
+ </div>`
  : refs.map(r=>{
  const stats=getReferrerStats(r.id);
- return `<div class="admin-user-row" onclick="openReferrerDetail('${r.id}')" style="cursor:pointer">
- <div class="avatar admin-user-av">${initials(r.name)}</div>
- <div class="admin-user-info">
- <div class="admin-user-name">${r.name} <span style="color:var(--accent);font-family:'DM Mono',monospace;font-size:11px">${r.code}</span></div>
- <div class="admin-user-email">${stats.referredUsersCount} usuarios · ${(r.commissionRate*100).toFixed(0)}% del rake</div>
+ const inactiveStyle = !r.isActive?'opacity:.55;':'';
+ return `<div class="admin-pending-card" onclick="openReferrerDetail('${r.id}')" style="cursor:pointer;${inactiveStyle}border-left-color:${stats.totalPending>0?'var(--accent)':'var(--b)'}">
+ <div class="admin-pending-info">
+ <div class="admin-pending-name" style="display:flex;align-items:center;gap:6px">
+ ${r.name}
+ <code style="background:rgba(255,215,0,.1);color:var(--accent);font-family:'DM Mono',monospace;font-size:10px;padding:2px 6px;border-radius:4px;letter-spacing:.5px">${r.code}</code>
+ ${!r.isActive?'<span style="background:var(--bg4);color:var(--t3);font-size:9px;padding:1px 5px;border-radius:3px;text-transform:uppercase;letter-spacing:.5px">inactivo</span>':''}
  </div>
- <div style="font-size:11px;text-align:right">
- ${stats.totalPending>0?`<div style="color:var(--accent);font-family:'Anton',sans-serif;font-size:16px">$${stats.totalPending.toFixed(2)}</div><div style="color:var(--t3)">pendiente</div>`:'<div style="color:var(--t3)">Sin pendientes</div>'}
+ <div class="admin-pending-meta">
+ ${stats.referredUsersCount} ${stats.referredUsersCount===1?'usuario':'usuarios'} · ${(r.commissionRate*100).toFixed(0)}% del rake · ${stats.commissionsCount} ${stats.commissionsCount===1?'comision':'comisiones'}
+ </div>
+ </div>
+ <div style="text-align:right">
+ ${stats.totalPending>0
+ ?`<div style="color:var(--accent);font-family:'Anton',sans-serif;font-size:18px;line-height:1">$${stats.totalPending.toFixed(0)}</div><div style="color:var(--t3);font-size:10px;text-transform:uppercase;letter-spacing:.5px;margin-top:1px">pendiente</div>`
+ :stats.totalPaid>0?`<div style="color:var(--green-ok);font-size:11px;font-weight:600">Al dia</div><div style="color:var(--t3);font-size:10px">$${stats.totalPaid.toFixed(0)} pagado</div>`
+ :'<div style="color:var(--t3);font-size:11px">Sin actividad</div>'}
  </div>
  </div>`;
  }).join('');
 
  openModal(`<h3>Agentes</h3>
- <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px">
- <div style="background:var(--bg3);border:1px solid var(--b);border-radius:10px;padding:10px;text-align:center">
- <div style="font-family:'Anton',sans-serif;font-size:20px;color:var(--t)">$${totalGenerated.toFixed(0)}</div>
- <div style="font-size:10px;color:var(--t2);text-transform:uppercase;letter-spacing:.5px">Generado</div>
+
+ <!-- Stats hero -->
+ <div style="background:linear-gradient(135deg,rgba(255,215,0,.08),rgba(255,215,0,.02));border:1px solid rgba(255,215,0,.2);border-radius:12px;padding:14px;margin-bottom:14px">
+ <div style="font-size:11px;color:var(--accent);text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:8px">Resumen</div>
+ <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center">
+ <div>
+ <div style="font-family:'Anton',sans-serif;font-size:22px;color:var(--t);line-height:1">$${totalGenerated.toFixed(0)}</div>
+ <div style="font-size:10px;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;margin-top:2px">Generado</div>
  </div>
- <div style="background:var(--bg3);border:1px solid rgba(255,215,0,.3);border-radius:10px;padding:10px;text-align:center">
- <div style="font-family:'Anton',sans-serif;font-size:20px;color:var(--accent)">$${totalPending.toFixed(0)}</div>
- <div style="font-size:10px;color:var(--accent);text-transform:uppercase;letter-spacing:.5px">Pendiente</div>
+ <div>
+ <div style="font-family:'Anton',sans-serif;font-size:22px;color:var(--accent);line-height:1">$${totalPending.toFixed(0)}</div>
+ <div style="font-size:10px;color:var(--accent);text-transform:uppercase;letter-spacing:.5px;margin-top:2px">Pendiente</div>
  </div>
- <div style="background:var(--bg3);border:1px solid rgba(91,201,125,.3);border-radius:10px;padding:10px;text-align:center">
- <div style="font-family:'Anton',sans-serif;font-size:20px;color:var(--green-ok)">$${totalPaid.toFixed(0)}</div>
- <div style="font-size:10px;color:var(--green-ok);text-transform:uppercase;letter-spacing:.5px">Pagado</div>
+ <div>
+ <div style="font-family:'Anton',sans-serif;font-size:22px;color:var(--green-ok);line-height:1">$${totalPaid.toFixed(0)}</div>
+ <div style="font-size:10px;color:var(--green-ok);text-transform:uppercase;letter-spacing:.5px;margin-top:2px">Pagado</div>
  </div>
  </div>
+ <div style="text-align:center;font-size:11px;color:var(--t2);margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,215,0,.15)">
+ <strong>${activeCount}</strong> ${activeCount===1?'agente activo':'agentes activos'}${inactiveCount>0?` · ${inactiveCount} inactivos`:''} · Rake admin: <strong style="color:var(--accent)">${(getRakeRate()*100).toFixed(0)}%</strong>
+ </div>
+ </div>
+
  <button class="btn btn-primary btn-full" onclick="openCreateReferrerModal()" style="margin-bottom:14px;display:flex;align-items:center;justify-content:center;gap:6px">
- <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+ <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
  Nuevo agente
  </button>
- <div class="admin-section-label">Activos (${refs.filter(r=>r.isActive).length})</div>
- <div class="admin-users-list" style="margin-bottom:14px">${refsRows}</div>
- <div style="font-size:11px;color:var(--t3);padding:10px;background:var(--bg3);border-radius:8px;margin-bottom:10px">
- <strong style="color:var(--t2)">Tu rake actual:</strong> ${(getRakeRate()*100).toFixed(0)}% del monto inscrito.
- Cada inscripcion aprobada de un usuario referido genera comision automaticamente.
- </div>
+
+ ${refs.length>0?`<div style="font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:8px">Lista de agentes</div>`:''}
+ <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px">${refsRows}</div>
+
  <button class="btn btn-secondary btn-full" onclick="closeModal()">Cerrar</button>
  `);
 }
@@ -7174,6 +8500,8 @@ function editReferrerRate(referrerId){
  pushLog({type:'admin',action:'change_referrer_rate',
  targetId:ref.id,targetName:ref.name,
  payload:{old:oldRate,new:newPct/100}});
+ // STEP 5: sync
+ if(typeof syncReferrerToFirestore==='function')syncReferrerToFirestore(ref);
  toast(`Tasa actualizada a ${newPct}%`,'success');
  setTimeout(()=>openReferrerDetail(referrerId),100);
 }
@@ -7291,44 +8619,73 @@ function openAdminConfig(){
  const current=getAdminWhatsApp();
  const currentRake=Math.round(getRakeRate()*100);
  const currentDefaultCommission=Math.round((DB.config?.defaultCommission||DEFAULT_COMMISSION)*100);
- openModal(`<h3>Configuración</h3>
- <p class="pay-instr">Datos de la plataforma. Solo tu (admin) ves esto.</p>
+ openModal(`<h3>Configuracion</h3>
 
- <div class="admin-section-label" style="margin-top:0">Comisiones · Tu negocio</div>
+ <!-- Hero con resumen actual -->
+ <div style="background:linear-gradient(135deg,rgba(255,215,0,.1),rgba(255,215,0,.02));border:1px solid rgba(255,215,0,.2);border-radius:12px;padding:14px;margin-bottom:14px">
+ <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;text-align:center">
+ <div>
+ <div style="font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px">Tu rake actual</div>
+ <div style="font-family:'Anton',sans-serif;font-size:28px;color:var(--accent);line-height:1.1;margin-top:2px">${currentRake}%</div>
+ </div>
+ <div>
+ <div style="font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px">Default agente</div>
+ <div style="font-family:'Anton',sans-serif;font-size:28px;color:var(--t);line-height:1.1;margin-top:2px">${currentDefaultCommission}%</div>
+ </div>
+ </div>
+ <div style="text-align:center;font-size:11px;color:var(--t2);margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,215,0,.15)">
+ De cada $100 que entra: <strong style="color:var(--accent)">$${currentRake}</strong> al admin · <strong>$${100-currentRake}</strong> al pool de premios
+ </div>
+ </div>
+
+ <!-- Seccion: economia -->
+ <div style="margin-bottom:6px;display:flex;align-items:center;gap:8px;padding-top:6px">
+ <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+ <span style="font-size:11px;color:var(--accent);text-transform:uppercase;letter-spacing:1px;font-weight:700">Economia</span>
+ </div>
 
  <div class="field">
- <label>Tu rake (% del monto inscrito)</label>
- <input type="number" id="cfg-rake" value="${currentRake}" min="1" max="50" step="1" inputmode="numeric">
+ <label>Rake del admin (% del monto inscrito)</label>
+ <div style="position:relative">
+ <input type="number" id="cfg-rake" value="${currentRake}" min="1" max="50" step="1" inputmode="numeric" style="padding-right:30px">
+ <span style="position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--t3);font-size:14px;pointer-events:none">%</span>
+ </div>
  <p style="font-size:11px;color:var(--t3);margin-top:6px;line-height:1.4">
- Por cada $100 que entra, te quedas con <strong style="color:var(--accent)">${currentRake}%</strong>. El resto (${100-currentRake}%) va al pool de premios para los jugadores.
+ Recomendado: <strong>10-15%</strong>. Mas alto = menos premio para jugadores. El resto va al pool.
  </p>
  </div>
 
  <div class="field">
- <label>% del rake que reciben agentes nuevos (default)</label>
- <input type="number" id="cfg-commission" value="${currentDefaultCommission}" min="0" max="100" step="5" inputmode="numeric">
+ <label>Comision default para agentes nuevos</label>
+ <div style="position:relative">
+ <input type="number" id="cfg-commission" value="${currentDefaultCommission}" min="0" max="100" step="5" inputmode="numeric" style="padding-right:30px">
+ <span style="position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--t3);font-size:14px;pointer-events:none">% del rake</span>
+ </div>
  <p style="font-size:11px;color:var(--t3);margin-top:6px;line-height:1.4">
- Cuando creas un agente, este es el porcentaje que recibira de tu rake. Lo puedes ajustar individualmente por agente.<br>
- Ejemplo: rake ${currentRake}% + comision ${currentDefaultCommission}% = agente recibe ${(currentRake*currentDefaultCommission/100).toFixed(2)}% del monto inscrito por sus referidos.
+ Por cada referido, agente recibe <strong style="color:var(--accent)">${(currentRake*currentDefaultCommission/100).toFixed(2)}%</strong> del monto. Ej: $50 inscripcion = $${(50*currentRake*currentDefaultCommission/10000).toFixed(2)} al agente.
  </p>
  </div>
 
- <div class="admin-section-label">Contacto · Pagos</div>
+ <!-- Seccion: contacto -->
+ <div style="margin-bottom:6px;margin-top:14px;display:flex;align-items:center;gap:8px">
+ <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+ <span style="font-size:11px;color:var(--accent);text-transform:uppercase;letter-spacing:1px;font-weight:700">Contacto · Pagos</span>
+ </div>
 
  <div class="field">
- <label>WhatsApp del admin (formato internacional)</label>
+ <label>WhatsApp del admin</label>
  <input type="tel" id="cfg-wa" value="${current}" placeholder="Ej: 584141234567" maxlength="20" inputmode="numeric">
  <p style="font-size:11px;color:var(--t3);margin-top:6px;line-height:1.4">
- Solo digitos: codigo de pais + numero, sin <strong>+</strong>, sin espacios, sin guiones.<br>
- Mexico: <code style="color:var(--accent)">521</code> + numero (10 digitos)<br>
- USA: <code style="color:var(--accent)">1</code> + numero (10 digitos)<br>
- Venezuela: <code style="color:var(--accent)">58</code> + numero sin el 0 inicial
+ Solo digitos: <strong>codigo de pais + numero</strong>. Sin <strong>+</strong>, sin espacios, sin guiones.<br>
+ <span style="display:inline-block;background:var(--bg4);padding:2px 6px;border-radius:4px;margin-top:4px;margin-right:4px">MX <code style="color:var(--accent)">521</code> + 10 digitos</span>
+ <span style="display:inline-block;background:var(--bg4);padding:2px 6px;border-radius:4px;margin-top:4px;margin-right:4px">USA <code style="color:var(--accent)">1</code> + 10 digitos</span>
+ <span style="display:inline-block;background:var(--bg4);padding:2px 6px;border-radius:4px;margin-top:4px">VE <code style="color:var(--accent)">58</code> + sin 0</span>
  </p>
  </div>
 
- <div class="err" id="cfg-err"></div>
+ <p class="err" id="cfg-err" style="color:var(--red);font-size:12px;min-height:16px"></p>
  <div class="modal-btns">
- <button class="btn btn-primary" style="flex:1" onclick="saveAdminConfig()">Guardar</button>
+ <button class="btn btn-primary" style="flex:1" onclick="saveAdminConfig()">Guardar cambios</button>
  <button class="btn btn-secondary" style="flex:1" onclick="closeModal()">Cancelar</button>
  </div>
  `);
@@ -7370,6 +8727,9 @@ function saveAdminConfig(){
  closeModal();
  toast('Configuracion guardada','success');
  renderAdminPanel();
+ if(typeof renderAdminDashboard==='function')renderAdminDashboard();
+ // STEP 5: sync config global a Firestore
+ if(typeof syncConfigToFirestore==='function')syncConfigToFirestore();
 }
 
 /* Stub: ya no hay depósitos del usuario que renderizar */
@@ -7885,52 +9245,596 @@ function openPrivacyModal(){
 }
 
 function openFAQModal(){
+ // FAQ con categorias colapsables. Empieza con la primera abierta.
+ const faqData = [
+ {
+ cat:'Inscripciones',
+ ico:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>',
+ items:[
+ {q:'Como me inscribo a una liga?',a:'Click en cualquier card de liga ($20, $50, $100 o $500) en el Home. Se abre un modal donde el admin te dice como pagar (Zelle, Binance, Pago Movil o efectivo). Una vez pagues, el admin aprueba tu inscripcion manualmente.'},
+ {q:'Cuanto tarda en aprobarse mi inscripcion?',a:'Normalmente 1-24 horas despues de que el admin verifica tu pago. Si tarda mas, escribe al WhatsApp del admin.'},
+ {q:'Puedo predecir antes de ser aprobado?',a:'Si. Tus predicciones se guardan desde que te registras. La aprobacion solo es necesaria para optar al premio.'},
+ {q:'Puedo tener varias inscripciones?',a:'Si. Puedes inscribirte multiples veces a la misma liga (cada una es una quiniela independiente) o a ligas diferentes.'},
+ {q:'Puedo reembolsar mi inscripcion?',a:'No. Una vez aprobada, no hay reembolso bajo ninguna circunstancia. Si tu inscripcion esta pendiente y aun no has pagado, simplemente no pagues.'},
+ ]
+ },
+ {
+ cat:'Predicciones y puntos',
+ ico:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
+ items:[
+ {q:'Hasta cuando puedo predecir un partido?',a:'Hasta 5 minutos antes del horario oficial de inicio. Despues queda bloqueado y no se puede modificar.'},
+ {q:'Como se calculan los puntos?',a:'Fase de grupos: 10 pts por resultado exacto, 3 pts por acertar ganador o empate. Eliminatorias: 15 (octavos), 25 (cuartos), 40 (semis), 60 (final). Bonus: 75 por campeon correcto, 50 por goleador.'},
+ {q:'Cuando se desbloquea el campeon y goleador?',a:'5 minutos antes del primer partido del Mundial (11 jun 2026, 13:55 hora Mexico). Despues quedan bloqueados como cualquier prediccion.'},
+ {q:'Que pasa si dos jugadores empatan en puntos?',a:'Se desempata por: 1) mas resultados exactos acertados, 2) campeon correcto, 3) goleador correcto, 4) fecha de inscripcion (gana quien se inscribio primero).'},
+ {q:'Puedo ver las predicciones de otros?',a:'Solo despues que el partido se bloquea (5 min antes del kickoff). Antes son privadas para evitar copia.'},
+ ]
+ },
+ {
+ cat:'Premios y pagos',
+ ico:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H3l1 5h2m12-5h3l-1 5h-2M6 9V4h12v5M6 9c0 4.418 2.686 8 6 8s6-3.582 6-8M9 20h6M12 18v2"/></svg>',
+ items:[
+ {q:'Cuando me pagan si gano?',a:'Una sola vez al final del Mundial, en un plazo de hasta 30 dias despues del partido final. Te contactaremos al email registrado para pedir tus datos de cobro.'},
+ {q:'Como se reparte el premio en cada liga?',a:'1er lugar: 50% del pool, 2do: 30%, 3er: 20%. El pool es 88% del total recaudado en esa liga (12% queda como rake del admin).'},
+ {q:'Como recibo mi premio?',a:'Por Zelle (USA), Binance USDT (cualquier pais), Pago Movil Venezuela, o efectivo si estas en Caracas. Tu eliges el metodo cuando reclames el premio.'},
+ {q:'Hay verificacion de identidad?',a:'Premios mayores a $500 USD pueden requerir verificacion. Pedimos foto del documento de identidad.'},
+ {q:'Que pasa si nadie acierta el campeon o goleador?',a:'Los puntos bonus simplemente no se otorgan. No afecta el reparto del pool de premios.'},
+ ]
+ },
+ {
+ cat:'Cuenta y soporte',
+ ico:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
+ items:[
+ {q:'Que pasa si pierdo mi contrasena?',a:'En la pantalla de login click "Olvidaste tu contrasena". Te llega un email de Firebase para crear una nueva.'},
+ {q:'Puedo usar la App desde mi celular y mi compu al mismo tiempo?',a:'Si, con la misma cuenta. Tus datos se sincronizan en tiempo real entre dispositivos.'},
+ {q:'Por que necesito verificar mi email?',a:'Para inscribirte a ligas con dinero real. Es un requisito anti-fraude. La verificacion es gratis: te llega un email con un link, click y listo.'},
+ {q:'Que pasa si FIFA cambia el calendario?',a:'El admin actualiza la App. Tus predicciones existentes se mantienen.'},
+ {q:'Mis datos estan seguros?',a:'Si. Usamos Firebase de Google (mismo sistema que apps bancarias). No vendemos datos. No guardamos info de tarjetas (no procesamos pagos directos).'},
+ {q:'Donde escribo si tengo un problema?',a:'Al WhatsApp del admin que aparece en cualquier modal de inscripcion. Respondemos en horario laboral.'},
+ ]
+ },
+ ];
+ const sections = faqData.map((cat,i)=>{
+ const items = cat.items.map((it,j)=>`<details style="background:var(--bg4);border-radius:8px;margin-bottom:6px;border:1px solid var(--b);overflow:hidden">
+ <summary style="cursor:pointer;padding:12px 14px;font-size:13px;font-weight:600;color:var(--t);list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px">
+ <span style="flex:1">${it.q}</span>
+ <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;transition:transform .2s"><polyline points="6 9 12 15 18 9"/></svg>
+ </summary>
+ <div style="padding:0 14px 12px;font-size:12.5px;color:var(--t2);line-height:1.55">${it.a}</div>
+ </details>`).join('');
+ return `<div style="margin-bottom:16px">
+ <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+ <div style="width:24px;height:24px;border-radius:6px;background:rgba(255,215,0,.1);border:1px solid rgba(255,215,0,.2);display:flex;align-items:center;justify-content:center;color:var(--accent)">
+ <svg width="14" height="14" viewBox="0 0 24 24" style="overflow:visible">${cat.ico.replace('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">','').replace('</svg>','')}</svg>
+ </div>
+ <span style="font-size:11px;color:var(--accent);text-transform:uppercase;letter-spacing:1px;font-weight:700">${cat.cat}</span>
+ <span style="font-size:11px;color:var(--t3);margin-left:auto">${cat.items.length} preguntas</span>
+ </div>
+ ${items}
+ </div>`;
+ }).join('');
+
  openModal(`<h3>Preguntas Frecuentes</h3>
+ <p style="font-size:12px;color:var(--t2);margin-bottom:16px;line-height:1.5">
+ Click cualquier pregunta para ver la respuesta. Si no encuentras lo que buscas, escribe al WhatsApp del admin.
+ </p>
+ ${sections}
 
- <div class="legal-doc">
- <h4>Como me inscribo a una liga?</h4>
- <p>Click en cualquier card de liga ($20, $50, $100 o $500) en el Home. Se abre un modal donde el admin te dice como pagar (Zelle, Binance, Pago Movil o efectivo). Una vez pagues, el admin aprueba tu inscripcion manualmente.</p>
-
- <h4>Cuanto tarda en aprobarse mi inscripcion?</h4>
- <p>Normalmente 1-24 horas despues de que el admin verifica tu pago. Si tarda mas, escribe al WhatsApp del admin.</p>
-
- <h4>Puedo predecir antes de ser aprobado?</h4>
- <p>Si. Tus predicciones se guardan desde que te registras. La aprobacion solo es necesaria para optar al premio.</p>
-
- <h4>Puedo tener varias inscripciones?</h4>
- <p>Si. Puedes inscribirte multiples veces a la misma liga (cada una es una quiniela independiente con sus propias predicciones) o a ligas diferentes.</p>
-
- <h4>Hasta cuando puedo predecir un partido?</h4>
- <p>Hasta <strong>5 minutos antes</strong> del horario oficial de inicio. Despues queda bloqueado.</p>
-
- <h4>Como se calculan los puntos?</h4>
- <p>Fase de grupos: 10 puntos por resultado exacto, 3 por acertar ganador o empate. En eliminatorias los puntos suben (15, 25, 40, 60 segun la fase). Bonus: 75 por campeon, 50 por goleador.</p>
-
- <h4>Cuando me pagan si gano?</h4>
- <p>Una sola vez al final del Mundial, en un plazo de hasta 30 dias despues del partido final. Te contactaremos al email registrado para pedir tus datos de cobro.</p>
-
- <h4>Como recibo mi premio?</h4>
- <p>Por Zelle, Binance USDT, Pago Movil Venezuela, o efectivo si estas en Caracas. Tu eliges el metodo. Premios mayores a $500 USD pueden requerir verificacion de identidad.</p>
-
- <h4>Puedo reembolsar mi inscripcion?</h4>
- <p>No. Una vez aprobada, no hay reembolso bajo ninguna circunstancia.</p>
-
- <h4>Que pasa si pierdo mi contrasena?</h4>
- <p>En la pantalla de login click "Olvidaste tu contrasena". Te llega un email de Firebase para crear una nueva.</p>
-
- <h4>Que pasa si FIFA cambia el calendario?</h4>
- <p>El admin actualiza la App. Tus predicciones existentes se mantienen.</p>
-
- <h4>Puedo usar la App desde mi celular y mi compu al mismo tiempo?</h4>
- <p>Si, con la misma cuenta. Tus datos se sincronizan.</p>
-
- <h4>Donde escribo si tengo un problema?</h4>
- <p>Al WhatsApp del admin que aparece en el modal de inscripcion. Respondemos en horario laboral hora Caracas.</p>
+ <div style="background:linear-gradient(135deg,rgba(255,215,0,.06),rgba(255,215,0,.02));border:1px solid rgba(255,215,0,.2);border-radius:10px;padding:14px;margin-top:16px;text-align:center">
+ <div style="font-size:12px;color:var(--t);margin-bottom:8px"><strong>No esta tu pregunta?</strong></div>
+ <div style="font-size:11px;color:var(--t2);margin-bottom:10px">Contactanos directo. Te respondemos rapido.</div>
+ <div style="display:flex;gap:6px;justify-content:center;flex-wrap:wrap">
+ <button class="btn btn-secondary" style="padding:8px 14px;font-size:12px;background:#25D366;border-color:#25D366;color:#fff" onclick="contactAdminViaWA()">WhatsApp admin</button>
+ <button class="btn btn-secondary" style="padding:8px 14px;font-size:12px" onclick="closeModal();openAboutModal()">Acerca de WC26</button>
+ </div>
  </div>
 
  <button class="btn btn-secondary btn-full" style="margin-top:14px" onclick="closeModal()">Cerrar</button>
  `,{wide:true});
 }
+
+/* Helper para contactar admin por WhatsApp desde FAQ */
+function contactAdminViaWA(){
+ const wa = getAdminWhatsApp();
+ if(!wa){
+ toast('WhatsApp del admin no configurado','error');
+ return;
+ }
+ const msg = encodeURIComponent('Hola, tengo una pregunta sobre WC26 Quiniela Mundial 2026.');
+ window.open(`https://wa.me/${wa}?text=${msg}`,'_blank');
+}
+window.contactAdminViaWA = contactAdminViaWA;
+
+/* Modal "Acerca de" — info de la plataforma, mision, contacto */
+function openAboutModal(){
+ const wa = getAdminWhatsApp();
+ const totalUsers = (DB.users||[]).filter(u=>!(u.id||'').startsWith('guest_')).length;
+ const totalEntries = (DB.users||[]).reduce((s,u)=>s+(u.entries||[]).filter(e=>(e.status||'pending')==='approved').length,0);
+ const startDate = new Date(TOURNAMENT_START);
+ const daysUntilTournament = Math.max(0, Math.floor((TOURNAMENT_START-Date.now())/86400000));
+
+ openModal(`<h3>Acerca de WC26</h3>
+
+ <!-- Hero -->
+ <div style="background:linear-gradient(135deg,rgba(255,215,0,.12),rgba(255,215,0,.02));border:1px solid rgba(255,215,0,.25);border-radius:12px;padding:18px;margin-bottom:14px;text-align:center">
+ <div style="font-family:'Anton',sans-serif;font-size:32px;color:var(--accent);line-height:1;letter-spacing:1px">WC26</div>
+ <div style="font-size:13px;color:var(--t);margin-top:4px;font-weight:600">Quiniela Mundial 2026</div>
+ <div style="font-size:11px;color:var(--t2);margin-top:6px">USA · Canada · Mexico · 11 jun - 19 jul 2026</div>
+ ${daysUntilTournament>0?`<div style="margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,215,0,.15);font-size:11px;color:var(--t2)">
+ <strong style="color:var(--accent);font-size:14px">${daysUntilTournament}</strong> dias para el inicio
+ </div>`:''}
+ </div>
+
+ <!-- Que es -->
+ <div style="font-size:11px;color:var(--accent);text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:8px">Que es WC26</div>
+ <p style="font-size:13px;color:var(--t);line-height:1.55;margin-bottom:14px">
+ Quiniela del Mundial FIFA 2026 con dinero real. Predice los resultados de los 104 partidos del torneo, gana puntos, y compite por premios reales en pools que dependen de la liga que elijas ($20, $50, $100 o $500).
+ </p>
+
+ <!-- Como funciona -->
+ <div style="font-size:11px;color:var(--accent);text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:8px">Como funciona</div>
+ <div style="background:var(--bg3);border:1px solid var(--b);border-radius:10px;padding:14px;margin-bottom:14px">
+ <div style="display:flex;gap:10px;margin-bottom:10px">
+ <div style="width:28px;height:28px;border-radius:50%;background:rgba(255,215,0,.1);border:1px solid rgba(255,215,0,.3);display:flex;align-items:center;justify-content:center;color:var(--accent);font-weight:800;font-size:12px;flex-shrink:0">1</div>
+ <div style="font-size:12.5px;color:var(--t2);line-height:1.5"><strong style="color:var(--t)">Inscribete</strong> a una liga ($20-$500). Coordina el pago con el admin via Zelle, Binance, Pago Movil o efectivo.</div>
+ </div>
+ <div style="display:flex;gap:10px;margin-bottom:10px">
+ <div style="width:28px;height:28px;border-radius:50%;background:rgba(255,215,0,.1);border:1px solid rgba(255,215,0,.3);display:flex;align-items:center;justify-content:center;color:var(--accent);font-weight:800;font-size:12px;flex-shrink:0">2</div>
+ <div style="font-size:12.5px;color:var(--t2);line-height:1.5"><strong style="color:var(--t)">Predice los 104 partidos</strong>. Llena resultados de grupos + bracket de eliminatorias + campeon + goleador.</div>
+ </div>
+ <div style="display:flex;gap:10px;margin-bottom:10px">
+ <div style="width:28px;height:28px;border-radius:50%;background:rgba(255,215,0,.1);border:1px solid rgba(255,215,0,.3);display:flex;align-items:center;justify-content:center;color:var(--accent);font-weight:800;font-size:12px;flex-shrink:0">3</div>
+ <div style="font-size:12.5px;color:var(--t2);line-height:1.5"><strong style="color:var(--t)">Acumula puntos</strong> a medida que se juegan los partidos. Cada acierto suma. El ranking se actualiza en vivo.</div>
+ </div>
+ <div style="display:flex;gap:10px">
+ <div style="width:28px;height:28px;border-radius:50%;background:rgba(91,201,125,.1);border:1px solid rgba(91,201,125,.3);display:flex;align-items:center;justify-content:center;color:var(--green-ok);font-weight:800;font-size:12px;flex-shrink:0">4</div>
+ <div style="font-size:12.5px;color:var(--t2);line-height:1.5"><strong style="color:var(--t)">Gana premios</strong>. Top 3 de cada liga reciben 50% / 30% / 20% del pool. Pago hasta 30 dias despues de la final.</div>
+ </div>
+ </div>
+
+ <!-- Reparto -->
+ <div style="font-size:11px;color:var(--accent);text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:8px">Reparto del dinero</div>
+ <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px">
+ <div style="background:var(--bg3);border:1px solid var(--b);border-radius:10px;padding:12px;text-align:center">
+ <div style="font-family:'Anton',sans-serif;font-size:28px;color:var(--accent);line-height:1">88%</div>
+ <div style="font-size:10px;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;margin-top:3px">Al pool de premios</div>
+ </div>
+ <div style="background:var(--bg3);border:1px solid var(--b);border-radius:10px;padding:12px;text-align:center">
+ <div style="font-family:'Anton',sans-serif;font-size:28px;color:var(--t2);line-height:1">12%</div>
+ <div style="font-size:10px;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;margin-top:3px">Operacion plataforma</div>
+ </div>
+ </div>
+
+ <!-- Stats vivos -->
+ ${totalUsers>0?`<div style="font-size:11px;color:var(--accent);text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:8px">La comunidad</div>
+ <div style="background:var(--bg3);border:1px solid var(--b);border-radius:10px;padding:12px;margin-bottom:14px;display:grid;grid-template-columns:1fr 1fr;gap:8px;text-align:center">
+ <div>
+ <div style="font-family:'Anton',sans-serif;font-size:22px;color:var(--t)">${totalUsers.toLocaleString()}</div>
+ <div style="font-size:10px;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;margin-top:2px">Jugadores</div>
+ </div>
+ <div>
+ <div style="font-family:'Anton',sans-serif;font-size:22px;color:var(--accent)">${totalEntries.toLocaleString()}</div>
+ <div style="font-size:10px;color:var(--accent);text-transform:uppercase;letter-spacing:.5px;margin-top:2px">Inscripciones</div>
+ </div>
+ </div>`:''}
+
+ <!-- Contacto -->
+ <div style="font-size:11px;color:var(--accent);text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:8px">Contacto</div>
+ <div style="background:var(--bg3);border:1px solid var(--b);border-radius:10px;padding:14px;margin-bottom:14px">
+ <p style="font-size:12.5px;color:var(--t2);margin:0 0 10px;line-height:1.5">
+ Operamos desde Venezuela. Resolvemos dudas, problemas con pagos, reclamos de premios y cualquier asunto relacionado a la plataforma.
+ </p>
+ ${wa?`<button class="btn btn-secondary btn-full" style="background:#25D366;border-color:#25D366;color:#fff;display:flex;align-items:center;justify-content:center;gap:8px" onclick="contactAdminViaWA()">
+ <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413"/></svg>
+ Escribir al WhatsApp +${wa}
+ </button>`:'<div style="font-size:12px;color:var(--t3);text-align:center;padding:8px">WhatsApp no configurado todavia</div>'}
+ </div>
+
+ <!-- Legal -->
+ <div style="font-size:11px;color:var(--t3);line-height:1.5;text-align:center;padding:10px">
+ Plataforma operada bajo legislacion venezolana. Es responsabilidad del usuario verificar la legalidad de participar en su jurisdiccion. Solo mayores de 18 anos.
+ </div>
+
+ <div style="display:flex;gap:6px;margin-top:8px">
+ <button class="btn btn-secondary" style="flex:1;font-size:12px" onclick="closeModal();openTermsModal()">Terminos</button>
+ <button class="btn btn-secondary" style="flex:1;font-size:12px" onclick="closeModal();openPrivacyModal()">Privacidad</button>
+ <button class="btn btn-secondary" style="flex:1;font-size:12px" onclick="closeModal();openFAQModal()">FAQ</button>
+ </div>
+
+ <button class="btn btn-secondary btn-full" style="margin-top:8px" onclick="closeModal()">Cerrar</button>
+ `,{wide:true});
+}
+window.openAboutModal = openAboutModal;
+
+/* ══════════════════════════════════════════════════════════════
+ v44: Onboard countdown + cupos en vivo
+ ══════════════════════════════════════════════════════════════ */
+let _obCountdownTimer = null;
+
+function refreshOnboardCountdown(){
+ const el = document.getElementById('ob-countdown');
+ if(!el)return;
+ const now = Date.now();
+ const diff = TOURNAMENT_START - now;
+ if(diff<=0){
+ el.innerHTML = `<span>Mundial 2026 EN VIVO</span>`;
+ return;
+ }
+ const days = Math.floor(diff/86400000);
+ const hours = Math.floor((diff%86400000)/3600000);
+ const mins = Math.floor((diff%3600000)/60000);
+ if(days>0){
+ el.innerHTML = `<span>${days} ${days===1?'día':'días'} para el inicio</span>`;
+ } else if(hours>0){
+ el.innerHTML = `<span>${hours}h ${mins}m para el inicio</span>`;
+ } else {
+ el.innerHTML = `<span>${mins} minutos para el inicio</span>`;
+ }
+}
+
+function refreshOnboardStats(){
+ // Calcular inscripciones reales por tier desde DB local
+ const tierCounts = {20:0, 50:0, 100:0, 500:0};
+ (DB.users||[]).forEach(u=>{
+ if(u.id&&u.id.startsWith('guest_'))return;
+ (u.entries||[]).forEach(e=>{
+ if((e.status||'pending')==='approved' && tierCounts[e.tier]!==undefined){
+ tierCounts[e.tier]++;
+ }
+ });
+ });
+ // Si tenemos numeros reales, usarlos. Si no, mantener los de demo.
+ const totalReal = Object.values(tierCounts).reduce((s,n)=>s+n,0);
+ if(totalReal>0){
+ Object.entries(tierCounts).forEach(([tier,count])=>{
+ const max = TIER_SPOTS[tier]||500;
+ const userEl = document.getElementById('ob-users-'+tier);
+ const barEl = document.getElementById('ob-bar-'+tier);
+ if(userEl)userEl.textContent = `${count}/${max}`;
+ if(barEl)barEl.style.width = `${Math.min(100,(count/max)*100)}%`;
+ });
+ }
+}
+
+/* Arrancar countdown cuando se monta el onboard */
+function initOnboard(){
+ refreshOnboardCountdown();
+ refreshOnboardStats();
+ if(_obCountdownTimer)clearInterval(_obCountdownTimer);
+ _obCountdownTimer = setInterval(refreshOnboardCountdown, 60000); // actualizar cada min
+}
+window.initOnboard = initOnboard;
+
+/* ══════════════════════════════════════════════════════════════
+ v45: STATS AVANZADAS · "Mi Rendimiento"
+ - Performance overview por quiniela
+ - Aciertos por fase (grupos / r32 / r16 / qf / sf / final / bonus)
+ - Top 5 mejores y peores predicciones
+ - Posicion vs todos
+ ══════════════════════════════════════════════════════════════ */
+
+/* Calcula stats detalladas de una quiniela del usuario actual */
+function computeMyStats(quinielaId){
+ const u = CUR;
+ const q = u?.quinielas?.[quinielaId];
+ if(!q)return null;
+ const results = DB.results||{groups:{},ko:{}};
+
+ const stats = {
+ quinielaId,
+ totalPts: q.pts||0,
+ // Por fase
+ phases: {
+ groups: {predicted:0, withResult:0, exact:0, winner:0, missed:0, points:0},
+ r32: {predicted:0, withResult:0, exact:0, winner:0, missed:0, points:0},
+ r16: {predicted:0, withResult:0, exact:0, winner:0, missed:0, points:0},
+ qf: {predicted:0, withResult:0, exact:0, winner:0, missed:0, points:0},
+ sf: {predicted:0, withResult:0, exact:0, winner:0, missed:0, points:0},
+ tp: {predicted:0, withResult:0, exact:0, winner:0, missed:0, points:0},
+ f: {predicted:0, withResult:0, exact:0, winner:0, missed:0, points:0},
+ },
+ bonus: {
+ champion: {picked:q.champ||'', correct:false, points:0},
+ topscorer: {picked:q.topscorer||'', correct:false, points:0},
+ },
+ // Top mejor/peor
+ best: [], // {matchKey, prediction, real, points}
+ missed: [], // {matchKey, prediction, real}
+ // Totales
+ totalPredicted: 0,
+ totalEvaluated: 0,
+ totalExact: 0,
+ totalWinner: 0,
+ totalMissed: 0,
+ hitRate: 0, // % aciertos
+ exactRate: 0, // % exactos
+ };
+
+ // Procesar grupos
+ if(q.scores){
+ Object.entries(q.scores).forEach(([key,sc])=>{
+ if(!sc||sc.a===''||sc.b==='')return;
+ stats.phases.groups.predicted++;
+ stats.totalPredicted++;
+ const real = results.groups[key];
+ if(!real)return; // sin resultado, no se evalua
+ stats.phases.groups.withResult++;
+ stats.totalEvaluated++;
+ const cmp = comparePrediction(sc,real);
+ if(!cmp)return;
+ let pts = 0;
+ if(cmp.exact){ pts=10; stats.phases.groups.exact++; stats.totalExact++; stats.phases.groups.points+=pts; }
+ else if(cmp.winner){ pts=3; stats.phases.groups.winner++; stats.totalWinner++; stats.phases.groups.points+=pts; }
+ else { stats.phases.groups.missed++; stats.totalMissed++; }
+ if(pts>0)stats.best.push({matchKey:key,prediction:`${sc.a}-${sc.b}`,real:`${real.a}-${real.b}`,points:pts,phase:'Grupos'});
+ if(!cmp.winner)stats.missed.push({matchKey:key,prediction:`${sc.a}-${sc.b}`,real:`${real.a}-${real.b}`,phase:'Grupos'});
+ });
+ }
+
+ // Procesar KO
+ if(q.ko){
+ Object.entries(q.ko).forEach(([key,sc])=>{
+ if(!sc||sc.a===''||sc.b==='')return;
+ const round = key.split('_')[0];
+ if(!stats.phases[round])return;
+ stats.phases[round].predicted++;
+ stats.totalPredicted++;
+ const real = results.ko[key];
+ if(!real)return;
+ stats.phases[round].withResult++;
+ stats.totalEvaluated++;
+ const cmp = comparePrediction(sc,real);
+ if(!cmp)return;
+ const conf = KO_POINTS[round]||{exact:10,winner:3};
+ let pts = 0;
+ if(cmp.exact){ pts=conf.exact; stats.phases[round].exact++; stats.totalExact++; stats.phases[round].points+=pts; }
+ else if(cmp.winner){ pts=conf.winner; stats.phases[round].winner++; stats.totalWinner++; stats.phases[round].points+=pts; }
+ else { stats.phases[round].missed++; stats.totalMissed++; }
+ const phaseLabel = {r32:'32avos',r16:'Octavos',qf:'Cuartos',sf:'Semis',tp:'Tercer lugar',f:'Final'}[round]||round;
+ if(pts>0)stats.best.push({matchKey:key,prediction:`${sc.a}-${sc.b}`,real:`${real.a}-${real.b}`,points:pts,phase:phaseLabel});
+ if(!cmp.winner)stats.missed.push({matchKey:key,prediction:`${sc.a}-${sc.b}`,real:`${real.a}-${real.b}`,phase:phaseLabel});
+ });
+ }
+
+ // Bonus
+ if(results.champion && q.champ){
+ stats.bonus.champion.correct = q.champ===results.champion;
+ if(stats.bonus.champion.correct)stats.bonus.champion.points = 75;
+ }
+ if(results.topscorer && q.topscorer){
+ stats.bonus.topscorer.correct = fuzzyMatchTopScorer(q.topscorer,results.topscorer);
+ if(stats.bonus.topscorer.correct)stats.bonus.topscorer.points = 50;
+ }
+
+ // Rates
+ if(stats.totalEvaluated>0){
+ stats.hitRate = ((stats.totalExact+stats.totalWinner)/stats.totalEvaluated)*100;
+ stats.exactRate = (stats.totalExact/stats.totalEvaluated)*100;
+ }
+
+ // Sort top 5
+ stats.best.sort((a,b)=>b.points-a.points);
+ stats.best = stats.best.slice(0,5);
+ stats.missed = stats.missed.slice(0,5);
+
+ return stats;
+}
+
+/* Calcula posicion del usuario en la liga (rank actual) */
+function getMyRankInTier(tier){
+ const ranking = [];
+ DB.users.forEach(u=>{
+ if(u.id&&u.id.startsWith('guest_'))return;
+ (u.entries||[]).forEach(e=>{
+ if((e.status||'pending')!=='approved')return;
+ if(parseInt(e.tier)!==parseInt(tier))return;
+ const q = u.quinielas?.[e.quinielaId];
+ if(!q)return;
+ ranking.push({userId:u.id, userName:u.name, quinielaId:e.quinielaId, points:q.pts||0});
+ });
+ });
+ ranking.sort((a,b)=>b.points-a.points);
+ const total = ranking.length;
+ const myEntries = (CUR.entries||[]).filter(e=>parseInt(e.tier)===parseInt(tier)).map(e=>e.quinielaId);
+ const myPositions = ranking.map((r,i)=>r.userId===CUR.id&&myEntries.includes(r.quinielaId)?{...r,rank:i+1}:null).filter(Boolean);
+ const avgPts = total>0 ? Math.round(ranking.reduce((s,r)=>s+r.points,0)/total) : 0;
+ const top10 = total>0 ? ranking[Math.max(0,Math.floor(total*0.1)-1)]?.points||0 : 0;
+ return {total, ranking, myPositions, avgPts, top10};
+}
+
+/* Modal: Mi rendimiento */
+function openMyStatsModal(quinielaId){
+ if(!CUR)return;
+ quinielaId = quinielaId || CUR.activeQuinielaId;
+ if(!quinielaId){toast('Inscríbete primero a una liga','error');return;}
+ const entry = (CUR.entries||[]).find(e=>e.quinielaId===quinielaId);
+ if(!entry){toast('Quiniela no encontrada','error');return;}
+ const stats = computeMyStats(quinielaId);
+ if(!stats)return;
+ const tier = entry.tier;
+ const tierName = TIER_NAMES[tier]||'Liga';
+ const rank = getMyRankInTier(tier);
+ const myRankInfo = rank.myPositions.find(p=>p.quinielaId===quinielaId);
+ const myRank = myRankInfo?.rank||'-';
+ const myPts = stats.totalPts;
+ const ahead = rank.total>0 && myRank!=='-' ? Math.round((1-(myRank-1)/rank.total)*100) : 0;
+
+ const phaseRows = [
+ ['groups','Grupos','3·10'],
+ ['r32','32avos','3·10'],
+ ['r16','Octavos','5·15'],
+ ['qf','Cuartos','8·25'],
+ ['sf','Semis','15·40'],
+ ['tp','3er lugar','10·30'],
+ ['f','Final','20·60'],
+ ].filter(([k])=>{
+ const p = stats.phases[k];
+ return p.predicted>0 || p.withResult>0;
+ }).map(([k,label,pointsLbl])=>{
+ const p = stats.phases[k];
+ const hits = p.exact + p.winner;
+ const rate = p.withResult>0 ? Math.round((hits/p.withResult)*100) : 0;
+ return `<div style="background:var(--bg3);border:1px solid var(--b);border-radius:10px;padding:12px;margin-bottom:8px">
+ <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+ <strong style="font-size:13px">${label}</strong>
+ <span style="font-family:'Anton',sans-serif;font-size:18px;color:var(--accent);line-height:1">+${p.points}</span>
+ </div>
+ <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;text-align:center;font-size:11px">
+ <div style="background:var(--bg4);border-radius:6px;padding:6px">
+ <div style="color:var(--gold);font-weight:700">${p.exact}</div>
+ <div style="color:var(--t3);font-size:9px;text-transform:uppercase;letter-spacing:.4px;margin-top:1px">Exactos</div>
+ </div>
+ <div style="background:var(--bg4);border-radius:6px;padding:6px">
+ <div style="color:var(--green-ok);font-weight:700">${p.winner}</div>
+ <div style="color:var(--t3);font-size:9px;text-transform:uppercase;letter-spacing:.4px;margin-top:1px">Ganador</div>
+ </div>
+ <div style="background:var(--bg4);border-radius:6px;padding:6px">
+ <div style="color:#FF6B35;font-weight:700">${p.missed}</div>
+ <div style="color:var(--t3);font-size:9px;text-transform:uppercase;letter-spacing:.4px;margin-top:1px">Fallos</div>
+ </div>
+ <div style="background:var(--bg4);border-radius:6px;padding:6px">
+ <div style="color:var(--t);font-weight:700">${rate}%</div>
+ <div style="color:var(--t3);font-size:9px;text-transform:uppercase;letter-spacing:.4px;margin-top:1px">Aciertos</div>
+ </div>
+ </div>
+ <div style="font-size:10px;color:var(--t3);margin-top:6px;text-align:center">${p.predicted} predichos · ${p.withResult} jugados · puntos ${pointsLbl}</div>
+ </div>`;
+ }).join('');
+
+ const bonusBlock = `<div style="background:var(--bg3);border:1px solid var(--b);border-radius:10px;padding:12px;margin-bottom:8px">
+ <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+ <strong style="font-size:13px">Predicciones bonus</strong>
+ <span style="font-family:'Anton',sans-serif;font-size:18px;color:var(--accent);line-height:1">+${stats.bonus.champion.points+stats.bonus.topscorer.points}</span>
+ </div>
+ <div style="display:flex;flex-direction:column;gap:6px">
+ <div style="display:flex;justify-content:space-between;align-items:center;background:var(--bg4);border-radius:6px;padding:8px 10px">
+ <div style="font-size:11.5px">
+ <span style="color:var(--t3)">Campeón:</span> <strong style="color:var(--t)">${stats.bonus.champion.picked||'sin elegir'}</strong>
+ </div>
+ ${stats.bonus.champion.picked?(stats.bonus.champion.correct?'<span style="color:var(--green-ok);font-size:11px;font-weight:700">+75 pts</span>':DB.results?.champion?'<span style="color:#FF6B35;font-size:11px">Fallo</span>':'<span style="color:var(--t3);font-size:11px">Pendiente</span>'):''}
+ </div>
+ <div style="display:flex;justify-content:space-between;align-items:center;background:var(--bg4);border-radius:6px;padding:8px 10px">
+ <div style="font-size:11.5px">
+ <span style="color:var(--t3)">Goleador:</span> <strong style="color:var(--t)">${stats.bonus.topscorer.picked||'sin elegir'}</strong>
+ </div>
+ ${stats.bonus.topscorer.picked?(stats.bonus.topscorer.correct?'<span style="color:var(--green-ok);font-size:11px;font-weight:700">+50 pts</span>':DB.results?.topscorer?'<span style="color:#FF6B35;font-size:11px">Fallo</span>':'<span style="color:var(--t3);font-size:11px">Pendiente</span>'):''}
+ </div>
+ </div>
+ </div>`;
+
+ const bestList = stats.best.length>0
+ ? stats.best.map(b=>{
+ const teams = b.matchKey.replace(/_/g,' ').replace('vs','vs');
+ return `<div style="background:var(--bg4);border-radius:6px;padding:8px 10px;margin-bottom:4px;display:flex;justify-content:space-between;align-items:center;font-size:11px">
+ <div>
+ <div style="color:var(--t)">${teams}</div>
+ <div style="color:var(--t3);font-size:10px;margin-top:1px">${b.phase} · ${b.prediction} → ${b.real}</div>
+ </div>
+ <span style="color:var(--green-ok);font-weight:700">+${b.points}</span>
+ </div>`;
+ }).join('')
+ : '<div style="font-size:11px;color:var(--t3);text-align:center;padding:12px">Aún no hay aciertos</div>';
+
+ const missedList = stats.missed.length>0
+ ? stats.missed.map(m=>{
+ const teams = m.matchKey.replace(/_/g,' ').replace('vs','vs');
+ return `<div style="background:var(--bg4);border-radius:6px;padding:8px 10px;margin-bottom:4px;display:flex;justify-content:space-between;align-items:center;font-size:11px">
+ <div>
+ <div style="color:var(--t)">${teams}</div>
+ <div style="color:var(--t3);font-size:10px;margin-top:1px">${m.phase} · predijiste ${m.prediction} · real ${m.real}</div>
+ </div>
+ <span style="color:#FF6B35;font-size:10px">Fallo</span>
+ </div>`;
+ }).join('')
+ : '<div style="font-size:11px;color:var(--t3);text-align:center;padding:12px">Sin fallos todavía</div>';
+
+ // Selector de quinielas si tiene varias
+ const myEntries = (CUR.entries||[]);
+ const switcher = myEntries.length>1
+ ? `<div style="margin-bottom:14px">
+ <label style="font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;font-weight:700;margin-bottom:6px;display:block">Quiniela</label>
+ <select id="stats-qid" class="inp" onchange="openMyStatsModal(this.value)">
+ ${myEntries.map(e=>{
+ const tn = TIER_NAMES[e.tier]||'Liga';
+ const qPts = CUR.quinielas?.[e.quinielaId]?.pts||0;
+ return `<option value="${e.quinielaId}" ${e.quinielaId===quinielaId?'selected':''}>${tn} · ${qPts} pts ${e.status==='pending'?'(pendiente)':''}</option>`;
+ }).join('')}
+ </select>
+ </div>`
+ : '';
+
+ openModal(`<h3>Mi Rendimiento</h3>
+ ${switcher}
+
+ <!-- Hero con rank -->
+ <div style="background:linear-gradient(135deg,rgba(255,215,0,.15),rgba(255,215,0,.02));border:1px solid rgba(255,215,0,.3);border-radius:14px;padding:18px;margin-bottom:14px;text-align:center">
+ <div style="font-size:11px;color:var(--accent);text-transform:uppercase;letter-spacing:1px;font-weight:800;margin-bottom:4px">${tierName}</div>
+ <div style="font-family:'Anton',sans-serif;font-size:48px;color:var(--accent);line-height:1">${myPts} <span style="font-size:16px;color:var(--t2)">pts</span></div>
+ ${myRank!=='-'?`<div style="font-size:12px;color:var(--t2);margin-top:6px">Posición <strong style="color:var(--t)">#${myRank}</strong> de ${rank.total} · Estás en el top <strong style="color:var(--accent)">${100-ahead+1}%</strong></div>`:''}
+ ${rank.total>1?`<div style="margin-top:10px;padding-top:10px;border-top:1px solid rgba(255,215,0,.15);font-size:11px;color:var(--t3)">
+ Promedio liga: <strong style="color:var(--t2)">${rank.avgPts}pts</strong> · Top 10%: <strong style="color:var(--accent)">${rank.top10}pts</strong>
+ </div>`:''}
+ </div>
+
+ <!-- KPIs principales -->
+ <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px">
+ <div style="background:var(--bg3);border:1px solid var(--b);border-radius:10px;padding:12px;text-align:center">
+ <div style="font-family:'Anton',sans-serif;font-size:24px;color:var(--accent);line-height:1">${stats.hitRate.toFixed(0)}%</div>
+ <div style="font-size:10px;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;margin-top:3px">Aciertos</div>
+ <div style="font-size:10px;color:var(--t3);margin-top:1px">${stats.totalExact+stats.totalWinner} de ${stats.totalEvaluated}</div>
+ </div>
+ <div style="background:var(--bg3);border:1px solid var(--b);border-radius:10px;padding:12px;text-align:center">
+ <div style="font-family:'Anton',sans-serif;font-size:24px;color:var(--gold);line-height:1">${stats.exactRate.toFixed(0)}%</div>
+ <div style="font-size:10px;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;margin-top:3px">Resultados exactos</div>
+ <div style="font-size:10px;color:var(--t3);margin-top:1px">${stats.totalExact} de ${stats.totalEvaluated}</div>
+ </div>
+ </div>
+
+ <!-- Distribucion -->
+ ${stats.totalEvaluated>0?`<div style="background:var(--bg3);border:1px solid var(--b);border-radius:10px;padding:12px;margin-bottom:14px">
+ <div style="font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;font-weight:700;margin-bottom:8px">Distribución de ${stats.totalEvaluated} predicciones evaluadas</div>
+ <div style="display:flex;height:8px;border-radius:4px;overflow:hidden;background:var(--bg4)">
+ <div style="background:var(--gold);width:${(stats.totalExact/stats.totalEvaluated)*100}%" title="${stats.totalExact} exactos"></div>
+ <div style="background:var(--green-ok);width:${(stats.totalWinner/stats.totalEvaluated)*100}%" title="${stats.totalWinner} ganador"></div>
+ <div style="background:#FF6B35;width:${(stats.totalMissed/stats.totalEvaluated)*100}%" title="${stats.totalMissed} fallos"></div>
+ </div>
+ <div style="display:flex;justify-content:space-between;font-size:10px;margin-top:6px">
+ <span style="color:var(--gold)">● Exactos (${stats.totalExact})</span>
+ <span style="color:var(--green-ok)">● Ganador (${stats.totalWinner})</span>
+ <span style="color:#FF6B35">● Fallos (${stats.totalMissed})</span>
+ </div>
+ </div>`:''}
+
+ <!-- Por fase -->
+ ${phaseRows ? `<div style="font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:8px">Por fase</div>${phaseRows}` : '<div style="background:var(--bg3);border:1px dashed var(--b);border-radius:10px;padding:24px;text-align:center;color:var(--t3);font-size:12px;margin-bottom:14px">Aún no hay datos para mostrar. Empieza a predecir y los resultados aparecerán cuando se jueguen los partidos.</div>'}
+
+ <!-- Bonus -->
+ <div style="font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-top:14px;margin-bottom:8px">Bonus</div>
+ ${bonusBlock}
+
+ ${stats.totalEvaluated>0?`
+ <!-- Mejores aciertos -->
+ <div style="font-size:11px;color:var(--green-ok);text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-top:14px;margin-bottom:6px">Mejores aciertos</div>
+ ${bestList}
+
+ <!-- Peores fallos -->
+ <div style="font-size:11px;color:#FF6B35;text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-top:14px;margin-bottom:6px">Fallos recientes</div>
+ ${missedList}
+ `:''}
+
+ <button class="btn btn-secondary btn-full" style="margin-top:14px" onclick="closeModal()">Cerrar</button>
+ `,{wide:true});
+}
+window.openMyStatsModal = openMyStatsModal;
+window.computeMyStats = computeMyStats;
+window.getMyRankInTier = getMyRankInTier;
+
+// Inicializar cuando carga la pagina si onboard esta activo
+document.addEventListener('DOMContentLoaded',()=>{
+ setTimeout(()=>{
+ const ob = document.getElementById('screen-onboard');
+ if(ob && ob.classList.contains('active'))initOnboard();
+ }, 200);
+});
 
 function openModal(html,opts){
  document.getElementById('modal-body').innerHTML=html;
