@@ -2614,11 +2614,14 @@ const FS_PRED_DEBOUNCE_MS = 1500;
 
 /* Sube una prediccion (group o ko) a Firestore con debounce */
 function schedulePredictionSync(type, matchKey, scoreObj, quinielaId){
- if(!window.fsMode)return;
- if(!fb||!fb.auth?.currentUser)return;
+ console.log('[Step4 DEBUG] schedule called:',{type,matchKey,scoreObj,quinielaId});
+ if(!window.fsMode){console.log('[Step4 DEBUG] BLOCKED: fsMode false');return;}
+ if(!fb||!fb.auth?.currentUser){console.log('[Step4 DEBUG] BLOCKED: no fb auth');return;}
+ if(!quinielaId){console.warn('[Step4 DEBUG] BLOCKED: quinielaId is null/empty — usuario sin entries?');return;}
  const uid = fb.auth.currentUser.uid;
  const docId = quinielaId+'_'+matchKey;
  const k = type+':'+docId;
+ console.log('[Step4 DEBUG] Will sync to:','users/'+uid+'/predictions/'+docId);
  if(_fsPredTimers[k])clearTimeout(_fsPredTimers[k]);
  _fsPredTimers[k] = setTimeout(async ()=>{
  try {
@@ -2626,6 +2629,7 @@ function schedulePredictionSync(type, matchKey, scoreObj, quinielaId){
  const a=scoreObj?.a, b=scoreObj?.b;
  if((a===''||a==null) && (b===''||b==null)){
  await fsDelete('users/'+uid+'/predictions/'+docId);
+ console.log('[Step4] Pred DELETED:',docId);
  } else {
  await fsSet('users/'+uid+'/predictions/'+docId, {
  type,
@@ -2635,10 +2639,10 @@ function schedulePredictionSync(type, matchKey, scoreObj, quinielaId){
  scoreB: b||'',
  updatedAt: Date.now(),
  });
+ console.log('[Step4] Pred SAVED:',docId,a+'-'+b);
  }
- console.log('[Step4] Pred synced:',docId);
  } catch(err) {
- console.error('[Step4] Pred sync failed:',docId,err.code||err.message);
+ console.error('[Step4] Pred sync FAIL:',docId,'CODE:',err.code,'MSG:',err.message);
  }
  delete _fsPredTimers[k];
  }, FS_PRED_DEBOUNCE_MS);
