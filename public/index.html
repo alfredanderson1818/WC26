@@ -1374,30 +1374,30 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
 
  <!-- LIGAS -->
  <div style="margin-bottom:18px">
- <div class="leagues-label">Elige tu liga · Click para empezar</div>
+ <div class="leagues-label">Elige tu quiniela · Click para empezar</div>
  <div class="leagues-grid">
  <div class="lt a" onclick="goTo('screen-register')">
  <div class="lt-price">$20</div>
- <div class="lt-name">Liga Iniciados</div>
+ <div class="lt-name">Económica</div>
  <div class="lt-prize">Premio hasta $4,400</div>
  <div class="lt-users"><div class="lt-users-bar"><div class="lt-users-fill" id="ob-bar-20" style="width:21.6%"></div></div><span id="ob-users-20">108/500</span></div>
  </div>
  <div class="lt b" onclick="goTo('screen-register')">
  <div class="lt-price">$50</div>
- <div class="lt-name">Liga Bronce</div>
+ <div class="lt-name">Estándar</div>
  <div class="lt-prize">Premio hasta $11,000</div>
  <div class="lt-users"><div class="lt-users-bar"><div class="lt-users-fill" id="ob-bar-50" style="width:37.6%"></div></div><span id="ob-users-50">188/500</span></div>
  </div>
  <div class="lt c hot" onclick="goTo('screen-register')">
  <div class="lt-hot">POPULAR</div>
  <div class="lt-price">$100</div>
- <div class="lt-name">Liga Plata</div>
+ <div class="lt-name">Estrella</div>
  <div class="lt-prize">Premio hasta $22,000</div>
  <div class="lt-users"><div class="lt-users-bar"><div class="lt-users-fill" id="ob-bar-100" style="width:60.4%"></div></div><span id="ob-users-100">302/500</span></div>
  </div>
  <div class="lt d" onclick="goTo('screen-register')">
  <div class="lt-price">$500</div>
- <div class="lt-name">Liga Diamante</div>
+ <div class="lt-name">Premium</div>
  <div class="lt-prize">Premio hasta $110,000</div>
  <div class="lt-users"><div class="lt-users-bar"><div class="lt-users-fill" id="ob-bar-500" style="width:85.2%"></div></div><span id="ob-users-500">426/500</span></div>
  </div>
@@ -1411,7 +1411,7 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
  <div class="ob-how-num">1</div>
  <div class="ob-how-text">
  <strong>Inscríbete</strong>
- <span>Elige tu liga, paga al admin por Zelle, Binance o Pago Móvil</span>
+ <span>Elige tu quiniela ($20-$500), paga al admin por Zelle, Binance o Pago Móvil</span>
  </div>
  </div>
  <div class="ob-how-step">
@@ -1627,7 +1627,7 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
 
  <!-- 4 ligas con premio: click directo abre el modal de inscripcion -->
  <div class="dash-leagues" style="margin-top:14px;margin-bottom:18px">
- <div class="dl-label">Ligas con premio · click para inscribirte</div>
+ <div class="dl-label">Quinielas con premio · click para inscribirte</div>
  <div class="dl-row">
  <div class="dl-card a" onclick="onTierCardClick('20')"><div class="dl-price a">$20</div><div class="dl-spots" id="dl-20">-</div></div>
  <div class="dl-card b" onclick="onTierCardClick('50')"><div class="dl-price b">$50</div><div class="dl-spots" id="dl-50">-</div></div>
@@ -1904,7 +1904,7 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
  <span class="bnav-center-circle">
  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14l2 2 4-4M7 3h10a2 2 0 0 1 2 2v15.5a.5.5 0 0 1-.8.4L17 19l-2 1.5L13 19l-2 1.5L9 19l-1.2.9a.5.5 0 0 1-.8-.4V5a2 2 0 0 1 2-2z"/></svg>
  </span>
- <span class="bnav-label">Mi Quiniela</span>
+ <span class="bnav-label">Mis Quinielas</span>
  </button>
  <button class="bnav-btn" data-page="ranking" onclick="navTo('ranking')">
  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H3l1 5h2m12-5h3l-1 5h-2M6 9V4h12v5M6 9c0 4.418 2.686 8 6 8s6-3.582 6-8M9 20h6M12 18v2"/></svg>
@@ -1999,7 +1999,7 @@ const KO_ROUNDS=[
  {id:'f',label:'Final',pts:'60 pts + 75 pts campeon',count:1},
 ];
 const TIER_SPOTS={20:892,50:487,100:312,500:74};
-const TIER_NAMES={20:'Liga Iniciados',50:'Liga Bronce',100:'Liga Plata',500:'Liga Diamante'};
+const TIER_NAMES={20:'Quiniela $20',50:'Quiniela $50',100:'Quiniela $100',500:'Quiniela $500'};
 
 /* ══════════════════════════════════════════
  FECHAS DE PARTIDOS / SISTEMA DE LOCK
@@ -4726,23 +4726,30 @@ function parseQuinielaId(id){
 }
 
 function getQuinielaName(id){
- if(!id)return'Sin liga';
+ if(!id)return'Sin quiniela';
  const parsed=parseQuinielaId(id);
  if(!parsed)return'Quiniela';
  if(parsed.type==='free')return'Quiniela libre';
  if(parsed.type==='tier'){
- const tierName=TIER_NAMES[parsed.tier]||'Liga';
- if(parsed.entryId){
- const myEntries=(CUR.entries||[]).filter(e=>e.tier===parsed.tier);
+ const tierAmount=parsed.tier;
+ const myEntries=(CUR.entries||[]).filter(e=>e.tier===tierAmount);
+ const baseLabel=`Quiniela $${tierAmount}`;
  if(myEntries.length>1){
  const idx=myEntries.findIndex(e=>e.quinielaId===id);
- if(idx>=0)return `${tierName} #${idx+1}`;
+ if(idx>=0)return `${baseLabel} #${idx+1}`;
  }
- }
- return tierName;
+ return baseLabel;
  }
  return'Quiniela';
 }
+
+/* Devuelve solo el precio de la quiniela */
+function getQuinielaPriceLabel(id){
+ const parsed=parseQuinielaId(id);
+ if(!parsed||parsed.type!=='tier')return'';
+ return `$${parsed.tier}`;
+}
+window.getQuinielaPriceLabel = getQuinielaPriceLabel;
 function getAllQuinielaIds(){
  const ids=[];
  // (Quiniela libre eliminada en v19)
@@ -6981,23 +6988,30 @@ function joinTier(t){
  const myEntries=(CUR.entries||[]).filter(e=>e.tier===t).length;
  // Pool maximo estimado (250 jugadores × tier × 88%)
  const prizePool=Math.round(tierAmount*250*(1-getRakeRate()));
- openModal(`<h3>Unirme a ${tierName}</h3>
+ openModal(`<h3>Nueva quiniela $${tierAmount}</h3>
+
+ <!-- Resumen pago -->
  <div class="pay-summary">
- <div class="pay-summary-row"><span>Inscripcion</span><strong>$${tierAmount}</strong></div>
- <div class="pay-summary-row"><span>Premio maximo</span><strong style="color:var(--gold)">$${prizePool.toLocaleString()}</strong></div>
+ <div class="pay-summary-row"><span>Inscripción</span><strong>$${tierAmount}</strong></div>
+ <div class="pay-summary-row"><span>Premio máximo</span><strong style="color:var(--gold)">$${prizePool.toLocaleString()}</strong></div>
  </div>
- ${myEntries>0?`<p class="pay-instr" style="color:var(--gold)">Ya tienes ${myEntries} ${myEntries===1?'inscripcion':'inscripciones'} en esta liga. Esta sera una quiniela <strong>nueva e independiente</strong>.</p>`:`<p class="pay-instr">Se creara una quiniela nueva e independiente.</p>`}
- <div class="wa-callout" style="background:rgba(255,215,0,.06);border-color:var(--gold-soft);margin-top:6px">
+
+ ${myEntries>0?`<div style="background:rgba(255,215,0,.06);border:1px solid rgba(255,215,0,.20);border-radius:8px;padding:10px;margin-top:14px;margin-bottom:6px;font-size:12px;color:var(--t2);line-height:1.4">
+ <strong style="color:var(--gold)">Ya tienes ${myEntries} ${myEntries===1?'quiniela':'quinielas'} a este precio.</strong> Esta será una quiniela nueva e independiente con sus propias predicciones.
+ </div>`:''}
+
+ <div class="wa-callout" style="background:rgba(255,215,0,.06);border-color:var(--gold-soft);margin-top:14px">
  <div class="wa-callout-ico" style="background:var(--bg4)">
  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
  </div>
  <div class="wa-callout-text">
- <div class="wa-callout-title" style="color:var(--gold)">Quedara pendiente</div>
- <p>Al confirmar, tu inscripcion quedara <strong>pendiente</strong>. Coordina el pago de $${tierAmount} con el admin por WhatsApp. Una vez confirmado, el admin la aprueba y entras a competir oficialmente. Mientras tanto puedes llenar tu quiniela.</p>
+ <div class="wa-callout-title" style="color:var(--gold)">Quedará pendiente</div>
+ <p>Al confirmar, queda <strong>pendiente</strong>. Coordina el pago de $${tierAmount} con el admin por WhatsApp. Mientras tanto ya puedes llenar predicciones.</p>
  </div>
  </div>
+
  <div class="modal-btns">
- <button class="btn btn-primary" style="flex:1" onclick="confirmJoinTier('${t}')">Confirmar inscripcion</button>
+ <button class="btn btn-primary" style="flex:1" onclick="confirmJoinTier('${t}')">Confirmar</button>
  <button class="btn btn-secondary" style="flex:1" onclick="closeModal()">Cancelar</button>
  </div>
  `);
@@ -8943,29 +8957,36 @@ function renderMyLeagues(){
  // Cards individuales
  html+=groupIds.map(id=>{
  const q=CUR.quinielas[id]||emptyQuiniela();
- const name=getQuinielaShortName(id);
  const isActive=id===CUR.activeQuinielaId;
  const parsed=parseQuinielaId(id);
  const isFree=parsed&&parsed.type==='free';
  const tierIsTier=parsed&&parsed.type==='tier';
  const entry=tierIsTier?getEntryForQuiniela(id):null;
  const status=entry?(entry.status||'pending'):null;
- // Si hay multiples inscripciones del mismo tier, mostrar #N
- const entries=tierIsTier?(CUR.entries||[]).filter(e=>e.tier===tier):[];
- const entryIdx=tierIsTier?entries.findIndex(e=>e.quinielaId===id):-1;
- const showNum=tierIsTier&&entries.length>1;
- const displayName=showNum?`${name} #${entryIdx+1}`:name;
+ // Display name basado en precio + #N si hay varias
+ let displayName;
+ if(isFree){
+ displayName='Quiniela libre';
+ } else if(tierIsTier){
+ const tierAmount=parseInt(parsed.tier);
+ const entries=(CUR.entries||[]).filter(e=>e.tier===parsed.tier);
+ const idx=entries.findIndex(e=>e.quinielaId===id);
+ displayName=entries.length>1?`Quiniela $${tierAmount} #${idx+1}`:`Quiniela $${tierAmount}`;
+ } else {
+ displayName='Quiniela';
+ }
+ // Subtitulo: precio + status + puntos
  let subLabel;
  if(isFree){
  subLabel=`Sin premio · ${q.pts||0} pts`;
  } else if(tierIsTier){
  const tierAmount=parseInt(parsed.tier);
  if(status==='approved'){
- subLabel=`Aprobada · $${tierAmount} · ${q.pts||0} pts`;
+ subLabel=`<strong style="color:var(--gold)">$${tierAmount}</strong> · Aprobada · ${q.pts||0} pts`;
  } else if(status==='rejected'){
- subLabel=`Rechazada · $${tierAmount}`;
+ subLabel=`<strong style="color:var(--gold)">$${tierAmount}</strong> · Rechazada`;
  } else {
- subLabel=`Pendiente de aprobacion · $${tierAmount}`;
+ subLabel=`<strong style="color:var(--gold)">$${tierAmount}</strong> · Pendiente de pago`;
  }
  } else {
  subLabel=`${q.pts||0} pts`;
@@ -8978,9 +8999,10 @@ function renderMyLeagues(){
  if(isActive)statusBadge=' <span class="badge badge-active">Activa</span>';
  if(status==='pending')statusBadge+=' <span class="badge" style="background:var(--gold-dim);color:var(--gold)">PENDIENTE</span>';
  else if(status==='rejected')statusBadge+=' <span class="badge" style="background:var(--reddim);color:var(--red)">RECHAZADA</span>';
- else if(status==='approved')statusBadge+=' <span class="badge" style="background:rgba(91,201,125,.15);color:var(--green-ok)"> APROBADA</span>';
- const optsBtn=tierIsTier
- ? `<button class="my-league-opts" onclick="event.stopPropagation();leaveTierEntry('${id}')" title="Cancelar/salir">
+ else if(status==='approved')statusBadge+=' <span class="badge" style="background:rgba(91,201,125,.15);color:var(--green-ok)">APROBADA</span>';
+ // Solo botón cancelar
+ const actionsBtns=tierIsTier
+ ? `<button class="my-league-opts" onclick="event.stopPropagation();leaveTierEntry('${id}')" title="Cancelar">
  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
  </button>`
  : '';
@@ -8990,7 +9012,7 @@ function renderMyLeagues(){
  <div class="my-league-name">${displayName}${statusBadge}</div>
  <div class="my-league-sub">${subLabel}</div>
  </div>
- ${optsBtn}
+ ${actionsBtns}
  <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="var(--t2)" stroke-width="1.5"><path d="M6 12l4-4-4-4"/></svg>
  </div>`;
  }).join('');
@@ -8999,7 +9021,7 @@ function renderMyLeagues(){
  const tierAmount=parseInt(tier);
  html+=`<button class="my-league-add-btn" onclick="joinTier('${tier}')">
  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
- <span>+ Otra inscripcion ($${tierAmount})</span>
+ <span>+ Otra quiniela $${tierAmount}</span>
  </button>`;
  }
  });
@@ -9188,6 +9210,60 @@ function renderMQPreview(){
  `;
 }
 window.renderMQPreview = renderMQPreview;
+
+/* ════════════════════════════════════════════════════════
+   v57: Renombrar quiniela despues de creada
+   ════════════════════════════════════════════════════════ */
+function openRenameQuinielaModal(quinielaId){
+ if(!CUR)return;
+ const entry=(CUR.entries||[]).find(e=>e.quinielaId===quinielaId);
+ if(!entry){toast('Quiniela no encontrada','error');return;}
+ const tierAmount=entry.tier;
+ const currentName=entry.customName||'';
+ const defaultPlaceholder=`Mi quiniela $${tierAmount}`;
+ openModal(`<h3>Renombrar quiniela</h3>
+ <p style="font-size:12.5px;color:var(--t2);margin-bottom:14px;line-height:1.5">
+ Quiniela <strong style="color:var(--t)">$${tierAmount}</strong> · ${entry.status==='approved'?'Activa':'Pendiente'}
+ </p>
+ <div class="field">
+ <label>Nuevo nombre <span style="color:var(--t3);font-weight:400">(opcional · vacío = nombre por defecto)</span></label>
+ <input type="text" id="rename-input" placeholder="${defaultPlaceholder}" value="${currentName}" maxlength="40" autocomplete="off">
+ <p style="font-size:11px;color:var(--t3);margin-top:6px;line-height:1.4">
+ Ejemplos: "Mi quiniela seria", "La de los amigos", "México campeón"
+ </p>
+ </div>
+ <div class="modal-btns">
+ <button class="btn btn-primary" style="flex:1" onclick="confirmRenameQuiniela('${quinielaId}')">Guardar</button>
+ <button class="btn btn-secondary" style="flex:1" onclick="closeModal()">Cancelar</button>
+ </div>
+ `);
+ setTimeout(()=>{
+ const inp=document.getElementById('rename-input');
+ if(inp){inp.focus();inp.select();}
+ },100);
+}
+
+function confirmRenameQuiniela(quinielaId){
+ const entry=(CUR.entries||[]).find(e=>e.quinielaId===quinielaId);
+ if(!entry){toast('Quiniela no encontrada','error');closeModal();return;}
+ const newName=(document.getElementById('rename-input')?.value||'').trim().slice(0,40);
+ entry.customName=newName||null;
+ sync();
+ // Re-render UI relevante
+ const active=document.querySelector('.page.active');
+ if(active){
+ if(active.id==='page-miquiniela')renderMyLeagues();
+ if(active.id==='page-dashboard')refreshDash();
+ }
+ updateActiveLigaBar();
+ // Sync a Firestore
+ if(typeof syncEntryToFirestore==='function')syncEntryToFirestore(CUR.id, entry);
+ closeModal();
+ toast('Nombre actualizado','success');
+}
+
+window.openRenameQuinielaModal = openRenameQuinielaModal;
+window.confirmRenameQuiniela = confirmRenameQuiniela;
 
 /* Render de premios que el usuario actual puede reclamar / ya reclamo */
 function renderMyPayouts(){
