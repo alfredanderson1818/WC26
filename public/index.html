@@ -4,9 +4,28 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>WC26 — Quiniela Mundial 2026</title>
+<script>
+// Aplicar tema antes de cualquier render para evitar flash
+(function(){
+  try {
+    var saved = localStorage.getItem('wc26v5_theme');
+    if (!saved) {
+      var prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+      saved = prefersLight ? 'light' : 'dark';
+    }
+    document.documentElement.setAttribute('data-theme', saved);
+  } catch(e) {
+    document.documentElement.setAttribute('data-theme', 'dark');
+  }
+})();
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;800;900&family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root {
+:root,
+[data-theme="dark"] {
+ /* ════════════════════════════════════════════════════════
+    DARK THEME (default) - Dorado elegante
+    ════════════════════════════════════════════════════════ */
  /* Paleta dorada elegante - single accent */
  --accent:#FFD700; /* dorado principal */
  --accent-bright:#FFE55C;
@@ -52,36 +71,94 @@
  --t2:#A39884;
  --t3:#6B6357;
 
+ /* Header/nav background */
+ --hdr-bg:rgba(10,10,10,.96);
+ --bnav-bg:rgba(11,9,5,.97);
+ --modal-ov-bg:rgba(0,0,0,.8);
+ --input-bg:var(--bg3);
+ --btn-secondary-bg:transparent;
+ --btn-primary-color:#0A0A0A;
+ --shadow-soft:0 0 0 2px var(--accent-dim);
+ --shadow-card:none;
+
  --r:10px; --rl:14px;
  --sb:env(safe-area-inset-bottom,0px);
 
- /* ── DESIGN SYSTEM TOKENS (v14) ──
- Usar SIEMPRE estos tokens en lugar de pixels hard-coded
- para mantener consistencia entre paginas. */
- /* Spacing escala 4px */
- --s1:4px; /* tight */
- --s2:8px; /* base mobile gap */
- --s3:12px; /* card-internal */
- --s4:16px; /* PAGE PADDING + section gap */
- --s5:20px;
- --s6:24px; /* section-to-section */
- --s7:32px;
- --s8:48px;
- /* Tipografia */
- --fs-display:32px; /* h1 page-title (Anton uppercase) */
- --fs-display-lg:48px;/* hero hero name */
- --fs-h2:20px; /* section heading */
- --fs-h3:16px; /* card title */
- --fs-body:14px; /* body text */
- --fs-sm:13px; /* sub */
- --fs-xs:12px; /* labels */
- --fs-xxs:11px; /* eyebrows uppercase */
- --fs-tn:10px; /* tiny */
- /* Card unificada */
+ /* DESIGN SYSTEM TOKENS */
+ --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:20px; --s6:24px; --s7:32px; --s8:48px;
+ --fs-display:32px;
+ --fs-display-lg:48px;
+ --fs-h2:20px;
+ --fs-h3:16px;
+ --fs-body:14px;
+ --fs-sm:13px;
+ --fs-xs:12px;
+ --fs-xxs:11px;
+ --fs-tn:10px;
  --card-bg:var(--bg3);
  --card-border:1px solid var(--b);
  --card-radius:12px;
  --card-pad:16px;
+}
+
+/* ════════════════════════════════════════════════════════
+   LIGHT THEME — fondo claro, mismos accents dorados
+   Se activa con <html data-theme="light"> o <body data-theme="light">
+   ════════════════════════════════════════════════════════ */
+[data-theme="light"]{
+ /* Acento dorado mas sobrio para fondo claro (legibilidad) */
+ --accent:#C9A227;
+ --accent-bright:#E5BC44;
+ --accent-dim:rgba(201,162,39,0.12);
+ --accent-glow:rgba(201,162,39,0.20);
+ --accent-soft:#A88716;
+ --accent-deep:#7A5F00;
+
+ --red:#D63031;
+ --red-bright:#FF4757;
+ --reddim:rgba(214,48,49,0.10);
+ --green-ok:#00A86B;
+ --green-dim:rgba(0,168,107,0.10);
+
+ --gold:var(--accent);
+ --gold-bright:var(--accent-bright);
+ --gold-soft:var(--accent-soft);
+ --gold-dark:#7A5F00;
+ --gold-deep:var(--accent-deep);
+ --gold-dim:var(--accent-dim);
+ --gold-glow:var(--accent-glow);
+
+ --blue:var(--accent);
+ --blue-bright:var(--accent-bright);
+ --blue-dim:var(--accent-dim);
+ --copper:var(--accent-soft);
+ --bronze:var(--accent-soft);
+
+ /* Fondos claros en escala de grises tibios */
+ --bg:#FAFAF7;
+ --bg2:#F2F1EC;
+ --bg3:#FFFFFF;
+ --bg4:#F8F7F2;
+ --bg5:#EAE9E2;
+
+ /* Bordes oscuros sutiles */
+ --b:rgba(20,20,30,0.08);
+ --b2:rgba(201,162,39,0.20);
+ --b3:rgba(201,162,39,0.45);
+
+ /* Texto oscuro sobre fondo claro */
+ --t:#1A1A2E;
+ --t2:#54545E;
+ --t3:#8A8A92;
+
+ --hdr-bg:rgba(255,255,255,.96);
+ --bnav-bg:rgba(255,255,255,.97);
+ --modal-ov-bg:rgba(20,20,30,.55);
+ --input-bg:#FFFFFF;
+ --btn-secondary-bg:#FFFFFF;
+ --btn-primary-color:#1A1A2E;
+ --shadow-soft:0 2px 8px rgba(201,162,39,.20);
+ --shadow-card:0 1px 3px rgba(20,20,30,.05);
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html{scroll-behavior:smooth}
@@ -93,18 +170,18 @@ body{font-family:'Inter','DM Sans',sans-serif;background:var(--bg);color:var(--t
 .page{display:none}
 .page.active{display:block;animation:fi .2s ease}
 
-input,select{font-family:'DM Sans',sans-serif;font-size:16px;background:var(--bg3);border:1px solid var(--b2);color:var(--t);border-radius:10px;padding:14px 16px;width:100%;outline:none;transition:border-color .2s;-webkit-appearance:none}
+input,select{font-family:'DM Sans',sans-serif;font-size:16px;background:var(--input-bg);border:1px solid var(--b2);color:var(--t);border-radius:10px;padding:14px 16px;width:100%;outline:none;transition:border-color .2s;-webkit-appearance:none}
 input:focus,select:focus{border-color:var(--gold)}
 input::placeholder{color:var(--t3)}
-select option{background:var(--bg3)}
+select option{background:var(--input-bg);color:var(--t)}
 label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight:500;letter-spacing:.3px}
 .field{margin-bottom:16px}
 .err{color:var(--red);font-size:12px;margin-top:5px;min-height:16px}
 
 .btn{font-family:'Inter','DM Sans',sans-serif;cursor:pointer;border:none;border-radius:8px;font-size:15px;font-weight:700;padding:14px 20px;transition:all .15s;-webkit-tap-highlight-color:transparent;touch-action:manipulation;letter-spacing:-0.01em}
-.btn-primary{background:var(--accent);color:#0A0A0A;box-shadow:0 0 0 2px var(--accent-dim)}
+.btn-primary{background:var(--accent);color:var(--btn-primary-color);box-shadow:var(--shadow-soft)}
 .btn-primary:active{transform:scale(.98);box-shadow:0 0 0 1px var(--accent-dim)}
-.btn-secondary{background:transparent;color:var(--t);border:1.5px solid var(--b2)}
+.btn-secondary{background:var(--btn-secondary-bg);color:var(--t);border:1.5px solid var(--b2)}
 .btn-secondary:active{background:var(--bg3);transform:scale(.98)}
 .btn-google{background:#fff;color:#3c4043;border:1px solid #dadce0;font-weight:600;display:flex;align-items:center;justify-content:center;margin-top:8px}
 .btn-google:active{background:#f8f9fa;transform:scale(.98)}
@@ -128,7 +205,7 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
 /* ── LOGO ── */
 .logo-svg{display:flex;align-items:center;gap:8px}
 .logo-mark{width:30px;height:30px;flex-shrink:0}
-.logo-text{font-family:'Anton','Bebas Neue',sans-serif;font-size:32px;letter-spacing:0;line-height:1;color:#F5EFD9}
+.logo-text{font-family:'Anton','Bebas Neue',sans-serif;font-size:34px;letter-spacing:-0.5px;line-height:1;color:var(--t);font-weight:400;-webkit-font-smoothing:antialiased}
 .logo-text span{color:var(--gold)}
 
 /* ── ONBOARDING ── */
@@ -138,7 +215,7 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
 .ob-hero{position:relative;z-index:1;width:100%;padding:52px 24px 32px;display:flex;flex-direction:column;align-items:center;text-align:center}
 .ob-logo-wrap{margin-bottom:24px}
 .ob-logo-big{width:180px;height:120px}
-.ob-logo-text{font-family:'Anton','Bebas Neue',sans-serif;font-size:96px;line-height:.85;letter-spacing:-2px;color:#F5EFD9;display:inline-block;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:geometricPrecision}
+.ob-logo-text{font-family:'Anton','Bebas Neue',sans-serif;font-size:96px;line-height:.85;letter-spacing:-2px;color:var(--t);display:inline-block;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:geometricPrecision}
 .ob-logo-text span{color:var(--gold)}
 .ob-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(52px,15vw,76px);line-height:.9;letter-spacing:1px;margin-bottom:10px}
 .ob-title span{background:linear-gradient(135deg,var(--gold-bright) 0%,var(--gold) 50%,var(--copper) 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;display:block}
@@ -257,12 +334,16 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
 
 /* ── APP HEADER ── */
 #screen-app{flex-direction:column}
-.app-header{position:sticky;top:0;z-index:100;background:rgba(10,10,10,.96);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1.5px solid var(--b);padding:0 16px;height:56px;display:flex;align-items:center;justify-content:space-between}
+.app-header{position:sticky;top:0;z-index:100;background:var(--hdr-bg);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1.5px solid var(--b);padding:0 16px;height:56px;display:flex;align-items:center;justify-content:space-between}
 .app-header-right{display:flex;align-items:center;gap:8px}
-.header-pts{display:inline-flex;align-items:center;gap:5px;font-family:'DM Mono',monospace;font-size:12px;color:var(--gold);font-weight:500;white-space:nowrap;padding:4px 2px}
-.header-pts svg{width:13px;height:13px;flex-shrink:0;opacity:.85}
-.header-pts .pts-n{color:var(--gold)}
-.header-pts .pts-l{color:var(--t3);font-size:10px;letter-spacing:.5px;text-transform:uppercase}
+.theme-toggle-btn{background:transparent;border:1px solid var(--b);border-radius:8px;width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;color:var(--t2);transition:all .15s;padding:0}
+.theme-toggle-btn:hover{color:var(--accent);border-color:var(--b2)}
+.theme-toggle-btn:active{transform:scale(.92)}
+.theme-toggle-btn svg{width:16px;height:16px}
+.header-pts{display:inline-flex;align-items:center;gap:6px;font-family:'Anton','Bebas Neue',sans-serif;font-size:18px;color:var(--gold);font-weight:400;white-space:nowrap;padding:4px 8px;background:var(--gold-dim);border:1px solid var(--b2);border-radius:8px;letter-spacing:0}
+.header-pts svg{width:14px;height:14px;flex-shrink:0;opacity:.95;color:var(--gold)}
+.header-pts .pts-n{color:var(--gold);line-height:1}
+.header-pts .pts-l{color:var(--gold-soft);font-size:10px;letter-spacing:.8px;text-transform:uppercase;font-family:'Inter',sans-serif;font-weight:700;line-height:1}
 .header-av{width:32px;height:32px;font-size:11px;cursor:pointer;background:var(--bg3);border-color:var(--b);color:var(--t2)}
 
 /* Page header */
@@ -327,7 +408,7 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
 #grupos-content.hidden,#mq-content.hidden{display:none}
 
 /* ── BOTTOM NAV (4 items uniformes) ── */
-.app-bnav{position:fixed;bottom:0;left:0;right:0;z-index:100;background:rgba(11,9,5,.97);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--b);display:flex;padding-bottom:var(--sb);padding-top:6px}
+.app-bnav{position:fixed;bottom:0;left:0;right:0;z-index:100;background:var(--bnav-bg);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--b);display:flex;padding-bottom:var(--sb);padding-top:6px}
 .bnav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 4px 6px;background:none;border:none;cursor:pointer;color:var(--t3);gap:3px;-webkit-tap-highlight-color:transparent;touch-action:manipulation;transition:color .15s;font-family:'DM Sans',sans-serif}
 
 /* Admin page — centro de control */
@@ -1043,7 +1124,7 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
 .pay-badge.bad{background:var(--reddim);color:var(--red)}
 
 /* Modal */
-.modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:200;display:flex;align-items:flex-end;justify-content:center}
+.modal-ov{position:fixed;inset:0;background:var(--modal-ov-bg);z-index:200;display:flex;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
 .modal-inner{background:var(--bg3);border:1px solid var(--b2);border-radius:var(--rl) var(--rl) 0 0;padding:24px 20px calc(24px + var(--sb));width:100%;max-height:85vh;overflow-y:auto;animation:slideUp .3s ease}
 @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
 .modal-inner h3{font-size:18px;font-weight:600;margin-bottom:16px}
@@ -1238,6 +1319,12 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
 <div id="screen-onboard" class="screen active">
  <div class="ob-bg"></div>
  <div class="ob-grid"></div>
+
+ <!-- Toggle tema en esquina superior derecha -->
+ <button class="theme-toggle-btn" onclick="toggleTheme()" title="Cambiar tema" aria-label="Cambiar tema" style="position:absolute;top:env(safe-area-inset-top,12px);right:14px;z-index:5">
+ <svg id="theme-icon-dark-ob" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+ <svg id="theme-icon-light-ob" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+ </button>
 
  <!-- HERO -->
  <div class="ob-hero">
@@ -1447,6 +1534,10 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
  <span class="logo-text">WC<span>26</span></span>
  </div>
  <div class="app-header-right">
+ <button class="theme-toggle-btn" onclick="toggleTheme()" title="Cambiar tema" aria-label="Cambiar tema">
+ <svg id="theme-icon-dark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+ <svg id="theme-icon-light" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+ </button>
  <span class="header-pts">
  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H3l1 5h2m12-5h3l-1 5h-2M6 9V4h12v5M6 9c0 4.418 2.686 8 6 8s6-3.582 6-8M9 20h6M12 18v2"/></svg>
  <span class="pts-n" id="header-pts">0</span><span class="pts-l">pts</span>
@@ -9444,6 +9535,74 @@ function openAboutModal(){
  `,{wide:true});
 }
 window.openAboutModal = openAboutModal;
+
+/* ══════════════════════════════════════════════════════════════
+ v49: TOGGLE TEMA DARK/LIGHT
+ - Persiste en localStorage 'wc26v5_theme'
+ - Auto-detecta preferencia del sistema en primera visita
+ - Se aplica al <html> via data-theme="light" o data-theme="dark"
+ ══════════════════════════════════════════════════════════════ */
+const THEME_KEY = 'wc26v5_theme';
+
+function getCurrentTheme(){
+ try{ return localStorage.getItem(THEME_KEY)||'dark'; }
+ catch(e){ return 'dark'; }
+}
+
+function applyTheme(theme){
+ const t = theme==='light'?'light':'dark';
+ document.documentElement.setAttribute('data-theme',t);
+ // Toggle iconos sol/luna
+ ['theme-icon-dark','theme-icon-light','theme-icon-dark-ob','theme-icon-light-ob'].forEach(id=>{
+ const el = document.getElementById(id);
+ if(!el)return;
+ const isDarkIcon = id.startsWith('theme-icon-dark');
+ // En tema dark mostramos el icono de luna (dark), en light mostramos sol (light)
+ if(t==='dark'){
+ el.style.display = isDarkIcon?'inline-block':'none';
+ } else {
+ el.style.display = isDarkIcon?'none':'inline-block';
+ }
+ });
+ // Actualizar meta theme-color para barra del navegador
+ let meta = document.querySelector('meta[name="theme-color"]');
+ if(!meta){
+ meta = document.createElement('meta');
+ meta.name = 'theme-color';
+ document.head.appendChild(meta);
+ }
+ meta.content = t==='light'?'#FAFAF7':'#0B0908';
+}
+
+function toggleTheme(){
+ const current = getCurrentTheme();
+ const newTheme = current==='dark'?'light':'dark';
+ try{ localStorage.setItem(THEME_KEY,newTheme); }catch(e){}
+ applyTheme(newTheme);
+ // Toast feedback
+ if(typeof toast==='function'){
+ toast(newTheme==='light'?'Tema claro':'Tema oscuro','success');
+ }
+}
+window.toggleTheme = toggleTheme;
+window.applyTheme = applyTheme;
+window.getCurrentTheme = getCurrentTheme;
+
+/* Aplicar tema lo antes posible (antes de DOMContentLoaded ideal) */
+(function initThemeImmediate(){
+ try{
+ let saved = localStorage.getItem(THEME_KEY);
+ if(!saved){
+ // Auto-detectar preferencia del sistema en primera visita
+ const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+ saved = prefersLight?'light':'dark';
+ localStorage.setItem(THEME_KEY,saved);
+ }
+ applyTheme(saved);
+ }catch(e){
+ applyTheme('dark');
+ }
+})();
 
 /* ══════════════════════════════════════════════════════════════
  v44: Onboard countdown + cupos en vivo
