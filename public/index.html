@@ -4783,8 +4783,11 @@ function navTo(page){
  // Arranca en modo Próximos (default)
  switchGroupMode(_currentGroupMode||'upcoming');
  } else {
- document.getElementById('grupos-content').classList.add('hidden');
- document.getElementById('grupos-no-liga').classList.remove('hidden');
+ // v56: Sin liga, mostramos el calendario completo en modo preview (read-only)
+ document.getElementById('grupos-content').classList.remove('hidden');
+ document.getElementById('grupos-no-liga').classList.add('hidden');
+ renderPreviewBanner('grupos-liga-hd');
+ switchGroupMode(_currentGroupMode||'upcoming');
  }
  }
  if(page==='miquiniela'){
@@ -4793,9 +4796,11 @@ function navTo(page){
  document.getElementById('mq-no-liga').classList.add('hidden');
  renderMQ();renderActiveLigaHeader('mq-liga-hd');
  } else {
- // Sin liga activa: mostrar empty state que lleva al Home (donde estan los tiers)
- document.getElementById('mq-content').classList.add('hidden');
- document.getElementById('mq-no-liga').classList.remove('hidden');
+ // v56: mostrar mq-content vacio con banner preview
+ document.getElementById('mq-content').classList.remove('hidden');
+ document.getElementById('mq-no-liga').classList.add('hidden');
+ renderPreviewBanner('mq-liga-hd');
+ renderMQPreview();
  }
  // Renderizar lista de mis ligas (incluso vacia)
  renderMyLeagues();
@@ -6144,6 +6149,16 @@ function onScoreChange(inp){
  const id=inp.id;
  // Si el partido ya está bloqueado, ignora el cambio
  if(inp.disabled)return;
+ // v56: Si no hay quiniela activa (modo preview), mostrar toast invitando a inscribirse
+ if(!hasActiveLiga()){
+ inp.value='';
+ if(!window._previewToastShown){
+ window._previewToastShown=true;
+ if(typeof toast==='function')toast('Inscríbete a una liga para guardar tus predicciones','success');
+ setTimeout(()=>{window._previewToastShown=false},3000);
+ }
+ return;
+ }
  // Rate limit anti-bot (200ms minimo entre cambios)
  const rl = typeof checkRateLimit==='function'?checkRateLimit('prediction'):{ok:true};
  if(!rl.ok)return; // silencioso, no toast
@@ -6398,6 +6413,16 @@ function buildKOUI(){
 }
 function onKOInputChange(inp){
  if(inp.disabled)return;
+ // v56: preview mode
+ if(!hasActiveLiga()){
+ inp.value='';
+ if(!window._previewToastShown){
+ window._previewToastShown=true;
+ if(typeof toast==='function')toast('Inscríbete a una liga para guardar tus predicciones','success');
+ setTimeout(()=>{window._previewToastShown=false},3000);
+ }
+ return;
+ }
  const id=inp.id; // ko_<round>_<i>_<a|b>
  const m=id.match(/^ko_(.+)_([ab])$/);
  if(!m)return;
@@ -9091,6 +9116,78 @@ function renderPerfil(){
  renderMyPayouts();
  renderAdminPanel();
 }
+
+/* ════════════════════════════════════════════════════════
+   v56: PREVIEW MODE - permitir que usuarios sin liga
+   exploren el calendario y vean cómo es la app
+   ════════════════════════════════════════════════════════ */
+function renderPreviewBanner(elId){
+ const el=document.getElementById(elId);
+ if(!el)return;
+ el.innerHTML=`<div style="background:linear-gradient(135deg,rgba(255,215,0,.10),rgba(255,215,0,.02));border:1px solid rgba(255,215,0,.30);border-radius:14px;padding:16px;margin-bottom:14px;display:flex;align-items:center;gap:14px">
+ <div style="flex-shrink:0;width:42px;height:42px;border-radius:50%;background:rgba(255,215,0,.15);border:1.5px solid rgba(255,215,0,.4);display:flex;align-items:center;justify-content:center;color:var(--gold)">
+ <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+ </div>
+ <div style="flex:1;min-width:0">
+ <div style="font-size:13px;font-weight:700;color:var(--t)">Modo vista previa</div>
+ <div style="font-size:11.5px;color:var(--t2);margin-top:2px;line-height:1.4">Inscríbete a una liga para guardar tus predicciones y competir.</div>
+ </div>
+ <button class="btn btn-primary" onclick="navTo('dashboard')" style="flex-shrink:0;padding:8px 14px;font-size:12px;font-weight:700">Ver ligas</button>
+ </div>`;
+}
+window.renderPreviewBanner = renderPreviewBanner;
+
+function renderMQPreview(){
+ // En "Mi Quiniela" sin liga: mostrar mensaje + cards de tiers debajo
+ const cont=document.getElementById('mq-content');
+ if(!cont)return;
+ // Buscar el contenedor donde va el resumen
+ const summary=cont.querySelector('.mq-summary')||cont;
+ cont.innerHTML='';
+ cont.innerHTML=`<div id="mq-liga-hd"></div>
+ <div style="background:var(--bg3);border:1px solid var(--b);border-radius:12px;padding:24px;text-align:center;margin-bottom:14px">
+ <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:10px;opacity:.7"><path d="M6 9H3l1 5h2m12-5h3l-1 5h-2M6 9V4h12v5M6 9c0 4.418 2.686 8 6 8s6-3.582 6-8M9 20h6M12 18v2"/></svg>
+ <div style="font-size:15px;font-weight:700;color:var(--t);margin-bottom:6px">Sin quiniela activa</div>
+ <p style="font-size:12.5px;color:var(--t2);line-height:1.5;max-width:300px;margin:0 auto 14px">Inscríbete a una liga para empezar a llenar tu quiniela. Top 3 ganan premios reales.</p>
+ <button class="btn btn-primary btn-full" onclick="navTo('dashboard')" style="max-width:240px;margin:0 auto">Ver ligas disponibles</button>
+ </div>
+ <div style="font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;font-weight:700;margin:14px 0 8px;text-align:center">Mientras tanto · Explora</div>
+ <div style="display:flex;flex-direction:column;gap:8px">
+ <div onclick="navTo('grupos')" style="background:var(--bg3);border:1px solid var(--b);border-radius:10px;padding:14px;display:flex;align-items:center;gap:12px;cursor:pointer">
+ <div style="flex-shrink:0;width:36px;height:36px;border-radius:8px;background:var(--bg4);display:flex;align-items:center;justify-content:center;color:var(--gold)">
+ <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+ </div>
+ <div style="flex:1">
+ <div style="font-size:13px;font-weight:700;color:var(--t)">Calendario completo</div>
+ <div style="font-size:11px;color:var(--t2);margin-top:1px">Ve los 104 partidos del Mundial</div>
+ </div>
+ <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+ </div>
+ <div onclick="navTo('ranking')" style="background:var(--bg3);border:1px solid var(--b);border-radius:10px;padding:14px;display:flex;align-items:center;gap:12px;cursor:pointer">
+ <div style="flex-shrink:0;width:36px;height:36px;border-radius:8px;background:var(--bg4);display:flex;align-items:center;justify-content:center;color:var(--gold)">
+ <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+ </div>
+ <div style="flex:1">
+ <div style="font-size:13px;font-weight:700;color:var(--t)">Ranking en vivo</div>
+ <div style="font-size:11px;color:var(--t2);margin-top:1px">Ve quién va liderando cada liga</div>
+ </div>
+ <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+ </div>
+ <div onclick="openAboutModal()" style="background:var(--bg3);border:1px solid var(--b);border-radius:10px;padding:14px;display:flex;align-items:center;gap:12px;cursor:pointer">
+ <div style="flex-shrink:0;width:36px;height:36px;border-radius:8px;background:var(--bg4);display:flex;align-items:center;justify-content:center;color:var(--gold)">
+ <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+ </div>
+ <div style="flex:1">
+ <div style="font-size:13px;font-weight:700;color:var(--t)">Cómo funciona</div>
+ <div style="font-size:11px;color:var(--t2);margin-top:1px">Reglas, premios, preguntas frecuentes</div>
+ </div>
+ <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+ </div>
+ </div>
+ <div id="my-leagues-section" style="margin-top:18px"></div>
+ `;
+}
+window.renderMQPreview = renderMQPreview;
 
 /* Render de premios que el usuario actual puede reclamar / ya reclamo */
 function renderMyPayouts(){
