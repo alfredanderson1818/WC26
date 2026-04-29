@@ -1600,7 +1600,7 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><line x1="12" y1="11" x2="12" y2="11"/><line x1="12" y1="15" x2="12.01" y2="15"/></svg>
  <div style="flex:1;font-size:13px;line-height:1.4">
  <strong style="color:var(--accent)">Verifica tu email</strong>
- <p style="margin:4px 0 8px;color:var(--t2);font-size:12px">No podras inscribirte a ligas con dinero real hasta confirmar tu correo.</p>
+ <p style="margin:4px 0 8px;color:var(--t2);font-size:12px">No podras inscribirte a quinielas con dinero real hasta confirmar tu correo.</p>
  <div style="display:flex;gap:6px;flex-wrap:wrap">
  <button class="btn btn-secondary" style="padding:6px 12px;font-size:11px" onclick="resendVerificationEmail()">Reenviar email</button>
  <button class="btn btn-secondary" style="padding:6px 12px;font-size:11px" onclick="checkEmailVerificationStatus().then(v=>{if(v)toast('Verificado','success');else toast('Aun no verificado','error')})">Ya verifique</button>
@@ -1625,7 +1625,7 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
  <span>Ver mi rendimiento detallado</span>
  </button>
 
- <!-- 4 ligas con premio: click directo abre el modal de inscripcion -->
+ <!-- 4 quinielas con premio: click directo abre el modal de inscripcion -->
  <div class="dash-leagues" style="margin-top:14px;margin-bottom:18px">
  <div class="dl-label">Quinielas con premio · click para inscribirte</div>
  <div class="dl-row">
@@ -1637,6 +1637,9 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
  <!-- Selector de quiniela activa: solo aparece si tiene mas de 1 -->
  <div id="dash-active-quiniela" style="margin-top:10px"></div>
  </div>
+
+ <!-- v64: Stats globales del torneo (social proof) -->
+ <div id="dash-global-stats" style="margin-bottom:18px"></div>
 
  <!-- Próximos 3 partidos -->
  <div id="dash-upcoming"></div>
@@ -1660,8 +1663,8 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
  <div class="no-liga-ico">
  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5"><path d="M6 9H3l1 5h2m12-5h3l-1 5h-2M6 9V4h12v5M6 9c0 4.418 2.686 8 6 8s6-3.582 6-8M9 20h6M12 18v2"/></svg>
  </div>
- <div class="no-liga-title">Aun no estas en ninguna liga</div>
- <div class="no-liga-sub">Unete a una liga para empezar a predecir y competir por el premio.</div>
+ <div class="no-liga-title">Aún no tienes una quiniela</div>
+ <div class="no-liga-sub">Únete a una quiniela para empezar a predecir y competir por el premio.</div>
  <button class="btn btn-primary btn-full" onclick="navTo('dashboard')">Volver al inicio</button>
  </div>
 
@@ -1752,8 +1755,8 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
  <div class="no-liga-ico">
  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14l2 2 4-4M7 3h10a2 2 0 0 1 2 2v15.5a.5.5 0 0 1-.8.4L17 19l-2 1.5L13 19l-2 1.5L9 19l-1.2.9a.5.5 0 0 1-.8-.4V5a2 2 0 0 1 2-2z"/></svg>
  </div>
- <div class="no-liga-title">Aun no estas en ninguna liga</div>
- <div class="no-liga-sub">Unete a una liga para crear tu quiniela y competir.</div>
+ <div class="no-liga-title">Aún no tienes una quiniela</div>
+ <div class="no-liga-sub">Inscríbete a una quiniela para empezar a predecir y competir.</div>
  <button class="btn btn-primary btn-full" onclick="navTo('dashboard')">Volver al inicio</button>
  </div>
 
@@ -1792,6 +1795,8 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
  <div class="podium" id="rank-podium"></div>
  <!-- Tabla -->
  <div class="rank-table" id="rank-table"></div>
+ <!-- v63: Quinielas privadas - acceso rápido al ranking del grupo -->
+ <div id="rank-private-section" style="margin-top:24px"></div>
  </div>
 
  <!-- PERFIL (avatar) -->
@@ -1810,6 +1815,24 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
 
  <!-- Panel de agente (solo si el usuario es agente) -->
  <div id="pf-referrer-panel"></div>
+
+ <!-- v61: QUINIELAS PRIVADAS -->
+ <div id="pf-private-leagues" style="margin-bottom:18px">
+ <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+ <h3 style="font-size:14px;font-weight:700;color:var(--t)">Quinielas privadas</h3>
+ </div>
+ <div id="pf-private-leagues-list"></div>
+ <div style="display:flex;gap:8px;margin-top:10px">
+ <button class="btn btn-primary" style="flex:1;font-size:12.5px;padding:10px" onclick="openCreatePrivateLeagueModal()">
+ <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" style="margin-right:4px;vertical-align:-2px"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+ Crear quiniela
+ </button>
+ <button class="btn btn-secondary" style="flex:1;font-size:12.5px;padding:10px" onclick="openJoinPrivateLeagueModal()">
+ <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;vertical-align:-2px"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+ Unirme con código
+ </button>
+ </div>
+ </div>
 
  <!-- Premios disponibles (solo si gano algo) -->
  <div id="pf-payouts"></div>
@@ -3421,6 +3444,106 @@ function startCommissionsListener(){
  }
 }
 
+/* ────────────── PRIVATE LEAGUES (quinielas privadas) ────────────── */
+async function syncPrivateLeagueToFirestore(league){
+ if(!window.fsMode||!fb?.auth?.currentUser)return false;
+ if(!league||!league.id)return false;
+ try{
+ await fsSet('privateLeagues/'+league.id, {
+ id: league.id,
+ code: league.code,
+ name: league.name,
+ description: league.description||'',
+ commissionerId: league.commissionerId,
+ commissionerName: league.commissionerName||'',
+ commissionerEmail: league.commissionerEmail||'',
+ status: league.status||'active',
+ createdAt: league.createdAt||Date.now(),
+ activatedAt: league.activatedAt||league.createdAt||Date.now(),
+ members: league.members||[],
+ maxMembers: league.maxMembers||MAX_MEMBERS_PRIVATE,
+ fee: league.fee||0,
+ updatedAt: Date.now(),
+ });
+ console.log('[v63] PrivateLeague synced:',league.id);
+ return true;
+ }catch(err){
+ console.error('[v63] PrivateLeague sync failed:',league.id,err.code||err.message);
+ return false;
+ }
+}
+window.syncPrivateLeagueToFirestore = syncPrivateLeagueToFirestore;
+
+async function deletePrivateLeagueFromFirestore(leagueId){
+ if(!window.fsMode||!fb?.auth?.currentUser)return false;
+ try{
+ await fsDelete('privateLeagues/'+leagueId);
+ return true;
+ }catch(err){
+ console.error('[v63] PrivateLeague delete failed:',leagueId,err.code||err.message);
+ return false;
+ }
+}
+window.deletePrivateLeagueFromFirestore = deletePrivateLeagueFromFirestore;
+
+/* Listener: descarga TODAS las quinielas privadas del cloud
+   y las refleja en DB.privateLeagues local */
+function startPrivateLeaguesListener(){
+ if(!window.fsMode||!fb?.auth?.currentUser)return null;
+ if(window._privateLeaguesListener){try{window._privateLeaguesListener();}catch(e){}}
+ try{
+ const unsub = fsListen('privateLeagues', (docs)=>{
+ if(!Array.isArray(docs))return;
+ if(!DB.privateLeagues)DB.privateLeagues=[];
+ // Sync: para cada doc en cloud, actualizar/crear en local
+ docs.forEach(d=>{
+ if(!d.id||!d.code)return;
+ let local = DB.privateLeagues.find(l=>l.id===d.id);
+ if(local){
+ // Update campos del cloud
+ local.code = d.code;
+ local.name = d.name;
+ local.description = d.description||'';
+ local.commissionerId = d.commissionerId;
+ local.commissionerName = d.commissionerName||'';
+ local.commissionerEmail = d.commissionerEmail||'';
+ local.status = d.status||'active';
+ local.createdAt = d.createdAt;
+ local.activatedAt = d.activatedAt||d.createdAt;
+ local.members = d.members||[];
+ local.maxMembers = d.maxMembers||MAX_MEMBERS_PRIVATE;
+ local.fee = d.fee||0;
+ } else {
+ DB.privateLeagues.push({
+ id: d.id, code: d.code, name: d.name,
+ description: d.description||'',
+ commissionerId: d.commissionerId,
+ commissionerName: d.commissionerName||'',
+ commissionerEmail: d.commissionerEmail||'',
+ status: d.status||'active',
+ createdAt: d.createdAt,
+ activatedAt: d.activatedAt||d.createdAt,
+ members: d.members||[],
+ maxMembers: d.maxMembers||MAX_MEMBERS_PRIVATE,
+ fee: d.fee||0,
+ });
+ }
+ });
+ saveDB();
+ // Refrescar UI relevante
+ if(typeof renderMyPrivateLeagues==='function')renderMyPrivateLeagues();
+ if(typeof renderMyLeagues==='function')renderMyLeagues();
+ console.log('[v63] PrivateLeagues updated:',docs.length,'docs');
+ });
+ window._privateLeaguesListener = unsub;
+ return unsub;
+ }catch(err){
+ console.error('[v63] startPrivateLeaguesListener failed:',err.code||err.message);
+ return null;
+ }
+}
+window.startPrivateLeaguesListener = startPrivateLeaguesListener;
+
 /* ────────────── PAYOUTS (premios reclamados) ────────────── */
 async function syncPayoutToFirestore(payout){
  if(!window.fsMode||!fb?.auth?.currentUser)return false;
@@ -3554,12 +3677,13 @@ function startAllStep5Listeners(){
  startReferrersListener();
  startCommissionsListener();
  startPayoutsListener();
+ startPrivateLeaguesListener(); // v63
  if(CUR?.isAdmin)startLogsListener();
 }
 
 /* Detener todos */
 function stopAllStep5Listeners(){
- [_entriesListener,_referrersListener,_commissionsListener,_payoutsListener,_configListener,_logsListener].forEach(fn=>{
+ [_entriesListener,_referrersListener,_commissionsListener,_payoutsListener,_configListener,_logsListener,window._privateLeaguesListener].forEach(fn=>{
  if(typeof fn==='function'){try{fn();}catch(e){}}
  });
  window._entriesListener=null;
@@ -3568,6 +3692,7 @@ function stopAllStep5Listeners(){
  window._payoutsListener=null;
  window._configListener=null;
  window._logsListener=null;
+ window._privateLeaguesListener=null;
 }
 
 window.syncConfigToFirestore = syncConfigToFirestore;
@@ -3813,7 +3938,7 @@ function checkRateLimit(action){
  const oldest = window._rateLimits.entries[0];
  const retryMs = limit.windowMs-(now-oldest);
  return {ok:false, retryAfterMs:retryMs,
- message:`Limite alcanzado: ${limit.max} inscripciones por hora. Intenta en ${Math.ceil(retryMs/60000)} min.`};
+ message:`Límite alcanzado: ${limit.max} inscripciones por hora. Intenta en ${Math.ceil(retryMs/60000)} min.`};
  }
  return {ok:true};
  }
@@ -3824,7 +3949,7 @@ function checkRateLimit(action){
  const oldest = window._rateLimits.payouts[0];
  const retryMs = limit.windowMs-(now-oldest);
  return {ok:false, retryAfterMs:retryMs,
- message:`Limite alcanzado: ${limit.max} reclamos por hora.`};
+ message:`Límite alcanzado: ${limit.max} reclamos por hora.`};
  }
  return {ok:true};
  }
@@ -4680,6 +4805,16 @@ if(!DB.config)DB.config={adminWhatsapp:''};
 if(!DB.logs)DB.logs=[];
 if(!DB.referrers)DB.referrers=[];
 if(!DB.commissions)DB.commissions=[];
+// v61: Quinielas privadas
+if(!DB.privateLeagues)DB.privateLeagues=[];
+// v62: Migración - todas las privadas ahora son gratis y active
+DB.privateLeagues.forEach(l=>{
+ if(l.status==='draft'){
+ l.status='active';
+ l.activatedAt=l.activatedAt||Date.now();
+ l.fee=0;
+ }
+});
 let CUR=JSON.parse(localStorage.getItem('wc26v5_cur')||'null');
 
 function saveDB(){localStorage.setItem('wc26v5_db',JSON.stringify(DB));}
@@ -4735,6 +4870,10 @@ function parseQuinielaId(id){
  if(usIdx>=0)return{type:'tier',tier:rest.slice(0,usIdx),entryId:rest.slice(usIdx+1)};
  return{type:'tier',tier:rest,entryId:null};
  }
+ // v63: privadas tienen formato priv_xxxxx
+ if(id.startsWith('priv_')){
+ return{type:'private',tier:null,entryId:null,leagueId:id};
+ }
  return null;
 }
 
@@ -4753,20 +4892,34 @@ function getQuinielaName(id){
  }
  return baseLabel;
  }
+ // v63: privada
+ if(parsed.type==='private'){
+ const league=(DB.privateLeagues||[]).find(l=>l.id===id);
+ return league?league.name:'Quiniela privada';
+ }
  return'Quiniela';
 }
 
 /* Devuelve solo el precio de la quiniela */
 function getQuinielaPriceLabel(id){
  const parsed=parseQuinielaId(id);
- if(!parsed||parsed.type!=='tier')return'';
+ if(!parsed)return'';
+ if(parsed.type==='private')return 'Privada';
+ if(parsed.type!=='tier')return'';
  return `$${parsed.tier}`;
 }
 window.getQuinielaPriceLabel = getQuinielaPriceLabel;
 function getAllQuinielaIds(){
  const ids=[];
- // (Quiniela libre eliminada en v19)
  if(CUR&&CUR.entries)CUR.entries.forEach(e=>ids.push(e.quinielaId));
+ // v63: incluir quinielas privadas donde estoy
+ if(CUR&&DB.privateLeagues){
+ DB.privateLeagues.forEach(l=>{
+ if(l.status==='active'&&l.members&&l.members.includes(CUR.id)){
+ ids.push(l.id);
+ }
+ });
+ }
  return ids;
 }
 function getTotalPts(){
@@ -4957,6 +5110,8 @@ function doLogin(){
         startAllStep5Listeners();
  // Step 4: cargar mis predicciones del cloud
  loadMyPredictionsFromFirestore();
+ // v63: cargar mis quinielas privadas del cloud
+ loadMyPrivateLeaguesFromFirestore();
  err.textContent='';
  pushLog({type:'auth',action:'login',targetId:u.id,targetName:u.name,payload:{method:'email'}});
  enterApp();
@@ -5003,6 +5158,8 @@ function doGoogleLogin(){
         startAllStep5Listeners();
  // Step 4: cargar predicciones del cloud
  loadMyPredictionsFromFirestore();
+ // v63: cargar mis quinielas privadas del cloud
+ loadMyPrivateLeaguesFromFirestore();
  });
  if(err)err.textContent='';
  pushLog({type:'auth',action:'login',targetId:u.id,targetName:u.name,payload:{method:'google'}});
@@ -5204,6 +5361,9 @@ fb.auth.onAuthStateChanged(async user=>{
  startLocksListener();
  // Step 4: cargar predicciones del cloud
  loadMyPredictionsFromFirestore();
+ // v63: cargar quinielas privadas del cloud + iniciar listener
+ loadMyPrivateLeaguesFromFirestore();
+ startAllStep5Listeners();
  // Si estamos en pantalla de auth, navegar a app
  const onAuth=['screen-onboard','screen-register','screen-login']
  .some(s=>document.getElementById(s)?.classList.contains('active'));
@@ -5499,6 +5659,8 @@ function calcQuinielaPoints(q){
 function recalcPts(){
  const q=getActiveQ();
  if(!q)return;
+ // v60: No recalcular en preview mode (quiniela temporal sin entry real)
+ if(q.__preview)return;
  q.pts=calcQuinielaPoints(q);
  updatePts();
 }
@@ -5557,6 +5719,8 @@ function getKO(){
 /* ── DASHBOARD ── */
 function refreshDash(){
  document.getElementById('dash-name').textContent='Hola, '+CUR.name;
+ // v64: stats globales en cualquier estado
+ if(typeof renderGlobalStats==='function')renderGlobalStats();
  const q=getActiveQ();
  if(!q){
  // Sin liga: dashboard simplificado
@@ -6175,7 +6339,7 @@ function onScoreChange(inp){
  inp.value='';
  if(!window._previewToastShown){
  window._previewToastShown=true;
- if(typeof toast==='function')toast('Inscríbete a una liga para guardar tus predicciones','success');
+ if(typeof toast==='function')toast('Inscríbete a una quiniela para guardar tus predicciones','success');
  setTimeout(()=>{window._previewToastShown=false},3000);
  }
  return;
@@ -6439,7 +6603,7 @@ function onKOInputChange(inp){
  inp.value='';
  if(!window._previewToastShown){
  window._previewToastShown=true;
- if(typeof toast==='function')toast('Inscríbete a una liga para guardar tus predicciones','success');
+ if(typeof toast==='function')toast('Inscríbete a una quiniela para guardar tus predicciones','success');
  setTimeout(()=>{window._previewToastShown=false},3000);
  }
  return;
@@ -6564,7 +6728,7 @@ function renderRanking(){
  const banner=document.getElementById('rank-prize-banner');
  if(banner){
  if(approvedCount===0){
- banner.outerHTML='<div class="rank-prize-empty" id="rank-prize-banner">Aun no hay jugadores aprobados en esta liga. El premio total se acumula segun se aprueben mas inscripciones.</div>';
+ banner.outerHTML='<div class="rank-prize-empty" id="rank-prize-banner">Aún no hay jugadores aprobados en esta quiniela. El premio total se acumula segun se aprueben mas inscripciones.</div>';
  } else {
  banner.outerHTML=`<div class="rank-prize-banner" id="rank-prize-banner">
  <div class="rank-prize-info">
@@ -6607,7 +6771,7 @@ function renderRanking(){
  // ─── Podio top 3 ───
  const podiumEl=document.getElementById('rank-podium');
  if(sorted.length===0){
- podiumEl.innerHTML=`<div class="podium-empty" style="text-align:center;width:100%;padding:24px 0;color:var(--t2);font-size:13px">${isPreview?'Aún no hay competidores en esta quiniela. Sé el primero en inscribirte.':'Aun no hay competidores en esta liga.'}</div>`;
+ podiumEl.innerHTML=`<div class="podium-empty" style="text-align:center;width:100%;padding:24px 0;color:var(--t2);font-size:13px">${isPreview?'Aún no hay competidores en esta quiniela. Sé el primero en inscribirte.':'Aún no hay competidores en esta quiniela.'}</div>`;
  } else {
  const positions=[
  {idx:1,medal:'2',cls:'podium-spot-2 podium-medal-2'},
@@ -6662,7 +6826,155 @@ function renderRanking(){
  </div>`;
  }).join('');
  }
+
+ // v63: Sección de quinielas privadas en el ranking
+ renderPrivateLeaguesInRanking();
 }
+
+/* v63: Renderiza la sección de "tus quinielas privadas" al final de la pantalla Ranking */
+function renderPrivateLeaguesInRanking(){
+ const cont=document.getElementById('rank-private-section');
+ if(!cont)return;
+ if(!CUR){cont.innerHTML='';return;}
+ const myPrivates=(DB.privateLeagues||[]).filter(l=>
+ l.status==='active'&&l.members&&l.members.includes(CUR.id)
+ );
+ if(myPrivates.length===0){
+ cont.innerHTML=`<div style="background:var(--bg3);border:1px dashed var(--b);border-radius:12px;padding:16px;text-align:center;font-size:12.5px;color:var(--t3);line-height:1.5">
+ <strong style="color:var(--t2)">¿Quieres competir solo entre amigos?</strong><br>
+ Crea una quiniela privada (gratis) o únete con un código.
+ <div style="display:flex;gap:8px;margin-top:12px">
+ <button class="btn btn-secondary" style="flex:1;font-size:12px;padding:8px" onclick="openCreatePrivateLeagueModal()">Crear privada</button>
+ <button class="btn btn-secondary" style="flex:1;font-size:12px;padding:8px" onclick="openJoinPrivateLeagueModal()">Unirme</button>
+ </div>
+ </div>`;
+ return;
+ }
+ cont.innerHTML=`<div style="font-size:11px;color:var(--gold);text-transform:uppercase;letter-spacing:1.5px;font-weight:800;margin-bottom:10px">Tus quinielas privadas</div>
+ ${myPrivates.map(l=>{
+ const isMine=l.commissionerId===CUR.id;
+ const memberCount=l.members.length;
+ const myQ=(CUR.quinielas&&CUR.quinielas[l.id])||emptyQuiniela();
+ return `<div onclick="openPrivateLeagueModal('${l.id}')" style="background:var(--bg3);border:1px solid var(--b);border-left:3px solid var(--green-ok);border-radius:10px;padding:12px;margin-bottom:8px;cursor:pointer;display:flex;align-items:center;gap:10px;transition:background .15s" onmouseover="this.style.background='var(--bg4)'" onmouseout="this.style.background='var(--bg3)'">
+ <div style="width:32px;height:32px;border-radius:8px;background:rgba(91,201,125,.12);display:flex;align-items:center;justify-content:center;color:var(--green-ok)">
+ <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+ </div>
+ <div style="flex:1;min-width:0">
+ <div style="font-size:13px;font-weight:700;color:var(--t);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${l.name}${isMine?' <span style="color:var(--gold);font-size:9px">★</span>':''}</div>
+ <div style="font-size:11px;color:var(--t2);margin-top:2px">${memberCount} ${memberCount===1?'miembro':'miembros'} · ${myQ.pts||0} pts tuyos · Click para ranking</div>
+ </div>
+ <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--t3)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+ </div>`;
+ }).join('')}`;
+}
+window.renderPrivateLeaguesInRanking = renderPrivateLeaguesInRanking;
+
+/* ════════════════════════════════════════════════════════
+   v64: STATS GLOBALES DEL TORNEO
+   - Métricas de toda la app para social proof en dashboard
+   - Calcula: jugadores únicos, premios totales acumulados,
+     total de quinielas privadas, total de predicciones
+   ════════════════════════════════════════════════════════ */
+function calcGlobalStats(){
+ const stats={
+ totalPlayers:0,
+ totalApprovedEntries:0,
+ totalPrizePool:0,
+ totalPrivateLeagues:0,
+ totalPrivateMembers:0,
+ totalPredictions:0,
+ totalPredictionsToday:0
+ };
+ // 1. Jugadores únicos con al menos una entry aprobada
+ const uniquePlayersSet=new Set();
+ // Contadores por tier
+ const entriesByTier={20:0,50:0,100:0,500:0};
+ (DB.users||[]).forEach(u=>{
+ if(u.id&&u.id.startsWith('guest_'))return;
+ const approvedEntries=(u.entries||[]).filter(e=>(e.status||'pending')==='approved');
+ if(approvedEntries.length>0){
+ uniquePlayersSet.add(u.id);
+ stats.totalApprovedEntries+=approvedEntries.length;
+ approvedEntries.forEach(e=>{
+ const t=parseInt(e.tier);
+ if(!isNaN(t))entriesByTier[t]=(entriesByTier[t]||0)+1;
+ });
+ }
+ // Contar predicciones por usuario
+ if(u.quinielas){
+ Object.values(u.quinielas).forEach(q=>{
+ if(!q)return;
+ const groupCount=q.scores?Object.keys(q.scores).length:0;
+ const koCount=q.ko?Object.keys(q.ko).length:0;
+ stats.totalPredictions+=groupCount+koCount;
+ });
+ }
+ });
+ stats.totalPlayers=uniquePlayersSet.size;
+ // 2. Premio total acumulado (suma de pools de cada tier × inscripciones aprobadas)
+ const rakeRate=getRakeRate();
+ Object.entries(entriesByTier).forEach(([tier,count])=>{
+ const tierAmount=parseInt(tier);
+ const pool=tierAmount*count*(1-rakeRate);
+ stats.totalPrizePool+=pool;
+ });
+ // 3. Quinielas privadas
+ const activePrivates=(DB.privateLeagues||[]).filter(l=>l.status==='active');
+ stats.totalPrivateLeagues=activePrivates.length;
+ const uniquePrivateMembers=new Set();
+ activePrivates.forEach(l=>{
+ (l.members||[]).forEach(uid=>uniquePrivateMembers.add(uid));
+ });
+ stats.totalPrivateMembers=uniquePrivateMembers.size;
+ return stats;
+}
+window.calcGlobalStats = calcGlobalStats;
+
+/* Renderiza la card de stats globales en el dashboard */
+function renderGlobalStats(){
+ const cont=document.getElementById('dash-global-stats');
+ if(!cont)return;
+ const s=calcGlobalStats();
+ // Si todo está en 0, no mostramos (app vacía recién instalada)
+ if(s.totalPlayers===0&&s.totalPrivateLeagues===0){
+ cont.innerHTML='';
+ return;
+ }
+ // Formato de números: usar comas para miles
+ const fmt=(n)=>n>=1000?Math.round(n/100)/10+'k':String(n);
+ const prizePool=Math.round(s.totalPrizePool);
+ const prizeFmt=prizePool>=1000?'$'+Math.round(prizePool/100)/10+'k':'$'+prizePool.toLocaleString();
+ cont.innerHTML=`<div style="background:linear-gradient(135deg,rgba(255,215,0,.08),rgba(255,215,0,.02));border:1px solid rgba(255,215,0,.25);border-radius:14px;padding:14px;position:relative;overflow:hidden">
+ <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+ <div style="display:flex;align-items:center;gap:8px">
+ <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--green-ok);box-shadow:0 0 8px var(--green-ok);animation:pulse 2s infinite"></span>
+ <span style="font-size:11px;color:var(--gold);text-transform:uppercase;letter-spacing:1.5px;font-weight:800">Mundial 2026 · En vivo</span>
+ </div>
+ <span style="font-size:10px;color:var(--t3)">Actualizado ahora</span>
+ </div>
+ <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+ <div style="background:var(--bg3);border:1px solid var(--b);border-radius:10px;padding:10px">
+ <div style="font-family:'Anton',sans-serif;font-size:24px;color:var(--t);line-height:1">${fmt(s.totalPlayers)}</div>
+ <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-top:3px">Jugadores activos</div>
+ </div>
+ <div style="background:var(--bg3);border:1px solid var(--b);border-radius:10px;padding:10px">
+ <div style="font-family:'Anton',sans-serif;font-size:24px;color:var(--gold);line-height:1">${prizeFmt}</div>
+ <div style="font-size:10px;color:var(--gold);text-transform:uppercase;letter-spacing:.5px;margin-top:3px">En premios</div>
+ </div>
+ <div style="background:var(--bg3);border:1px solid var(--b);border-radius:10px;padding:10px">
+ <div style="font-family:'Anton',sans-serif;font-size:24px;color:var(--green-ok);line-height:1">${fmt(s.totalPrivateLeagues)}</div>
+ <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-top:3px">Privadas activas</div>
+ </div>
+ <div style="background:var(--bg3);border:1px solid var(--b);border-radius:10px;padding:10px">
+ <div style="font-family:'Anton',sans-serif;font-size:24px;color:var(--t);line-height:1">${fmt(s.totalPredictions)}</div>
+ <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-top:3px">Predicciones</div>
+ </div>
+ </div>
+ </div>`;
+}
+window.renderGlobalStats = renderGlobalStats;
+
+
 
 function selectRankTier(t){
  _rankSelectedTier=t;
@@ -7015,7 +7327,7 @@ function joinTier(t){
  // Verificar email antes de permitir inscripcion (admin esta exento)
  if(!CUR?.isAdmin && !isMyEmailVerified()){
  openModal(`<h3>Verifica tu email primero</h3>
- <p class="pay-instr">Para inscribirte a una liga con dinero real necesitas confirmar tu correo electronico. Es un requisito para evitar fraudes y proteger los premios.</p>
+ <p class="pay-instr">Para inscribirte a una quiniela con dinero real necesitas confirmar tu correo electronico. Es un requisito para evitar fraudes y proteger los premios.</p>
  <div style="background:var(--bg4);border-radius:10px;padding:12px;margin:12px 0">
  <div style="font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px">Tu email</div>
  <div style="font-size:14px;font-weight:600;color:var(--t)">${CUR.email||fb.auth?.currentUser?.email||''}</div>
@@ -7102,16 +7414,16 @@ function confirmJoinTier(t){
  const userLabel=CUR.name+(CUR.email?` (${CUR.email})`:'');
  const presetMsg=encodeURIComponent(`Hola, soy ${userLabel}. Acabo de inscribirme a ${tierName} ($${tierAmount}) en Quiniela Mundial 2026 y quiero coordinar el pago.`);
  const waLink=phone?`https://wa.me/${phone}?text=${presetMsg}`:'';
- openModal(`<h3> Inscripcion creada</h3>
- <p class="pay-instr">Tu inscripcion a <strong>${tierName}</strong> esta <strong style="color:var(--gold)">pendiente de aprobacion</strong>. Ya puedes empezar a llenar tu quiniela.</p>
+ openModal(`<h3>Inscripción creada</h3>
+ <p class="pay-instr">Tu inscripción a <strong>${tierName}</strong> está <strong style="color:var(--gold)">pendiente de aprobación</strong>. Ya puedes empezar a llenar tu quiniela.</p>
  <p class="pay-instr">Para activarla oficialmente, coordina el pago de <strong>$${tierAmount}</strong> con el admin:</p>
  ${phone?`<a href="${waLink}" target="_blank" rel="noopener" class="btn btn-primary btn-full" style="background:#25D366;color:#fff;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:6px" onclick="closeModal()">
  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448L.057 24z"/></svg>
  Escribir al admin por WhatsApp
- </a>`:`<p style="font-size:12px;color:var(--t3);text-align:center;padding:10px;background:var(--bg4);border-radius:8px">El admin no ha configurado un WhatsApp. Contactalo por otro medio para coordinar el pago.</p>`}
+ </a>`:`<p style="font-size:12px;color:var(--t3);text-align:center;padding:10px;background:var(--bg4);border-radius:8px">El admin no ha configurado un WhatsApp. Contáctalo por otro medio para coordinar el pago.</p>`}
  <button class="btn btn-primary btn-full" style="margin-top:8px" onclick="closeModal();navTo('grupos')">Empezar a predecir →</button>
  `);
- toast(`Inscripcion pendiente en ${TIER_NAMES[t]}`,'success');
+ toast(`Inscripción pendiente en ${TIER_NAMES[t]}`,'success');
  renderTiers();
  renderMyLeagues();
  refreshDash();
@@ -7133,7 +7445,7 @@ function leaveTierEntry(quinielaId){
  const remaining=getAllQuinielaIds();
  CUR.activeQuinielaId=remaining[0]||null;
  }
- toast(isPending?'Inscripcion cancelada':'Saliste de la liga','success');
+ toast(isPending?'Inscripción cancelada':'Saliste de la quiniela','success');
  sync();closeModal();
  renderTiers();renderMyLeagues();updatePts();
 }
@@ -7214,6 +7526,12 @@ function renderAdminDashboard(){
  title:'Resultados',sub:'Ingresar resultados oficiales',onclick:'openResultsAdmin()',badge:null},
  {ico:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>',
  title:'Inscripciones',sub:`${pendingCount} pendientes · ${approvedCount} aprobadas`,onclick:'scrollToPending()',badge:pendingCount>0?String(pendingCount):null,alert:pendingCount>0},
+ {ico:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>',
+ title:'Quinielas privadas',sub:(()=>{
+ const active=(DB.privateLeagues||[]).filter(l=>l.status==='active').length;
+ const totalMembers=(DB.privateLeagues||[]).filter(l=>l.status==='active').reduce((s,l)=>s+l.members.length,0);
+ return `${active} ${active===1?'quiniela':'quinielas'} · ${totalMembers} ${totalMembers===1?'miembro':'miembros'}`;
+ })(),onclick:'openPrivateLeaguesAdmin()',badge:null},
  {ico:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>',
  title:'Ingresos',sub:'Mi ganancia detallada',onclick:'openIngresosAdmin()',badge:null},
  {ico:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
@@ -7501,7 +7819,7 @@ function confirmApproveEntry(userId,quinielaId){
  if(isNaN(amount)||amount<=0){if(err)err.textContent='Monto invalido';return;}
  const expected=parseInt(e.tier);
  if(amount<expected){
- const ok=confirm(`Atencion: el monto recibido ($${amount}) es menor al de la liga ($${expected}). Aprobar de todos modos?`);
+ const ok=confirm(`Atencion: el monto recibido ($${amount}) es menor al de la quiniela ($${expected}). Aprobar de todos modos?`);
  if(!ok)return;
  }
  // Guardar registro de pago dentro de la entry
@@ -8983,8 +9301,7 @@ function renderMyLeagues(){
  if(!cont)return;
  const ids=getAllQuinielaIds();
  if(countEl)countEl.textContent=ids.length?`(${ids.length})`:'';
- // Siempre hay al menos la 'free', asi que nunca esta vacio.
- // Agrupar por tier (free queda como 'free')
+ // Agrupar por tier (tiers + 'private')
  const byTier={};
  ids.forEach(id=>{
  if(id==='free'){
@@ -8993,17 +9310,27 @@ function renderMyLeagues(){
  return;
  }
  const parsed=parseQuinielaId(id);
+ if(parsed&&parsed.type==='private'){
+ if(!byTier.private)byTier.private=[];
+ byTier.private.push(id);
+ return;
+ }
  const key=(parsed&&parsed.type==='tier')?parsed.tier:'other';
  if(!byTier[key])byTier[key]=[];
  byTier[key].push(id);
  });
- // Render: free primero, luego tiers en orden
- const tierOrder=['free','20','50','100','500','other'];
+ // Render: tiers primero, luego privadas
+ const tierOrder=['free','20','50','100','500','other','private'];
  let html='';
  tierOrder.forEach(tier=>{
  if(!byTier[tier])return;
  const groupIds=byTier[tier];
- const isTier=tier!=='free'&&tier!=='other';
+ const isTier=tier!=='free'&&tier!=='other'&&tier!=='private';
+ const isPrivateGroup=tier==='private';
+ // v63: Header de sección privadas
+ if(isPrivateGroup){
+ html+=`<div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;font-weight:700;margin:14px 0 6px;padding-left:4px">Quinielas privadas</div>`;
+ }
  // Cards individuales
  html+=groupIds.map(id=>{
  const q=CUR.quinielas[id]||emptyQuiniela();
@@ -9011,9 +9338,11 @@ function renderMyLeagues(){
  const parsed=parseQuinielaId(id);
  const isFree=parsed&&parsed.type==='free';
  const tierIsTier=parsed&&parsed.type==='tier';
+ const isPrivate=parsed&&parsed.type==='private';
  const entry=tierIsTier?getEntryForQuiniela(id):null;
  const status=entry?(entry.status||'pending'):null;
- // Display name basado en precio + #N si hay varias
+ const privateLeague=isPrivate?(DB.privateLeagues||[]).find(l=>l.id===id):null;
+ // Display name
  let displayName;
  if(isFree){
  displayName='Quiniela libre';
@@ -9022,10 +9351,12 @@ function renderMyLeagues(){
  const entries=(CUR.entries||[]).filter(e=>e.tier===parsed.tier);
  const idx=entries.findIndex(e=>e.quinielaId===id);
  displayName=entries.length>1?`Quiniela $${tierAmount} #${idx+1}`:`Quiniela $${tierAmount}`;
+ } else if(isPrivate&&privateLeague){
+ displayName=privateLeague.name;
  } else {
  displayName='Quiniela';
  }
- // Subtitulo: precio + status + puntos
+ // Subtitulo
  let subLabel;
  if(isFree){
  subLabel=`Sin premio · ${q.pts||0} pts`;
@@ -9038,24 +9369,38 @@ function renderMyLeagues(){
  } else {
  subLabel=`<strong style="color:var(--gold)">$${tierAmount}</strong> · Pendiente de pago`;
  }
+ } else if(isPrivate&&privateLeague){
+ const memberCount=privateLeague.members.length;
+ const isCommissioner=privateLeague.commissionerId===CUR.id;
+ subLabel=`<span style="color:var(--green-ok)">Privada</span> · ${memberCount} ${memberCount===1?'miembro':'miembros'} · ${q.pts||0} pts${isCommissioner?' · <span style="color:var(--gold);font-size:10px">Tú creaste</span>':''}`;
  } else {
  subLabel=`${q.pts||0} pts`;
  }
  const icon=isFree
  ? `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>`
+ : isPrivate
+ ? `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--green-ok)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>`
  : `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5"><path d="M6 9H3l1 5h2m12-5h3l-1 5h-2M6 9V4h12v5M6 9c0 4.418 2.686 8 6 8s6-3.582 6-8M9 20h6M12 18v2"/></svg>`;
- // Badge de status
+ // Badge
  let statusBadge='';
  if(isActive)statusBadge=' <span class="badge badge-active">Activa</span>';
  if(status==='pending')statusBadge+=' <span class="badge" style="background:var(--gold-dim);color:var(--gold)">PENDIENTE</span>';
  else if(status==='rejected')statusBadge+=' <span class="badge" style="background:var(--reddim);color:var(--red)">RECHAZADA</span>';
  else if(status==='approved')statusBadge+=' <span class="badge" style="background:rgba(91,201,125,.15);color:var(--green-ok)">APROBADA</span>';
- // Solo botón cancelar
- const actionsBtns=tierIsTier
- ? `<button class="my-league-opts" onclick="event.stopPropagation();leaveTierEntry('${id}')" title="Cancelar">
+ // Botones de acción
+ let actionsBtns='';
+ if(tierIsTier){
+ actionsBtns=`<button class="my-league-opts" onclick="event.stopPropagation();leaveTierEntry('${id}')" title="Cancelar">
  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
- </button>`
- : '';
+ </button>`;
+ } else if(isPrivate){
+ const isCommissioner=privateLeague&&privateLeague.commissionerId===CUR.id;
+ if(!isCommissioner){
+ actionsBtns=`<button class="my-league-opts" onclick="event.stopPropagation();leavePrivateLeague('${id}')" title="Salir">
+ <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+ </button>`;
+ }
+ }
  return `<div class="my-league-card ${isActive?'active':''}" onclick="selectLeague('${id}')">
  <div class="my-league-ico">${icon}</div>
  <div class="my-league-info">
@@ -9066,7 +9411,7 @@ function renderMyLeagues(){
  <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="var(--t2)" stroke-width="1.5"><path d="M6 12l4-4-4-4"/></svg>
  </div>`;
  }).join('');
- // Botón "+ Otra inscripción" al final del grupo (solo para tiers)
+ // Botón "+ Otra" para tiers
  if(isTier){
  const tierAmount=parseInt(tier);
  html+=`<button class="my-league-add-btn" onclick="joinTier('${tier}')">
@@ -9074,7 +9419,37 @@ function renderMyLeagues(){
  <span>+ Otra quiniela $${tierAmount}</span>
  </button>`;
  }
+ // v63: Botones para privadas
+ if(isPrivateGroup){
+ html+=`<div style="display:flex;gap:6px;margin-top:6px">
+ <button class="my-league-add-btn" style="flex:1" onclick="openCreatePrivateLeagueModal()">
+ <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+ <span>Crear privada</span>
+ </button>
+ <button class="my-league-add-btn" style="flex:1" onclick="openJoinPrivateLeagueModal()">
+ <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/></svg>
+ <span>Unirme</span>
+ </button>
+ </div>`;
+ }
  });
+ // Si NO hay privadas, agregar sección con botones
+ if(!byTier.private){
+ html+=`<div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;font-weight:700;margin:14px 0 6px;padding-left:4px">Quinielas privadas</div>
+ <div style="background:var(--bg3);border:1px dashed var(--b);border-radius:10px;padding:12px;text-align:center;font-size:12px;color:var(--t3);margin-bottom:6px">
+ Crea una quiniela cerrada para tus amigos (gratis)
+ </div>
+ <div style="display:flex;gap:6px">
+ <button class="my-league-add-btn" style="flex:1" onclick="openCreatePrivateLeagueModal()">
+ <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+ <span>Crear privada</span>
+ </button>
+ <button class="my-league-add-btn" style="flex:1" onclick="openJoinPrivateLeagueModal()">
+ <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/></svg>
+ <span>Unirme</span>
+ </button>
+ </div>`;
+ }
  cont.innerHTML=html;
 }
 
@@ -9164,7 +9539,7 @@ function renderTiers(){
  });
  if(availableCount===0){
  html=`<div class="no-liga-empty" style="padding:18px;text-align:center">
- <div style="font-size:13px;color:var(--t2)">Estas inscrito en todas las ligas disponibles.</div>
+ <div style="font-size:13px;color:var(--t2)">Tienes una quiniela en cada liga disponible.</div>
  </div>`;
  }
  cont.innerHTML=html;
@@ -9184,10 +9559,351 @@ function renderPerfil(){
  // Render panel de agente
  const refPanel=document.getElementById('pf-referrer-panel');
  if(refPanel)renderMyReferrerDashboard(refPanel);
+ // v61: Render quinielas privadas
+ if(typeof renderMyPrivateLeagues==='function')renderMyPrivateLeagues();
  // Render premios disponibles
  renderMyPayouts();
  renderAdminPanel();
 }
+
+/* v61: Lista de quinielas privadas del usuario en el perfil */
+function renderMyPrivateLeagues(){
+ const cont=document.getElementById('pf-private-leagues-list');
+ if(!cont)return;
+ const leagues=getMyPrivateLeagues();
+ if(leagues.length===0){
+ cont.innerHTML=`<div style="background:var(--bg3);border:1px dashed var(--b);border-radius:10px;padding:14px;text-align:center;font-size:12px;color:var(--t3)">
+ Crea tu propia quiniela privada (gratis) o únete a una con un código.
+ </div>`;
+ return;
+ }
+ cont.innerHTML=leagues.map(l=>{
+ const isMine=l.commissionerId===CUR.id;
+ const memberCount=l.members.length;
+ const commissionerBadge=isMine?'<span style="background:rgba(255,215,0,.15);color:var(--gold);font-size:9px;padding:2px 6px;border-radius:4px;font-weight:700;letter-spacing:.3px;text-transform:uppercase;margin-left:4px">Tú creaste</span>':'';
+ return `<div style="background:var(--bg3);border:1px solid var(--b);border-left:3px solid var(--green-ok);border-radius:10px;padding:12px;margin-bottom:8px">
+ <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:6px">
+ <div style="flex:1;min-width:0">
+ <div style="font-size:13px;font-weight:700;color:var(--t);line-height:1.3">${l.name}</div>
+ <div style="font-size:11px;color:var(--t2);margin-top:3px;display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+ ${commissionerBadge}
+ <span>${memberCount}/${l.maxMembers} miembros</span>
+ </div>
+ </div>
+ <button onclick="copyPrivateLeagueCode('${l.code}')" title="Copiar código" style="background:var(--bg4);border:1px solid var(--b);border-radius:6px;padding:4px 8px;cursor:pointer;font-family:'DM Mono',monospace;font-size:11px;color:var(--gold);letter-spacing:1px">${l.code}</button>
+ </div>
+ ${l.description?`<div style="font-size:11.5px;color:var(--t2);margin-top:6px;line-height:1.4">${l.description}</div>`:''}
+ <div style="display:flex;gap:6px;margin-top:10px">
+ <button class="btn btn-secondary" style="flex:1;font-size:11px;padding:7px" onclick="openPrivateLeagueModal('${l.id}')">Ver detalles</button>
+ ${isMine?`<button class="btn btn-secondary" style="font-size:11px;padding:7px" onclick="sharePrivateLeagueCode('${l.id}')" title="Compartir código">
+ <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+ </button>`:''}
+ ${!isMine?`<button class="btn btn-secondary" style="font-size:11px;padding:7px;background:var(--reddim);color:var(--red);border-color:rgba(233,69,69,.3)" onclick="leavePrivateLeague('${l.id}')" title="Salir">
+ <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+ </button>`:''}
+ </div>
+ </div>`;
+ }).join('');
+}
+window.renderMyPrivateLeagues = renderMyPrivateLeagues;
+
+/* Copiar código al portapapeles */
+function copyPrivateLeagueCode(code){
+ navigator.clipboard.writeText(code).then(()=>{
+ toast('Código copiado: '+code,'success');
+ }).catch(()=>{
+ toast('No se pudo copiar','error');
+ });
+}
+window.copyPrivateLeagueCode = copyPrivateLeagueCode;
+
+/* Compartir código vía WhatsApp / sistema */
+function sharePrivateLeagueCode(leagueId){
+ const league=(DB.privateLeagues||[]).find(l=>l.id===leagueId);
+ if(!league)return;
+ const url=window.location.origin;
+ const text=`Te invito a mi quiniela privada del Mundial 2026:\n\n*${league.name}*\n\nCódigo: ${league.code}\n\nEntra a ${url} → Perfil → "Unirme con código"`;
+ if(navigator.share){
+ navigator.share({
+ title:'Quiniela '+league.name,
+ text:text,
+ }).catch(()=>{});
+ } else {
+ // Fallback: WhatsApp
+ const waUrl=`https://wa.me/?text=${encodeURIComponent(text)}`;
+ window.open(waUrl,'_blank');
+ }
+}
+window.sharePrivateLeagueCode = sharePrivateLeagueCode;
+
+/* Modal de detalle de quiniela privada (vista básica para v61) */
+function openPrivateLeagueModal(leagueId){
+ const league=(DB.privateLeagues||[]).find(l=>l.id===leagueId);
+ if(!league){toast('No encontrada','error');return;}
+ const isMine=league.commissionerId===CUR.id;
+ const memberCount=league.members.length;
+ // Render inicial con loading del ranking
+ openModal(`<h3 style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+ ${league.name}
+ ${isMine?'<span style="background:rgba(255,215,0,.15);color:var(--gold);font-size:9px;padding:3px 7px;border-radius:4px;font-weight:700;letter-spacing:.5px;text-transform:uppercase">Tú creaste</span>':''}
+ </h3>
+ ${league.description?`<p style="font-size:12.5px;color:var(--t2);margin-bottom:14px;line-height:1.4">${league.description}</p>`:'<div style="margin-bottom:8px"></div>'}
+
+ <!-- Tabs: Ranking | Predecir | Miembros | Código -->
+ <div style="display:flex;gap:4px;background:var(--bg3);border-radius:10px;padding:4px;margin-bottom:14px">
+ <button class="priv-tab-btn priv-tab-active" data-tab="ranking" onclick="switchPrivateTab('${leagueId}','ranking')" style="flex:1;background:var(--bg4);border:none;color:var(--t);padding:8px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer">Ranking</button>
+ <button class="priv-tab-btn" data-tab="predict" onclick="switchPrivateTab('${leagueId}','predict')" style="flex:1;background:transparent;border:none;color:var(--t2);padding:8px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer">Predecir</button>
+ <button class="priv-tab-btn" data-tab="members" onclick="switchPrivateTab('${leagueId}','members')" style="flex:1;background:transparent;border:none;color:var(--t2);padding:8px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer">Miembros</button>
+ <button class="priv-tab-btn" data-tab="code" onclick="switchPrivateTab('${leagueId}','code')" style="flex:1;background:transparent;border:none;color:var(--t2);padding:8px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer">Código</button>
+ </div>
+
+ <!-- Contenedor del tab activo -->
+ <div id="priv-tab-content" style="min-height:200px"></div>
+
+ <div style="display:flex;gap:6px;margin-top:14px">
+ ${!isMine?`<button class="btn btn-secondary" style="flex:1;background:var(--reddim);color:var(--red);border-color:rgba(233,69,69,.3)" onclick="leavePrivateLeague('${league.id}');closeModal()">Salir</button>`:''}
+ <button class="btn btn-secondary" style="flex:1" onclick="closeModal()">Cerrar</button>
+ </div>
+ `,{wide:true});
+ // Render inicial del tab Ranking
+ setTimeout(()=>renderPrivateTab(leagueId,'ranking'),50);
+}
+window.openPrivateLeagueModal = openPrivateLeagueModal;
+
+/* v63: Switch entre tabs del modal de quiniela privada */
+function switchPrivateTab(leagueId, tab){
+ // Toggle visual
+ document.querySelectorAll('.priv-tab-btn').forEach(b=>{
+ if(b.dataset.tab===tab){
+ b.classList.add('priv-tab-active');
+ b.style.background='var(--bg4)';
+ b.style.color='var(--t)';
+ b.style.fontWeight='700';
+ } else {
+ b.classList.remove('priv-tab-active');
+ b.style.background='transparent';
+ b.style.color='var(--t2)';
+ b.style.fontWeight='600';
+ }
+ });
+ renderPrivateTab(leagueId, tab);
+}
+window.switchPrivateTab = switchPrivateTab;
+
+/* v63: Renderizar el contenido de cada tab */
+async function renderPrivateTab(leagueId, tab){
+ const cont=document.getElementById('priv-tab-content');
+ if(!cont)return;
+ const league=(DB.privateLeagues||[]).find(l=>l.id===leagueId);
+ if(!league){cont.innerHTML='<p>No encontrada</p>';return;}
+ if(tab==='ranking'){
+ // Loading state
+ cont.innerHTML=`<div style="text-align:center;padding:40px 16px;color:var(--t3);font-size:13px">
+ <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-bottom:10px;animation:spin 1.5s linear infinite"><circle cx="12" cy="12" r="10" stroke-dasharray="60" stroke-dashoffset="20"/></svg>
+ <div>Cargando ranking del grupo...</div>
+ </div>`;
+ try{
+ const ranking=await loadGroupPredictionsForRanking(leagueId);
+ // Renderizar podio + tabla
+ if(ranking.length===0){
+ cont.innerHTML='<p style="text-align:center;color:var(--t3);padding:30px;font-size:13px">Aún no hay miembros</p>';
+ return;
+ }
+ // Stats del grupo
+ const totalPts=ranking.reduce((s,r)=>s+r.pts,0);
+ const avgPts=Math.round(totalPts/ranking.length);
+ const maxPts=Math.max(...ranking.map(r=>r.pts));
+ const myPos=ranking.findIndex(r=>r.isMe);
+ const podium=ranking.slice(0,3);
+ const rest=ranking.slice(3);
+ // HTML
+ let html=`<!-- Stats del grupo -->
+ <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;background:var(--bg3);border:1px solid var(--b);border-radius:10px;padding:10px;margin-bottom:14px;text-align:center">
+ <div>
+ <div style="font-family:'Anton',sans-serif;font-size:18px;color:var(--gold);line-height:1">${ranking.length}</div>
+ <div style="font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-top:2px">Miembros</div>
+ </div>
+ <div>
+ <div style="font-family:'Anton',sans-serif;font-size:18px;color:var(--t);line-height:1">${maxPts}</div>
+ <div style="font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-top:2px">Top pts</div>
+ </div>
+ <div>
+ <div style="font-family:'Anton',sans-serif;font-size:18px;color:var(--green-ok);line-height:1">${avgPts}</div>
+ <div style="font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-top:2px">Promedio</div>
+ </div>
+ </div>`;
+ // Mi posición
+ if(myPos>=0){
+ const me=ranking[myPos];
+ html+=`<div style="background:rgba(255,215,0,.08);border:1px solid rgba(255,215,0,.25);border-radius:10px;padding:10px;margin-bottom:14px;display:flex;align-items:center;gap:10px">
+ <div style="font-family:'Anton',sans-serif;font-size:22px;color:var(--gold);min-width:32px;text-align:center">#${myPos+1}</div>
+ <div style="flex:1">
+ <div style="font-size:13px;font-weight:700;color:var(--t)">Tu posición</div>
+ <div style="font-size:11px;color:var(--t2);margin-top:1px">${me.pts} pts · ${me.pctComplete}% completado</div>
+ </div>
+ </div>`;
+ }
+ // Top 3 podio
+ html+='<div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:8px">Top 3</div>';
+ podium.forEach((r,i)=>{
+ const medals=['1','2','3'];
+ const colors=['var(--gold)','#C0C0C0','#CD7F32'];
+ html+=`<div style="background:var(--bg3);border:1px solid var(--b);border-left:3px solid ${colors[i]};border-radius:10px;padding:10px;margin-bottom:6px;display:flex;align-items:center;gap:10px${r.isMe?';outline:1px solid rgba(255,215,0,.3)':''}">
+ <div style="font-family:'Anton',sans-serif;font-size:22px;color:${colors[i]};min-width:30px;text-align:center">${medals[i]}</div>
+ <div style="width:32px;height:32px;border-radius:50%;background:var(--bg4);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--t2)">${initials(r.userName)}</div>
+ <div style="flex:1;min-width:0">
+ <div style="font-size:13px;font-weight:600;color:var(--t);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.userName}${r.isMe?' <span style="color:var(--gold);font-size:10px">(tú)</span>':''}${r.isCommissioner?' <span style="color:var(--gold);font-size:10px">★</span>':''}</div>
+ <div style="font-size:10px;color:var(--t3);margin-top:1px">${r.pctComplete}% completado</div>
+ </div>
+ <div style="text-align:right">
+ <div style="font-family:'Anton',sans-serif;font-size:18px;color:var(--gold);line-height:1">${r.pts}</div>
+ <div style="font-size:9px;color:var(--t3);margin-top:1px">PTS</div>
+ </div>
+ </div>`;
+ });
+ // Resto de la tabla
+ if(rest.length>0){
+ html+='<div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;font-weight:700;margin:14px 0 8px">Resto del grupo</div>';
+ rest.forEach((r,i)=>{
+ const pos=i+4;
+ html+=`<div style="background:var(--bg3);border:1px solid var(--b);border-radius:8px;padding:8px 10px;margin-bottom:4px;display:flex;align-items:center;gap:8px${r.isMe?';outline:1px solid rgba(255,215,0,.3)':''}">
+ <div style="font-family:'DM Mono',monospace;font-size:13px;color:var(--t2);min-width:26px;text-align:center">#${pos}</div>
+ <div style="width:24px;height:24px;border-radius:50%;background:var(--bg4);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:var(--t2)">${initials(r.userName)}</div>
+ <div style="flex:1;min-width:0">
+ <div style="font-size:12px;color:var(--t);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.userName}${r.isMe?' <span style="color:var(--gold);font-size:9px">(tú)</span>':''}${r.isCommissioner?' <span style="color:var(--gold);font-size:9px">★</span>':''}</div>
+ </div>
+ <div style="font-family:'DM Mono',monospace;font-size:12px;color:var(--t)">${r.pts} pts</div>
+ </div>`;
+ });
+ }
+ cont.innerHTML=html;
+ }catch(err){
+ console.error('[v63] Error cargando ranking:',err);
+ cont.innerHTML='<p style="color:var(--red);font-size:12px;text-align:center;padding:30px">Error cargando ranking. Intenta de nuevo.</p>';
+ }
+ } else if(tab==='predict'){
+ // Resumen de predicciones del usuario
+ const q=(CUR&&CUR.quinielas&&CUR.quinielas[leagueId])||emptyQuiniela();
+ const totalScores=Object.keys(q.scores||{}).length;
+ const totalKO=Object.keys(q.ko||{}).length;
+ const totalPreds=totalScores+totalKO;
+ const pctComplete=Math.min(100,Math.round((totalPreds/104)*100));
+ cont.innerHTML=`<div style="background:var(--bg3);border:1px solid var(--b);border-radius:10px;padding:14px;margin-bottom:14px;text-align:center">
+ <div style="font-size:11px;color:var(--gold);text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:4px">Tu progreso en este grupo</div>
+ <div style="font-family:'Anton',sans-serif;font-size:32px;color:var(--t);line-height:1;margin-top:6px">${q.pts||0} <span style="font-size:14px;color:var(--t2)">PTS</span></div>
+ <div style="font-size:11px;color:var(--t2);margin-top:4px">${pctComplete}% completado · ${totalPreds}/104 partidos</div>
+ <div style="background:var(--bg4);border-radius:8px;height:6px;margin-top:10px;overflow:hidden">
+ <div style="background:var(--gold);height:100%;width:${pctComplete}%;transition:width .3s"></div>
+ </div>
+ </div>
+
+ <div style="background:rgba(91,201,125,.05);border:1px solid rgba(91,201,125,.2);border-radius:10px;padding:12px;font-size:12.5px;color:var(--t2);line-height:1.5;margin-bottom:14px">
+ <strong style="color:var(--green-ok)">Tus predicciones en este grupo son independientes.</strong><br>
+ Lo que predigas aquí no afecta tus otras quinielas (oficiales o privadas).
+ </div>
+
+ <button class="btn btn-primary btn-full" onclick="closeModal();selectLeague('${leagueId}')">
+ <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="margin-right:6px;vertical-align:-3px"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+ Predecir partidos
+ </button>`;
+ } else if(tab==='members'){
+ const members=league.members.map(uid=>{
+ let u=DB.users.find(usr=>usr.id===uid);
+ return {
+ id:uid,
+ name:u?.name||'Usuario',
+ email:u?.email||'',
+ isCommissioner:uid===league.commissionerId,
+ isMe:CUR&&uid===CUR.id
+ };
+ });
+ cont.innerHTML=`<div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:8px">${members.length}/${league.maxMembers} miembros</div>
+ <div style="background:var(--bg3);border:1px solid var(--b);border-radius:10px;padding:8px;max-height:280px;overflow-y:auto">
+ ${members.map((m,i)=>`<div style="display:flex;align-items:center;gap:10px;padding:8px 6px;${i<members.length-1?'border-bottom:1px solid var(--b)':''}">
+ <div style="width:32px;height:32px;border-radius:50%;background:var(--bg4);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--t2)">${initials(m.name)}</div>
+ <div style="flex:1;min-width:0">
+ <div style="font-size:12.5px;color:var(--t);font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${m.name}${m.isMe?' <span style="color:var(--gold);font-size:10px">(tú)</span>':''}</div>
+ ${m.email?`<div style="font-size:10px;color:var(--t3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${m.email}</div>`:''}
+ </div>
+ ${m.isCommissioner?'<span style="background:rgba(255,215,0,.15);color:var(--gold);font-size:9px;padding:3px 6px;border-radius:4px;font-weight:700;letter-spacing:.3px;text-transform:uppercase">Creador</span>':''}
+ </div>`).join('')}
+ </div>`;
+ } else if(tab==='code'){
+ cont.innerHTML=`<div style="background:var(--bg3);border:1px solid var(--b);border-radius:10px;padding:18px;margin-bottom:14px;text-align:center">
+ <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:10px">Código de invitación</div>
+ <div style="font-family:'Anton',sans-serif;font-size:32px;color:var(--gold);letter-spacing:3px;background:var(--bg4);padding:14px 18px;border-radius:10px;margin-bottom:14px;word-break:break-all">${league.code}</div>
+ <div style="display:flex;gap:8px">
+ <button class="btn btn-secondary" style="flex:1;font-size:12px" onclick="copyPrivateLeagueCode('${league.code}')">
+ <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;vertical-align:-2px"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+ Copiar
+ </button>
+ <button class="btn btn-primary" style="flex:1;font-size:12px;background:#25D366;border-color:#25D366;color:#fff" onclick="sharePrivateLeagueCode('${league.id}')">
+ <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="margin-right:4px;vertical-align:-2px"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448L.057 24z"/></svg>
+ Compartir
+ </button>
+ </div>
+ </div>
+ <p style="font-size:11px;color:var(--t3);text-align:center;line-height:1.4">Comparte este código con quien quieras invitar. Cualquiera con el código puede unirse.</p>`;
+ }
+}
+window.renderPrivateTab = renderPrivateTab;
+
+/* ── ADMIN: Vista informativa de quinielas privadas ── */
+function openPrivateLeaguesAdmin(){
+ if(!isAdmin(CUR)){toast('Solo admins','error');return;}
+ const all=(DB.privateLeagues||[]).filter(l=>l.status!=='rejected').sort((a,b)=>b.createdAt-a.createdAt);
+ const active=all.filter(l=>l.status==='active');
+ const totalMembers=active.reduce((s,l)=>s+l.members.length,0);
+ const last7Days=active.filter(l=>(Date.now()-l.createdAt)<7*86400000).length;
+ const rows=active.length>0
+ ? active.map(l=>{
+ const days=Math.floor((Date.now()-l.createdAt)/86400000);
+ return `<div style="background:var(--bg3);border:1px solid var(--b);border-left:3px solid var(--green-ok);border-radius:10px;padding:12px;margin-bottom:8px">
+ <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:6px">
+ <div style="flex:1">
+ <div style="font-size:14px;font-weight:700;color:var(--t)">${l.name}</div>
+ <div style="font-size:11px;color:var(--t2);margin-top:2px">Por <strong>${l.commissionerName}</strong> · ${l.commissionerEmail||'sin email'}</div>
+ <div style="font-size:11px;color:var(--t3);margin-top:1px">Creada hace ${days===0?'hoy':days+'d'} · ${l.members.length}/${l.maxMembers} miembros</div>
+ </div>
+ <code style="background:var(--bg4);color:var(--gold);font-family:'DM Mono',monospace;font-size:10px;padding:4px 8px;border-radius:4px;letter-spacing:1px">${l.code}</code>
+ </div>
+ ${l.description?`<div style="font-size:11.5px;color:var(--t2);margin-top:4px;padding:4px 0;font-style:italic">"${l.description}"</div>`:''}
+ </div>`;
+ }).join('')
+ : `<div style="padding:24px 16px;text-align:center;background:var(--bg3);border:1px dashed var(--b);border-radius:12px">
+ <div style="color:var(--t2);font-size:13px;font-weight:600">Aún no hay quinielas privadas</div>
+ <div style="color:var(--t3);font-size:11px;margin-top:4px">Cuando los usuarios creen quinielas, aparecerán aquí</div>
+ </div>`;
+ openModal(`<h3>Quinielas privadas</h3>
+ <p style="font-size:12px;color:var(--t2);margin-bottom:14px;line-height:1.5">Vista informativa. Las quinielas privadas son <strong style="color:var(--green-ok)">gratis</strong> para los usuarios y se activan automáticamente.</p>
+
+ <!-- Stats hero -->
+ <div style="background:linear-gradient(135deg,rgba(91,201,125,.08),rgba(91,201,125,.02));border:1px solid rgba(91,201,125,.2);border-radius:12px;padding:14px;margin-bottom:14px">
+ <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center">
+ <div>
+ <div style="font-family:'Anton',sans-serif;font-size:22px;color:var(--green-ok);line-height:1">${active.length}</div>
+ <div style="font-size:10px;color:var(--green-ok);text-transform:uppercase;letter-spacing:.5px;margin-top:2px">Activas</div>
+ </div>
+ <div>
+ <div style="font-family:'Anton',sans-serif;font-size:22px;color:var(--t);line-height:1">${totalMembers}</div>
+ <div style="font-size:10px;color:var(--t2);text-transform:uppercase;letter-spacing:.5px;margin-top:2px">Miembros</div>
+ </div>
+ <div>
+ <div style="font-family:'Anton',sans-serif;font-size:22px;color:var(--gold);line-height:1">${last7Days}</div>
+ <div style="font-size:10px;color:var(--gold);text-transform:uppercase;letter-spacing:.5px;margin-top:2px">Últimos 7d</div>
+ </div>
+ </div>
+ </div>
+
+ ${active.length>0?'<div style="font-size:11px;color:var(--green-ok);text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:8px">Todas las activas</div>':''}
+ ${rows}
+
+ <button class="btn btn-secondary btn-full" style="margin-top:14px" onclick="closeModal()">Cerrar</button>
+ `,{wide:true});
+}
+window.openPrivateLeaguesAdmin = openPrivateLeaguesAdmin;
+
+
 
 /* ════════════════════════════════════════════════════════
    v56: PREVIEW MODE - permitir que usuarios sin liga
@@ -9219,6 +9935,474 @@ function refreshUIForActiveLiga(){
 }
 window.refreshUIForActiveLiga = refreshUIForActiveLiga;
 
+/* ════════════════════════════════════════════════════════
+   v61: QUINIELAS PRIVADAS
+   - Cualquier user paga $10 USD para crear una liga privada
+   - Estado draft (creada pero no pagada) → active (pagada)
+   - Genera código único tipo WC-A3F2-X9K1 para invitar
+   - Otros users entran con el código (gratis para ellos)
+   - Compiten entre ellos en ranking aislado
+   - El creador (commissioner) tiene control de su liga
+   ════════════════════════════════════════════════════════ */
+
+const PRIVATE_LEAGUE_FEE = 10; // USD por crear
+const MAX_MEMBERS_PRIVATE = 100; // limite default
+const MAX_NAME_LEN = 40;
+const MAX_DESC_LEN = 200;
+
+/* Genera codigo unico tipo WC-A3F2-X9K1 (8 chars hex) */
+function generatePrivateLeagueCode(){
+ const hex='ABCDEFGHIJKLMNPQRSTUVWXYZ23456789'; // sin 0,O,1,I,L para evitar confusion
+ let code='WC-';
+ for(let i=0;i<4;i++)code+=hex[Math.floor(Math.random()*hex.length)];
+ code+='-';
+ for(let i=0;i<4;i++)code+=hex[Math.floor(Math.random()*hex.length)];
+ // Verificar que no exista
+ const existing=(DB.privateLeagues||[]).find(l=>l.code===code);
+ if(existing)return generatePrivateLeagueCode(); // reintenta
+ return code;
+}
+
+/* Crea una nueva quiniela privada (gratis, active inmediatamente) */
+async function createPrivateLeague(name, description){
+ if(!CUR){toast('Sesion no encontrada','error');return null;}
+ const cleanName=(name||'').trim().slice(0,MAX_NAME_LEN);
+ const cleanDesc=(description||'').trim().slice(0,MAX_DESC_LEN);
+ if(!cleanName){toast('Nombre obligatorio','error');return null;}
+ const id='priv_'+Date.now().toString(36)+Math.random().toString(36).slice(2,5);
+ const code=generatePrivateLeagueCode();
+ const league={
+ id, code,
+ name:cleanName,
+ description:cleanDesc,
+ commissionerId:CUR.id,
+ commissionerName:CUR.name,
+ commissionerEmail:CUR.email,
+ status:'active',
+ createdAt:Date.now(),
+ activatedAt:Date.now(),
+ members:[CUR.id],
+ maxMembers:MAX_MEMBERS_PRIVATE,
+ fee:0,
+ };
+ if(!DB.privateLeagues)DB.privateLeagues=[];
+ DB.privateLeagues.push(league);
+ // v63: crear quiniela vacía aislada para esta privada
+ if(!CUR.quinielas)CUR.quinielas={};
+ if(!CUR.quinielas[id])CUR.quinielas[id]=emptyQuiniela();
+ saveDB();
+ sync();
+ // Sync a Firestore (ahora real)
+ await syncPrivateLeagueToFirestore(league);
+ // Log
+ pushLog({
+ type:'private',action:'create',
+ targetId:CUR.id,targetName:CUR.name,
+ payload:{leagueId:id, code, name:cleanName}
+ });
+ return league;
+}
+window.createPrivateLeague = createPrivateLeague;
+
+/* Busca una liga privada por su codigo (local + Firestore) */
+function findPrivateLeagueByCode(code){
+ if(!code)return null;
+ const cleanCode=code.toUpperCase().trim();
+ return (DB.privateLeagues||[]).find(l=>l.code===cleanCode);
+}
+window.findPrivateLeagueByCode = findPrivateLeagueByCode;
+
+/* v63: Versión async que busca primero local, luego Firestore */
+async function findPrivateLeagueByCodeAsync(code){
+ if(!code)return null;
+ const cleanCode=code.toUpperCase().trim();
+ // 1. Buscar en local
+ const local=findPrivateLeagueByCode(cleanCode);
+ if(local)return local;
+ // 2. Buscar en Firestore
+ if(!window.fsMode||!fb?.db)return null;
+ try{
+ const docs=await fsList('privateLeagues',{
+ where:[['code','==',cleanCode]],
+ limit:1
+ });
+ if(!docs||docs.length===0)return null;
+ const remote=docs[0];
+ // Guardar en local
+ if(!DB.privateLeagues)DB.privateLeagues=[];
+ const idx=DB.privateLeagues.findIndex(l=>l.id===remote.id);
+ if(idx>=0)DB.privateLeagues[idx]=remote;
+ else DB.privateLeagues.push(remote);
+ saveDB();
+ return remote;
+ }catch(err){
+ console.error('[v63] Error buscando código en Firestore:', err.code||err.message);
+ return null;
+ }
+}
+window.findPrivateLeagueByCodeAsync = findPrivateLeagueByCodeAsync;
+
+/* v63: Cargar las quinielas privadas del usuario desde Firestore al login */
+async function loadMyPrivateLeaguesFromFirestore(){
+ if(!fb||!fb.db||!CUR){
+ console.log('[v63] No carga privateLeagues - sin Firestore o sin user');
+ return;
+ }
+ try{
+ // Buscar todas las ligas donde estoy en members[]
+ const docs=await fsList('privateLeagues',{
+ where:[['members','array-contains',CUR.id]]
+ });
+ if(!DB.privateLeagues)DB.privateLeagues=[];
+ docs.forEach(remote=>{
+ const idx=DB.privateLeagues.findIndex(l=>l.id===remote.id);
+ if(idx>=0){
+ DB.privateLeagues[idx]=remote;
+ } else {
+ DB.privateLeagues.push(remote);
+ }
+ // v63: asegurar quiniela aislada local existe
+ if(!CUR.quinielas)CUR.quinielas={};
+ if(!CUR.quinielas[remote.id])CUR.quinielas[remote.id]=emptyQuiniela();
+ });
+ saveDB();
+ sync();
+ console.log(`[v63] Cargadas ${docs.length} quinielas privadas desde Firestore`);
+ } catch(err){
+ console.error('[v63] Error cargando privateLeagues:', err);
+ }
+}
+window.loadMyPrivateLeaguesFromFirestore = loadMyPrivateLeaguesFromFirestore;
+
+/* v63: Listener en tiempo real para quinielas privadas del usuario */
+let _privateLeaguesUnsub = null;
+function startPrivateLeaguesListener(){
+ if(_privateLeaguesUnsub){
+ try{_privateLeaguesUnsub()}catch(e){}
+ _privateLeaguesUnsub=null;
+ }
+ if(!fb||!fb.db||!CUR)return;
+ try{
+ _privateLeaguesUnsub=fsListen('privateLeagues',(docs)=>{
+ if(!DB.privateLeagues)DB.privateLeagues=[];
+ docs.forEach(remote=>{
+ if(remote.members&&remote.members.includes(CUR.id)){
+ const idx=DB.privateLeagues.findIndex(l=>l.id===remote.id);
+ if(idx>=0){
+ DB.privateLeagues[idx]={...DB.privateLeagues[idx],...remote};
+ } else {
+ DB.privateLeagues.push(remote);
+ }
+ // Asegurar quiniela aislada local
+ if(!CUR.quinielas)CUR.quinielas={};
+ if(!CUR.quinielas[remote.id])CUR.quinielas[remote.id]=emptyQuiniela();
+ }
+ });
+ // Eliminar las que ya no estoy
+ DB.privateLeagues=DB.privateLeagues.filter(l=>{
+ const remote=docs.find(d=>d.id===l.id);
+ if(remote&&!remote.members.includes(CUR.id))return false;
+ return true;
+ });
+ saveDB();
+ // Re-render si estoy en perfil o mi quiniela
+ const active=document.querySelector('.page.active');
+ if(active){
+ if(active.id==='page-perfil'&&typeof renderMyPrivateLeagues==='function')renderMyPrivateLeagues();
+ if(active.id==='page-miquiniela'&&typeof renderMyLeagues==='function')renderMyLeagues();
+ }
+ });
+ console.log('[v63] Listener privateLeagues iniciado');
+ } catch(err){
+ console.error('[v63] Error iniciando listener:', err);
+ }
+}
+window.startPrivateLeaguesListener = startPrivateLeaguesListener;
+
+
+/* v63: Cargar predicciones de los miembros de una quiniela privada para ranking */
+async function loadGroupPredictionsForRanking(leagueId){
+ if(!fb||!fb.db){console.warn('[v63 ranking] Firestore no disponible');return [];}
+ const league=(DB.privateLeagues||[]).find(l=>l.id===leagueId);
+ if(!league)return [];
+ const memberIds=league.members||[];
+ const results=[];
+ for(const memberId of memberIds){
+ try{
+ const allPreds=await fsList(`users/${memberId}/predictions`,{
+ where:[['quinielaId','==',leagueId]]
+ });
+ const tournamentDocs=await fsList(`users/${memberId}/tournament`,{
+ where:[['quinielaId','==',leagueId]]
+ });
+ const q=emptyQuiniela();
+ (allPreds||[]).forEach(p=>{
+ if(p.type==='group'&&p.matchKey)q.scores[p.matchKey]={a:p.scoreA||'',b:p.scoreB||''};
+ else if(p.type==='ko'&&p.matchKey)q.ko[p.matchKey]={a:p.scoreA||'',b:p.scoreB||''};
+ });
+ if(tournamentDocs&&tournamentDocs[0])q.topscorer=tournamentDocs[0].topscorer||'';
+ q.pts=calcQuinielaPoints(q);
+ let userName='Usuario',userEmail='';
+ const localUser=DB.users.find(u=>u.id===memberId);
+ if(localUser){
+ userName=localUser.name||localUser.email||'Usuario';
+ userEmail=localUser.email||'';
+ } else {
+ try{
+ const remoteUser=await fsGet(`users/${memberId}`);
+ if(remoteUser){userName=remoteUser.name||remoteUser.email||'Usuario';userEmail=remoteUser.email||'';}
+ }catch(e){}
+ }
+ const totalPreds=Object.keys(q.scores).length+Object.keys(q.ko).length;
+ const pctComplete=Math.min(100,Math.round((totalPreds/104)*100));
+ results.push({
+ userId:memberId,userName,userEmail,
+ isCommissioner:league.commissionerId===memberId,
+ isMe:CUR&&memberId===CUR.id,
+ pts:q.pts,totalPreds,pctComplete
+ });
+ } catch(err){
+ console.warn('[v63 ranking] Error member',memberId,err.message);
+ const localUser=DB.users.find(u=>u.id===memberId);
+ results.push({
+ userId:memberId,
+ userName:localUser?.name||'Usuario',
+ userEmail:localUser?.email||'',
+ isCommissioner:league.commissionerId===memberId,
+ isMe:CUR&&memberId===CUR.id,
+ pts:0,totalPreds:0,pctComplete:0
+ });
+ }
+ }
+ results.sort((a,b)=>b.pts-a.pts);
+ return results;
+}
+window.loadGroupPredictionsForRanking = loadGroupPredictionsForRanking;
+
+
+async function joinPrivateLeague(code){
+ if(!CUR){toast('Sesion no encontrada','error');return null;}
+ // v63: Buscar primero en local, después en Firestore
+ const league=await findPrivateLeagueByCodeAsync(code);
+ if(!league){toast('Codigo no encontrado','error');return null;}
+ if(league.status==='rejected'){
+ toast('Esta quiniela ya no está disponible','error');
+ return null;
+ }
+ if(league.members.includes(CUR.id)){
+ toast('Ya estas en esta quiniela','success');
+ return league;
+ }
+ if(league.members.length>=league.maxMembers){
+ toast('Esta quiniela esta llena ('+league.maxMembers+' miembros)','error');
+ return null;
+ }
+ league.members.push(CUR.id);
+ // v63: crear quiniela vacía aislada para mí
+ if(!CUR.quinielas)CUR.quinielas={};
+ if(!CUR.quinielas[league.id])CUR.quinielas[league.id]=emptyQuiniela();
+ saveDB();
+ sync();
+ // Sync a Firestore
+ await syncPrivateLeagueToFirestore(league);
+ pushLog({
+ type:'private',action:'join',
+ targetId:CUR.id,targetName:CUR.name,
+ payload:{leagueId:league.id, code:league.code, name:league.name}
+ });
+ toast('Te uniste a "'+league.name+'"','success');
+ return league;
+}
+window.joinPrivateLeague = joinPrivateLeague;
+
+/* Sale de una liga privada (no es el commissioner) */
+async function leavePrivateLeague(leagueId){
+ if(!CUR)return;
+ const league=(DB.privateLeagues||[]).find(l=>l.id===leagueId);
+ if(!league){toast('Quiniela no encontrada','error');return;}
+ if(league.commissionerId===CUR.id){
+ toast('Eres el creador. No puedes salir, debes eliminarla.','error');
+ return;
+ }
+ if(!confirm('¿Salir de "'+league.name+'"? Perderas tu progreso en esta quiniela.'))return;
+ league.members=league.members.filter(id=>id!==CUR.id);
+ saveDB();
+ // Sync a Firestore
+ await syncPrivateLeagueToFirestore(league);
+ // Eliminar de mi DB local también
+ DB.privateLeagues=DB.privateLeagues.filter(l=>l.id!==leagueId);
+ saveDB();
+ pushLog({
+ type:'private',action:'leave',
+ targetId:CUR.id,targetName:CUR.name,
+ payload:{leagueId:league.id, code:league.code}
+ });
+ toast('Saliste de la quiniela','success');
+ if(typeof renderMyLeagues==='function')renderMyLeagues();
+ if(typeof renderMyPrivateLeagues==='function')renderMyPrivateLeagues();
+}
+window.leavePrivateLeague = leavePrivateLeague;
+
+/* Devuelve las ligas privadas del usuario actual */
+function getMyPrivateLeagues(){
+ if(!CUR)return [];
+ return (DB.privateLeagues||[]).filter(l=>l.members.includes(CUR.id));
+}
+window.getMyPrivateLeagues = getMyPrivateLeagues;
+
+/* Devuelve las ligas privadas que YO cree */
+function getLeaguesIComissioner(){
+ if(!CUR)return [];
+ return (DB.privateLeagues||[]).filter(l=>l.commissionerId===CUR.id);
+}
+window.getLeaguesIComissioner = getLeaguesIComissioner;
+
+/* ────── MODALES UI ────── */
+
+/* Modal: crear quiniela privada (gratis) */
+function openCreatePrivateLeagueModal(){
+ if(!CUR){toast('Sesion no encontrada','error');return;}
+ if(!CUR.isAdmin && !isMyEmailVerified()){
+ toast('Verifica tu email primero','error');
+ return;
+ }
+ openModal(`<h3>Crear quiniela privada</h3>
+
+ <!-- Hero gratis -->
+ <div style="background:linear-gradient(135deg,rgba(91,201,125,.12),rgba(91,201,125,.02));border:1px solid rgba(91,201,125,.3);border-radius:12px;padding:14px;margin-bottom:14px;text-align:center">
+ <div style="font-size:11px;color:var(--green-ok);text-transform:uppercase;letter-spacing:1px;font-weight:800">100% Gratis</div>
+ <div style="font-family:'Anton',sans-serif;font-size:28px;color:var(--green-ok);line-height:1;margin-top:4px">$0</div>
+ <div style="font-size:11px;color:var(--t2);margin-top:6px">Hasta ${MAX_MEMBERS_PRIVATE} miembros · Sin caducidad</div>
+ </div>
+
+ <p style="font-size:13px;color:var(--t2);margin-bottom:14px;line-height:1.5">Crea una quiniela cerrada para tus amigos, familia, oficina, etc. Compiten entre ustedes con su propio código. Comparte el código y listo.</p>
+
+ <div class="field">
+ <label>Nombre de tu quiniela <span style="color:var(--red)">*</span></label>
+ <input type="text" id="priv-name" placeholder="Familia González · Mundial 2026" maxlength="${MAX_NAME_LEN}" autocomplete="off">
+ <p style="font-size:11px;color:var(--t3);margin-top:4px">Lo verán todos los miembros. Hasta ${MAX_NAME_LEN} caracteres.</p>
+ </div>
+
+ <div class="field">
+ <label>Descripción <span style="color:var(--t3);font-weight:400">(opcional)</span></label>
+ <input type="text" id="priv-desc" placeholder="La de la familia · 5 dólares al ganador (off-app)" maxlength="${MAX_DESC_LEN}" autocomplete="off">
+ <p style="font-size:11px;color:var(--t3);margin-top:4px">Si quieren apostar entre ustedes, coordinen el dinero por su cuenta.</p>
+ </div>
+
+ <p class="err" id="priv-err" style="color:var(--red);font-size:12px;min-height:16px"></p>
+
+ <div class="modal-btns">
+ <button class="btn btn-primary" style="flex:1" onclick="confirmCreatePrivateLeague()">Crear quiniela</button>
+ <button class="btn btn-secondary" style="flex:1" onclick="closeModal()">Cancelar</button>
+ </div>
+ `);
+ setTimeout(()=>{document.getElementById('priv-name')?.focus()},100);
+}
+window.openCreatePrivateLeagueModal = openCreatePrivateLeagueModal;
+
+async function confirmCreatePrivateLeague(){
+ const name=document.getElementById('priv-name')?.value||'';
+ const desc=document.getElementById('priv-desc')?.value||'';
+ const errEl=document.getElementById('priv-err');
+ if(!name.trim()){
+ if(errEl)errEl.textContent='El nombre es obligatorio';
+ return;
+ }
+ // Estado de carga
+ if(errEl){errEl.textContent='Creando quiniela...';errEl.style.color='var(--t2)';}
+ const league=await createPrivateLeague(name, desc);
+ if(!league){
+ if(errEl)errEl.style.color='var(--red)';
+ return;
+ }
+ closeModal();
+ openPrivateLeagueCreatedModal(league.id);
+ if(typeof renderMyPrivateLeagues==='function')renderMyPrivateLeagues();
+}
+window.confirmCreatePrivateLeague = confirmCreatePrivateLeague;
+
+/* Modal: quiniela creada con éxito - mostrar código y opciones */
+function openPrivateLeagueCreatedModal(leagueId){
+ const league=(DB.privateLeagues||[]).find(l=>l.id===leagueId);
+ if(!league){toast('Quiniela no encontrada','error');return;}
+ openModal(`<h3>¡Quiniela creada!</h3>
+
+ <div style="background:linear-gradient(135deg,rgba(91,201,125,.15),rgba(91,201,125,.02));border:1px solid rgba(91,201,125,.3);border-radius:12px;padding:16px;margin-bottom:14px;text-align:center">
+ <div style="font-size:11px;color:var(--green-ok);text-transform:uppercase;letter-spacing:1px;font-weight:800;margin-bottom:4px">${league.name}</div>
+ <div style="font-size:11px;color:var(--t2);margin-bottom:10px">Estado: <strong style="color:var(--green-ok)">Activa · Lista para invitar</strong></div>
+ <div style="font-family:'Anton',sans-serif;font-size:28px;color:var(--gold);letter-spacing:3px;background:var(--bg4);padding:12px 16px;border-radius:8px;display:inline-block">${league.code}</div>
+ <div style="font-size:10px;color:var(--t3);margin-top:6px">Tu código de invitación</div>
+ </div>
+
+ <p style="font-size:13px;color:var(--t);line-height:1.5;margin-bottom:14px">Comparte este código con tus amigos. Cualquiera con el código podrá unirse a tu quiniela.</p>
+
+ <div style="display:flex;gap:8px;margin-bottom:14px">
+ <button class="btn btn-secondary" style="flex:1;font-size:12px" onclick="copyPrivateLeagueCode('${league.code}')">
+ <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;vertical-align:-2px"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+ Copiar código
+ </button>
+ <button class="btn btn-primary" style="flex:1;font-size:12px;background:#25D366;border-color:#25D366;color:#fff" onclick="sharePrivateLeagueCode('${league.id}')">
+ <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="margin-right:4px;vertical-align:-2px"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448L.057 24z"/></svg>
+ Compartir
+ </button>
+ </div>
+
+ <div style="background:var(--bg3);border:1px solid var(--b);border-radius:10px;padding:12px;margin-bottom:14px;font-size:12px;color:var(--t2);line-height:1.5">
+ <strong style="color:var(--t)">Recuerda:</strong><br>
+ • La quiniela está en tu <strong>perfil</strong> en cualquier momento.<br>
+ • Si quieren apostar dinero entre ustedes, coordinen <strong>off-app</strong>.<br>
+ • Cualquier persona con el código puede unirse.
+ </div>
+
+ <button class="btn btn-secondary btn-full" onclick="closeModal()">Listo</button>
+ `);
+}
+window.openPrivateLeagueCreatedModal = openPrivateLeagueCreatedModal;
+
+/* Modal: unirse con código */
+function openJoinPrivateLeagueModal(){
+ if(!CUR){toast('Sesion no encontrada','error');return;}
+ openModal(`<h3>Unirme a quiniela privada</h3>
+ <p style="font-size:13px;color:var(--t2);margin-bottom:14px;line-height:1.5">Si alguien te compartió un código, ingrésalo aquí para unirte.</p>
+
+ <div class="field">
+ <label>Código de la quiniela</label>
+ <input type="text" id="priv-code-input" placeholder="WC-XXXX-XXXX" maxlength="12" style="font-family:'DM Mono',monospace;letter-spacing:2px;text-transform:uppercase" autocomplete="off">
+ <p style="font-size:11px;color:var(--t3);margin-top:4px">Formato: WC-XXXX-XXXX</p>
+ </div>
+
+ <p class="err" id="priv-join-err" style="color:var(--red);font-size:12px;min-height:16px"></p>
+
+ <div class="modal-btns">
+ <button class="btn btn-primary" style="flex:1" onclick="confirmJoinPrivateLeague()">Unirme</button>
+ <button class="btn btn-secondary" style="flex:1" onclick="closeModal()">Cancelar</button>
+ </div>
+ `);
+ setTimeout(()=>{document.getElementById('priv-code-input')?.focus()},100);
+}
+window.openJoinPrivateLeagueModal = openJoinPrivateLeagueModal;
+
+async function confirmJoinPrivateLeague(){
+ const code=document.getElementById('priv-code-input')?.value||'';
+ const errEl=document.getElementById('priv-join-err');
+ if(!code.trim()){
+ if(errEl)errEl.textContent='Ingresa un código';
+ return;
+ }
+ // Mostrar estado de carga
+ if(errEl){errEl.textContent='Buscando código...';errEl.style.color='var(--t2)';}
+ const league=await joinPrivateLeague(code);
+ if(league){
+ closeModal();
+ if(typeof renderMyLeagues==='function')renderMyLeagues();
+ if(typeof renderPerfil==='function')renderPerfil();
+ if(typeof renderMyPrivateLeagues==='function')renderMyPrivateLeagues();
+ } else {
+ if(errEl)errEl.style.color='var(--red)';
+ }
+}
+window.confirmJoinPrivateLeague = confirmJoinPrivateLeague;
+
 function renderMQPreview(){
  // En "Mi Quiniela" sin liga: mostrar mensaje + cards de tiers debajo
  const cont=document.getElementById('mq-content');
@@ -9230,7 +10414,7 @@ function renderMQPreview(){
  <div style="background:var(--bg3);border:1px solid var(--b);border-radius:12px;padding:24px;text-align:center;margin-bottom:14px">
  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:10px;opacity:.7"><path d="M6 9H3l1 5h2m12-5h3l-1 5h-2M6 9V4h12v5M6 9c0 4.418 2.686 8 6 8s6-3.582 6-8M9 20h6M12 18v2"/></svg>
  <div style="font-size:15px;font-weight:700;color:var(--t);margin-bottom:6px">Sin quiniela activa</div>
- <p style="font-size:12.5px;color:var(--t2);line-height:1.5;max-width:300px;margin:0 auto 14px">Inscríbete a una liga para empezar a llenar tu quiniela. Top 3 ganan premios reales.</p>
+ <p style="font-size:12.5px;color:var(--t2);line-height:1.5;max-width:300px;margin:0 auto 14px">Inscríbete a una quiniela para empezar a predecir. Top 3 ganan premios reales.</p>
  <button class="btn btn-primary btn-full" onclick="navTo('dashboard')" style="max-width:240px;margin:0 auto">Ver ligas disponibles</button>
  </div>
  <div style="font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;font-weight:700;margin:14px 0 8px;text-align:center">Mientras tanto · Explora</div>
@@ -9621,7 +10805,7 @@ function openFAQModal(){
  cat:'Inscripciones',
  ico:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>',
  items:[
- {q:'Como me inscribo a una liga?',a:'Click en cualquier card de liga ($20, $50, $100 o $500) en el Home. Se abre un modal donde el admin te dice como pagar (Zelle, Binance, Pago Movil o efectivo). Una vez pagues, el admin aprueba tu inscripcion manualmente.'},
+ {q:'¿Cómo me inscribo a una quiniela?',a:'Haz click en cualquier card de quiniela ($20, $50, $100 o $500) en el Home. Se abre un modal donde el admin te dice como pagar (Zelle, Binance, Pago Movil o efectivo). Una vez pagues, el admin aprueba tu inscripcion manualmente.'},
  {q:'Cuanto tarda en aprobarse mi inscripcion?',a:'Normalmente 1-24 horas despues de que el admin verifica tu pago. Si tarda mas, escribe al WhatsApp del admin.'},
  {q:'Puedo predecir antes de ser aprobado?',a:'Si. Tus predicciones se guardan desde que te registras. La aprobacion solo es necesaria para optar al premio.'},
  {q:'Puedo tener varias inscripciones?',a:'Si. Puedes inscribirte multiples veces a la misma liga (cada una es una quiniela independiente) o a ligas diferentes.'},
@@ -9656,7 +10840,7 @@ function openFAQModal(){
  items:[
  {q:'Que pasa si pierdo mi contrasena?',a:'En la pantalla de login click "Olvidaste tu contrasena". Te llega un email de Firebase para crear una nueva.'},
  {q:'Puedo usar la App desde mi celular y mi compu al mismo tiempo?',a:'Si, con la misma cuenta. Tus datos se sincronizan en tiempo real entre dispositivos.'},
- {q:'Por que necesito verificar mi email?',a:'Para inscribirte a ligas con dinero real. Es un requisito anti-fraude. La verificacion es gratis: te llega un email con un link, click y listo.'},
+ {q:'Por que necesito verificar mi email?',a:'Para inscribirte a quinielas con dinero real. Es un requisito anti-fraude. La verificacion es gratis: te llega un email con un link, click y listo.'},
  {q:'Que pasa si FIFA cambia el calendario?',a:'El admin actualiza la App. Tus predicciones existentes se mantienen.'},
  {q:'Mis datos estan seguros?',a:'Si. Usamos Firebase de Google (mismo sistema que apps bancarias). No vendemos datos. No guardamos info de tarjetas (no procesamos pagos directos).'},
  {q:'Donde escribo si tengo un problema?',a:'Al WhatsApp del admin que aparece en cualquier modal de inscripcion. Respondemos en horario laboral.'},
@@ -9737,7 +10921,7 @@ function openAboutModal(){
  <!-- Que es -->
  <div style="font-size:11px;color:var(--accent);text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:8px">Que es WC26</div>
  <p style="font-size:13px;color:var(--t);line-height:1.55;margin-bottom:14px">
- Quiniela del Mundial FIFA 2026 con dinero real. Predice los resultados de los 104 partidos del torneo, gana puntos, y compite por premios reales en pools que dependen de la liga que elijas ($20, $50, $100 o $500).
+ Quiniela del Mundial FIFA 2026 con dinero real. Predice los resultados de los 104 partidos del torneo, gana puntos, y compite por premios reales en pools que dependen de la quiniela que elijas ($20, $50, $100 o $500).
  </p>
 
  <!-- Como funciona -->
@@ -9745,7 +10929,7 @@ function openAboutModal(){
  <div style="background:var(--bg3);border:1px solid var(--b);border-radius:10px;padding:14px;margin-bottom:14px">
  <div style="display:flex;gap:10px;margin-bottom:10px">
  <div style="width:28px;height:28px;border-radius:50%;background:rgba(255,215,0,.1);border:1px solid rgba(255,215,0,.3);display:flex;align-items:center;justify-content:center;color:var(--accent);font-weight:800;font-size:12px;flex-shrink:0">1</div>
- <div style="font-size:12.5px;color:var(--t2);line-height:1.5"><strong style="color:var(--t)">Inscribete</strong> a una liga ($20-$500). Coordina el pago con el admin via Zelle, Binance, Pago Movil o efectivo.</div>
+ <div style="font-size:12.5px;color:var(--t2);line-height:1.5"><strong style="color:var(--t)">Inscribete</strong> a una quiniela ($20-$500). Coordina el pago con el admin via Zelle, Binance, Pago Movil o efectivo.</div>
  </div>
  <div style="display:flex;gap:10px;margin-bottom:10px">
  <div style="width:28px;height:28px;border-radius:50%;background:rgba(255,215,0,.1);border:1px solid rgba(255,215,0,.3);display:flex;align-items:center;justify-content:center;color:var(--accent);font-weight:800;font-size:12px;flex-shrink:0">2</div>
@@ -10082,7 +11266,7 @@ function getMyRankInTier(tier){
 function openMyStatsModal(quinielaId){
  if(!CUR)return;
  quinielaId = quinielaId || CUR.activeQuinielaId;
- if(!quinielaId){toast('Inscríbete primero a una liga','error');return;}
+ if(!quinielaId){toast('Inscríbete primero a una quiniela','error');return;}
  const entry = (CUR.entries||[]).find(e=>e.quinielaId===quinielaId);
  if(!entry){toast('Quiniela no encontrada','error');return;}
  const stats = computeMyStats(quinielaId);
