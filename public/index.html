@@ -1742,7 +1742,7 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
  <div class="ko-rounds" id="ko-container" oninput="if(event.target.classList.contains('ko-inp'))onKOInputChange(event.target)"></div>
  </div>
 
- <button class="mq-ai" onclick="askAI()" style="margin-top:18px;margin-bottom:8px">Que la IA analice mi quiniela</button>
+ <button class="mq-ai" id="btn-ia-quiniela" onclick="askAI()" style="margin-top:18px;margin-bottom:8px">Que la IA analice mi quiniela</button>
  </div>
  </div>
 
@@ -4690,6 +4690,16 @@ function sync(){const i=DB.users.findIndex(u=>u.id===CUR.id);if(i>=0)DB.users[i]
  En el nuevo modelo NO hay quiniela 'free' por defecto.
  El usuario debe estar en al menos una liga (tier o privada) para predecir.
  Si no tiene ninguna, getActiveQ devuelve null y la UI muestra el estado vacío. */
+/* v59: Cache de quiniela "preview" — vacía, solo lectura */
+let _PREVIEW_Q = null;
+function getPreviewQ(){
+ if(!_PREVIEW_Q){
+ _PREVIEW_Q = emptyQuiniela();
+ _PREVIEW_Q.__preview = true; // bandera por si alguien quiere distinguir
+ }
+ return _PREVIEW_Q;
+}
+
 function getActiveQ(){
  if(!CUR)return null;
  if(!CUR.quinielas)CUR.quinielas={};
@@ -4700,8 +4710,11 @@ function getActiveQ(){
  // Si no, intenta auto-elegir la primera liga disponible
  const ids=getAllQuinielaIds();
  if(ids.length===0){
+ // v59: PREVIEW MODE - devolver quiniela vacia para que las pantallas
+ // de Grupos/Mi Quiniela puedan renderizar el calendario (read-only).
+ // Los inputs siguen bloqueados por onScoreChange/onKOInputChange.
  CUR.activeQuinielaId=null;
- return null;
+ return getPreviewQ();
  }
  const firstId=ids[0];
  CUR.activeQuinielaId=firstId;
@@ -4789,6 +4802,7 @@ function navTo(page){
  renderActiveLigaHeader('grupos-liga-hd');
  // Arranca en modo Próximos (default)
  switchGroupMode(_currentGroupMode||'upcoming');
+ if(typeof refreshUIForActiveLiga==='function')refreshUIForActiveLiga();
  } else {
  // v56: Sin liga, mostramos el calendario completo en modo preview (read-only)
  document.getElementById('grupos-content').classList.remove('hidden');
@@ -6465,7 +6479,10 @@ function renderRanking(){
  const myApprovedTiers=[...new Set(myEntries.filter(e=>(e.status||'pending')==='approved').map(e=>e.tier))];
  const myPendingTiers=[...new Set(myEntries.filter(e=>(e.status||'pending')==='pending').map(e=>e.tier))];
 
- // Default: tier de la quiniela activa, si no hay → primer aprobada → primer pending
+ // v59: Si el usuario no tiene NINGUNA liga, modo preview con todas las opciones
+ const isPreview=myApprovedTiers.length===0&&myPendingTiers.length===0;
+
+ // Default: tier de la quiniela activa, si no hay → primer aprobada → primer pending → preview default
  if(!_rankSelectedTier){
  const activeId=CUR&&CUR.activeQuinielaId;
  if(activeId){
@@ -6474,13 +6491,21 @@ function renderRanking(){
  }
  if(!_rankSelectedTier&&myApprovedTiers.length)_rankSelectedTier=myApprovedTiers[0];
  if(!_rankSelectedTier&&myPendingTiers.length)_rankSelectedTier=myPendingTiers[0];
+ // En preview: arrancar con $50 default
+ if(!_rankSelectedTier&&isPreview)_rankSelectedTier='50';
  }
 
  // ─── Render TABS de ligas ───
  const tabsEl=document.getElementById('rank-tabs');
  const allTiers=Object.keys(TIER_NAMES); // ['20','50','100','500']
  if(tabsEl){
- if(myApprovedTiers.length===0&&myPendingTiers.length===0){
+ if(isPreview){
+ // En preview, mostrar TODAS las quinielas como tabs
+ tabsEl.innerHTML=allTiers.map(t=>{
+ const isActive=t===_rankSelectedTier;
+ return `<button class="rank-tab${isActive?' active':''}" onclick="selectRankTier('${t}')">${TIER_NAMES[t]}</button>`;
+ }).join('');
+ } else if(myApprovedTiers.length===0&&myPendingTiers.length===0){
  tabsEl.innerHTML='';
  } else {
  tabsEl.innerHTML=allTiers.map(t=>{
@@ -6496,13 +6521,13 @@ function renderRanking(){
  }
  }
 
- // ─── Si el usuario no esta en ninguna liga ───
+ // En preview SIEMPRE habrá un tier seleccionado, así que solo el caso real "sin liga" (no debería ocurrir)
  if(!_rankSelectedTier){
- document.getElementById('rank-sub').textContent='Sin liga activa';
+ document.getElementById('rank-sub').textContent='Sin quiniela activa';
  const banner=document.getElementById('rank-prize-banner');
  if(banner)banner.outerHTML='<div class="rank-prize-banner" id="rank-prize-banner"></div>';
  document.getElementById('rank-prize-banner').className='rank-prize-empty';
- document.getElementById('rank-prize-banner').textContent='Inscribete en una liga con premio para ver el ranking.';
+ document.getElementById('rank-prize-banner').textContent='Inscribete en una quiniela con premio para ver el ranking.';
  document.getElementById('rank-podium').innerHTML='';
  document.getElementById('rank-table').innerHTML='';
  return;
@@ -6554,10 +6579,35 @@ function renderRanking(){
  }
  }
 
+ // v59: Banner preview en ranking si el user no esta inscrito
+ if(isPreview){
+ const subEl=document.getElementById('rank-sub');
+ if(subEl)subEl.innerHTML=`<span style="color:var(--gold);font-weight:600">Modo vista previa</span> · ${tierName}`;
+ // Reemplazar prize banner por uno con CTA
+ const banner2=document.getElementById('rank-prize-banner');
+ if(banner2){
+ banner2.outerHTML=`<div class="rank-prize-banner" id="rank-prize-banner" style="cursor:pointer;flex-direction:column;align-items:flex-start;gap:8px" onclick="navTo('dashboard')">
+ <div style="display:flex;justify-content:space-between;align-items:center;width:100%">
+ <div class="rank-prize-info">
+ <div class="rank-prize-label">Premio acumulado</div>
+ <div class="rank-prize-amount">$${prizePool.toLocaleString()}</div>
+ <div class="rank-prize-sub">${approvedCount} ${approvedCount===1?'inscripcion aprobada':'inscripciones aprobadas'} · Reparto 50/30/20 top 3</div>
+ </div>
+ <div class="rank-prize-icon">
+ <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H3l1 5h2m12-5h3l-1 5h-2M6 9V4h12v5M6 9c0 4.418 2.686 8 6 8s6-3.582 6-8M9 20h6M12 18v2"/></svg>
+ </div>
+ </div>
+ <div style="width:100%;padding-top:8px;border-top:1px solid rgba(255,215,0,.18);font-size:11px;color:var(--t2);text-align:center">
+ No estas inscrito · <strong style="color:var(--gold)">Click para inscribirte →</strong>
+ </div>
+ </div>`;
+ }
+ }
+
  // ─── Podio top 3 ───
  const podiumEl=document.getElementById('rank-podium');
  if(sorted.length===0){
- podiumEl.innerHTML=`<div class="podium-empty" style="text-align:center;width:100%;padding:24px 0;color:var(--t2);font-size:13px">Aun no hay competidores en esta liga.</div>`;
+ podiumEl.innerHTML=`<div class="podium-empty" style="text-align:center;width:100%;padding:24px 0;color:var(--t2);font-size:13px">${isPreview?'Aún no hay competidores en esta quiniela. Sé el primero en inscribirte.':'Aun no hay competidores en esta liga.'}</div>`;
  } else {
  const positions=[
  {idx:1,medal:'2',cls:'podium-spot-2 podium-medal-2'},
@@ -9152,12 +9202,22 @@ function renderPreviewBanner(elId){
  </div>
  <div style="flex:1;min-width:0">
  <div style="font-size:13px;font-weight:700;color:var(--t)">Modo vista previa</div>
- <div style="font-size:11.5px;color:var(--t2);margin-top:2px;line-height:1.4">Inscríbete a una liga para guardar tus predicciones y competir.</div>
+ <div style="font-size:11.5px;color:var(--t2);margin-top:2px;line-height:1.4">Inscríbete a una quiniela para guardar tus predicciones y competir.</div>
  </div>
- <button class="btn btn-primary" onclick="navTo('dashboard')" style="flex-shrink:0;padding:8px 14px;font-size:12px;font-weight:700">Ver ligas</button>
+ <button class="btn btn-primary" onclick="navTo('dashboard')" style="flex-shrink:0;padding:8px 14px;font-size:12px;font-weight:700">Ver quinielas</button>
  </div>`;
+ // Esconder boton IA (no aplica en preview)
+ const iaBtn=document.getElementById('btn-ia-quiniela');
+ if(iaBtn)iaBtn.style.display='none';
 }
 window.renderPreviewBanner = renderPreviewBanner;
+
+/* v59: helper para mostrar/ocultar boton IA segun preview o no */
+function refreshUIForActiveLiga(){
+ const iaBtn=document.getElementById('btn-ia-quiniela');
+ if(iaBtn)iaBtn.style.display=hasActiveLiga()?'':'none';
+}
+window.refreshUIForActiveLiga = refreshUIForActiveLiga;
 
 function renderMQPreview(){
  // En "Mi Quiniela" sin liga: mostrar mensaje + cards de tiers debajo
