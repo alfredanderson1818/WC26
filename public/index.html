@@ -273,6 +273,12 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
 .lt.c .lt-users-fill{background:var(--gold-soft)}
 .lt.d .lt-users-fill{background:var(--gold)}
 .lt-hot{position:absolute;top:8px;right:8px;font-size:9px;font-weight:800;background:var(--gold);color:#0A0A0A;padding:3px 7px;border-radius:10px;letter-spacing:.5px;text-transform:uppercase}
+/* v72: Card de quiniela privada (gratis, verde) */
+.lt-private{border-color:rgba(0,168,107,.25)!important;background:linear-gradient(180deg,rgba(0,168,107,.04),rgba(0,168,107,.01))!important}
+.lt-private:hover{border-color:rgba(0,168,107,.45)!important}
+.lt-private::before{background:var(--green-ok)!important;opacity:1!important;box-shadow:0 0 12px rgba(0,168,107,.4)}
+.lt-private .lt-price{color:var(--green-ok)!important}
+.lt-private-tag{position:absolute;top:8px;right:8px;font-size:9px;font-weight:800;background:var(--green-ok);color:#fff;padding:3px 7px;border-radius:10px;letter-spacing:.5px;text-transform:uppercase}
 .ob-free{text-align:center;font-size:12px;color:var(--t3);margin-bottom:18px}
 .ob-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:18px}
 .ob-stat{background:var(--bg3);border:1px solid var(--b);border-radius:var(--r);padding:13px 8px;text-align:center}
@@ -1406,30 +1412,31 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
  <div style="margin-bottom:18px">
  <div class="leagues-label">Elige tu quiniela · Click para empezar</div>
  <div class="leagues-grid">
+ <div class="lt d lt-private" onclick="goTo('screen-register')">
+ <div class="lt-private-tag">GRATIS</div>
+ <div class="lt-price">$0</div>
+ <div class="lt-name">Quiniela entre amigos</div>
+ <div class="lt-prize">Crea un grupo privado</div>
+ <div class="lt-users"><div class="lt-users-bar"><div class="lt-users-fill" id="ob-bar-priv" style="width:0%;background:var(--green-ok)"></div></div><span id="ob-users-priv">Ilimitadas · sin costo</span></div>
+ </div>
  <div class="lt a" onclick="goTo('screen-register')">
  <div class="lt-price">$20</div>
- <div class="lt-name">Económica</div>
+ <div class="lt-name">Quiniela $20</div>
  <div class="lt-prize">Premio hasta $4,400</div>
- <div class="lt-users"><div class="lt-users-bar"><div class="lt-users-fill" id="ob-bar-20" style="width:21.6%"></div></div><span id="ob-users-20">108/500</span></div>
+ <div class="lt-users"><div class="lt-users-bar"><div class="lt-users-fill" id="ob-bar-20" style="width:0%"></div></div><span id="ob-users-20">0 jugadores</span></div>
  </div>
  <div class="lt b" onclick="goTo('screen-register')">
  <div class="lt-price">$50</div>
- <div class="lt-name">Estándar</div>
+ <div class="lt-name">Quiniela $50</div>
  <div class="lt-prize">Premio hasta $11,000</div>
- <div class="lt-users"><div class="lt-users-bar"><div class="lt-users-fill" id="ob-bar-50" style="width:37.6%"></div></div><span id="ob-users-50">188/500</span></div>
+ <div class="lt-users"><div class="lt-users-bar"><div class="lt-users-fill" id="ob-bar-50" style="width:0%"></div></div><span id="ob-users-50">0 jugadores</span></div>
  </div>
  <div class="lt c hot" onclick="goTo('screen-register')">
  <div class="lt-hot">POPULAR</div>
  <div class="lt-price">$100</div>
- <div class="lt-name">Estrella</div>
+ <div class="lt-name">Quiniela $100</div>
  <div class="lt-prize">Premio hasta $22,000</div>
- <div class="lt-users"><div class="lt-users-bar"><div class="lt-users-fill" id="ob-bar-100" style="width:60.4%"></div></div><span id="ob-users-100">302/500</span></div>
- </div>
- <div class="lt d" onclick="goTo('screen-register')">
- <div class="lt-price">$500</div>
- <div class="lt-name">Premium</div>
- <div class="lt-prize">Premio hasta $110,000</div>
- <div class="lt-users"><div class="lt-users-bar"><div class="lt-users-fill" id="ob-bar-500" style="width:85.2%"></div></div><span id="ob-users-500">426/500</span></div>
+ <div class="lt-users"><div class="lt-users-bar"><div class="lt-users-fill" id="ob-bar-100" style="width:0%"></div></div><span id="ob-users-100">0 jugadores</span></div>
  </div>
  </div>
  </div>
@@ -1441,7 +1448,7 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
  <div class="ob-how-num">1</div>
  <div class="ob-how-text">
  <strong>Inscríbete</strong>
- <span>Elige tu quiniela ($20-$500), paga al admin por Zelle, Binance o Pago Móvil</span>
+ <span>Elige tu quiniela ($20-$100), paga al admin por Zelle, Binance o Pago Móvil</span>
  </div>
  </div>
  <div class="ob-how-step">
@@ -1456,13 +1463,6 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
  <div class="ob-how-text">
  <strong>Acumula puntos en vivo</strong>
  <span>Cada acierto suma. Ranking en tiempo real desde el primer partido</span>
- </div>
- </div>
- <div class="ob-how-step">
- <div class="ob-how-num green">4</div>
- <div class="ob-how-text">
- <strong>Cobra tu premio</strong>
- <span>Top 3 de cada liga reciben 50% / 30% / 20% del pool. Pago hasta 30 días tras la final</span>
  </div>
  </div>
  </div>
@@ -2035,8 +2035,8 @@ const KO_ROUNDS=[
  {id:'tp',label:'Tercer lugar',pts:'30 pts / ganador',count:1},
  {id:'f',label:'Final',pts:'60 pts + 75 pts campeon',count:1},
 ];
-const TIER_SPOTS={20:892,50:487,100:312,500:74};
-const TIER_NAMES={20:'Quiniela $20',50:'Quiniela $50',100:'Quiniela $100',500:'Quiniela $500'};
+const TIER_SPOTS={20:892,50:487,100:312};
+const TIER_NAMES={20:'Quiniela $20',50:'Quiniela $50',100:'Quiniela $100'};
 
 /* ══════════════════════════════════════════
  FECHAS DE PARTIDOS / SISTEMA DE LOCK
@@ -5158,8 +5158,8 @@ function sendPasswordReset(){
 }
 
 function demoLogin(){
- // Modo invitado: pre-aprobado en todos los tiers para que el usuario
- // pueda navegar y probar la app completa sin friccion
+ // Modo invitado: solo permite navegar la app en modo preview
+ // Sin entries pre-aprobadas (eso seria fraude)
  const now=Date.now();
  const g={
  id:'guest_'+now,
@@ -5167,23 +5167,12 @@ function demoLogin(){
  email:'',
  pass:'',
  team:'Argentina',
- quinielas:{
- free:{groups:{},scores:{},ko:{},champ:'',topscorer:'',pts:0},
- tier_20_1:{groups:{},scores:{},ko:{},champ:'',topscorer:'',pts:0},
- tier_50_1:{groups:{},scores:{},ko:{},champ:'',topscorer:'',pts:0},
- tier_100_1:{groups:{},scores:{},ko:{},champ:'',topscorer:'',pts:0},
- tier_500_1:{groups:{},scores:{},ko:{},champ:'',topscorer:'',pts:0},
- },
- activeQuinielaId:'tier_50_1', // arrancan en Bronce
- entries:[
- {tier:'20',entryNum:1,joinedAt:now,quinielaId:'tier_20_1',status:'approved',approvedAt:now},
- {tier:'50',entryNum:1,joinedAt:now,quinielaId:'tier_50_1',status:'approved',approvedAt:now},
- {tier:'100',entryNum:1,joinedAt:now,quinielaId:'tier_100_1',status:'approved',approvedAt:now},
- {tier:'500',entryNum:1,joinedAt:now,quinielaId:'tier_500_1',status:'approved',approvedAt:now},
- ],
+ quinielas:{},
+ activeQuinielaId:null,
+ entries:[],
  };
  CUR=g;saveCur();enterApp();
- toast('Modo invitado · Acceso completo activado','success');
+ toast('Modo invitado · Solo preview','success');
 }
 
 /* ── DEV ADMIN LOGIN ──
@@ -5211,14 +5200,12 @@ function devAdminLogin(){
  tier_20_1:{groups:{},scores:{},ko:{},champ:'',topscorer:'',pts:0},
  tier_50_1:{groups:{},scores:{},ko:{},champ:'',topscorer:'',pts:0},
  tier_100_1:{groups:{},scores:{},ko:{},champ:'',topscorer:'',pts:0},
- tier_500_1:{groups:{},scores:{},ko:{},champ:'',topscorer:'',pts:0},
  },
  activeQuinielaId:'tier_50_1',
  entries:[
  {tier:'20',entryNum:1,joinedAt:now,quinielaId:'tier_20_1',status:'approved',approvedAt:now},
  {tier:'50',entryNum:1,joinedAt:now,quinielaId:'tier_50_1',status:'approved',approvedAt:now},
  {tier:'100',entryNum:1,joinedAt:now,quinielaId:'tier_100_1',status:'approved',approvedAt:now},
- {tier:'500',entryNum:1,joinedAt:now,quinielaId:'tier_500_1',status:'approved',approvedAt:now},
  ],
  ledger:[{ts:now,type:'deposit',amount:10000,note:'Saldo dev admin',balance:10000}],
  };
@@ -6621,7 +6608,7 @@ function renderRanking(){
 
  // ─── Render TABS de ligas ───
  const tabsEl=document.getElementById('rank-tabs');
- const allTiers=Object.keys(TIER_NAMES); // ['20','50','100','500']
+ const allTiers=Object.keys(TIER_NAMES); // ['20','50','100']
  if(tabsEl){
  if(isPreview){
  // En preview, mostrar TODAS las quinielas como tabs
@@ -6979,7 +6966,7 @@ function renderQuinielasSection(){
  });
 
  // Lista de tiers disponibles para mostrar como "otras"
- const allTiers=['20','50','100','500'];
+ const allTiers=['20','50','100'];
  const otherTiers=allTiers.filter(t=>{
  // Mostrar si NO es la activa actual
  if(myActiveLeague&&myActiveLeague.tier===t)return false;
@@ -6990,8 +6977,7 @@ function renderQuinielasSection(){
  const tierLabels={
  '20':{name:'Quiniela $20',prize:4400,badge:null,clsLetter:'a'},
  '50':{name:'Quiniela $50',prize:11000,badge:null,clsLetter:'b'},
- '100':{name:'Quiniela $100',prize:22000,badge:'POPULAR',clsLetter:'c'},
- '500':{name:'Quiniela $500',prize:110000,badge:'VIP',clsLetter:'d'}
+ '100':{name:'Quiniela $100',prize:22000,badge:'POPULAR',clsLetter:'c'}
  };
 
  let html='';
@@ -7710,6 +7696,8 @@ function renderAdminDashboard(){
  title:'Backup',sub:(()=>{const d=getDaysSinceLastBackup();return d===Infinity?'Descargar todo en JSON':d===0?'Hoy · descargar nuevo':`Hace ${d}d · descargar nuevo`;})(),onclick:'downloadBackup()',badge:getDaysSinceLastBackup()>7?'!':null,alert:getDaysSinceLastBackup()>7},
  {ico:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M3 21v-5h5"/></svg>',
  title:'Restaurar',sub:'Importar backup .json',onclick:'openRestoreModal()',badge:null},
+ {ico:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6h14z"/></svg>',
+ title:'Reset producción',sub:'Borrar todo · listo para lanzar',onclick:'nukeProductionData()',badge:'!',alert:true},
  ];
  cards.innerHTML=cardData.map(c=>{
  // v66: Sanitizar onclick - extraer nombre de función y argumentos
@@ -9631,7 +9619,7 @@ function renderMyLeagues(){
  byTier[key].push(id);
  });
  // Render: tiers primero, luego privadas
- const tierOrder=['free','20','50','100','500','other','private'];
+ const tierOrder=['free','20','50','100','other','private'];
  let html='';
  tierOrder.forEach(tier=>{
  if(!byTier[tier])return;
@@ -11159,7 +11147,7 @@ function openFAQModal(){
  cat:'Inscripciones',
  ico:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>',
  items:[
- {q:'¿Cómo me inscribo a una quiniela?',a:'Haz click en cualquier card de quiniela ($20, $50, $100 o $500) en el Home. Se abre un modal donde el admin te dice como pagar (Zelle, Binance, Pago Movil o efectivo). Una vez pagues, el admin aprueba tu inscripcion manualmente.'},
+ {q:'¿Cómo me inscribo a una quiniela?',a:'Haz click en cualquier card de quiniela ($20, $50 o $100) en el Home. Se abre un modal donde el admin te dice como pagar (Zelle, Binance, Pago Movil o efectivo). Una vez pagues, el admin aprueba tu inscripcion manualmente.'},
  {q:'Cuanto tarda en aprobarse mi inscripcion?',a:'Normalmente 1-24 horas despues de que el admin verifica tu pago. Si tarda mas, escribe al WhatsApp del admin.'},
  {q:'Puedo predecir antes de ser aprobado?',a:'Si. Tus predicciones se guardan desde que te registras. La aprobacion solo es necesaria para optar al premio.'},
  {q:'Puedo tener varias inscripciones?',a:'Si. Puedes inscribirte multiples veces a la misma liga (cada una es una quiniela independiente) o a ligas diferentes.'},
@@ -11275,7 +11263,7 @@ function openAboutModal(){
  <!-- Que es -->
  <div style="font-size:11px;color:var(--accent);text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:8px">Que es WC26</div>
  <p style="font-size:13px;color:var(--t);line-height:1.55;margin-bottom:14px">
- Quiniela del Mundial FIFA 2026 con dinero real. Predice los resultados de los 104 partidos del torneo, gana puntos, y compite por premios reales en pools que dependen de la quiniela que elijas ($20, $50, $100 o $500).
+ Quiniela del Mundial FIFA 2026 con dinero real. Predice los resultados de los 104 partidos del torneo, gana puntos, y compite por premios reales en pools que dependen de la quiniela que elijas ($20, $50 o $100).
  </p>
 
  <!-- Como funciona -->
@@ -11283,7 +11271,7 @@ function openAboutModal(){
  <div style="background:var(--bg3);border:1px solid var(--b);border-radius:10px;padding:14px;margin-bottom:14px">
  <div style="display:flex;gap:10px;margin-bottom:10px">
  <div style="width:28px;height:28px;border-radius:50%;background:rgba(255,215,0,.1);border:1px solid rgba(255,215,0,.3);display:flex;align-items:center;justify-content:center;color:var(--accent);font-weight:800;font-size:12px;flex-shrink:0">1</div>
- <div style="font-size:12.5px;color:var(--t2);line-height:1.5"><strong style="color:var(--t)">Inscribete</strong> a una quiniela ($20-$500). Coordina el pago con el admin via Zelle, Binance, Pago Movil o efectivo.</div>
+ <div style="font-size:12.5px;color:var(--t2);line-height:1.5"><strong style="color:var(--t)">Inscribete</strong> a una quiniela ($20-$100). Coordina el pago con el admin via Zelle, Binance, Pago Movil o efectivo.</div>
  </div>
  <div style="display:flex;gap:10px;margin-bottom:10px">
  <div style="width:28px;height:28px;border-radius:50%;background:rgba(255,215,0,.1);border:1px solid rgba(255,215,0,.3);display:flex;align-items:center;justify-content:center;color:var(--accent);font-weight:800;font-size:12px;flex-shrink:0">2</div>
@@ -11446,7 +11434,7 @@ function refreshOnboardCountdown(){
 
 function refreshOnboardStats(){
  // Calcular inscripciones reales por tier desde DB local
- const tierCounts = {20:0, 50:0, 100:0, 500:0};
+ const tierCounts = {20:0, 50:0, 100:0};
  (DB.users||[]).forEach(u=>{
  if(u.id&&u.id.startsWith('guest_'))return;
  (u.entries||[]).forEach(e=>{
@@ -11455,14 +11443,14 @@ function refreshOnboardStats(){
  }
  });
  });
- // Si tenemos numeros reales, usarlos. Si no, mantener los de demo.
+ // Si tenemos numeros reales, usarlos.
  const totalReal = Object.values(tierCounts).reduce((s,n)=>s+n,0);
  if(totalReal>0){
  Object.entries(tierCounts).forEach(([tier,count])=>{
  const max = TIER_SPOTS[tier]||500;
  const userEl = document.getElementById('ob-users-'+tier);
  const barEl = document.getElementById('ob-bar-'+tier);
- if(userEl)userEl.textContent = `${count}/${max}`;
+ if(userEl)userEl.textContent = `${count} ${count===1?'jugador':'jugadores'}`;
  if(barEl)barEl.style.width = `${Math.min(100,(count/max)*100)}%`;
  });
  }
@@ -12070,6 +12058,112 @@ console.log('[WC26] Admin helpers disponibles: makeAdmin("tu@email.com") · rese
  });
  console.log('[v66] Expuestas '+exposed+' funciones nuevas a window');
 })();
+
+/* ════════════════════════════════════════════════════════
+   v73: NUKE PRODUCCIÓN - Borrar TODOS los datos test
+   Solo para admin. Borra:
+   - Todas las quinielas privadas (Firestore)
+   - Todas las entries de inscripciones (Firestore)
+   - Todos los users excepto el admin (Firestore)
+   - DB local entera (excepto cuenta actual)
+   ════════════════════════════════════════════════════════ */
+async function nukeProductionData(){
+ if(!CUR||!CUR.isAdmin){toast('Solo admin','error');return;}
+ const confirm1=prompt('⚠️ ATENCIÓN: Esto borra TODAS las quinielas, inscripciones y usuarios excepto tu cuenta admin.\n\nEscribe "BORRAR TODO" para confirmar:');
+ if(confirm1!=='BORRAR TODO'){toast('Cancelado','error');return;}
+ const confirm2=confirm('ÚLTIMO AVISO: ¿De verdad borrar TODO? No se puede deshacer.');
+ if(!confirm2){toast('Cancelado','error');return;}
+ toast('Borrando datos...','success');
+ try{
+ // 1. Borrar privateLeagues de Firestore
+ if(fb&&fb.db){
+ const privates=await fb.db.collection('privateLeagues').get();
+ console.log('[nuke] Borrando',privates.size,'quinielas privadas...');
+ for(const doc of privates.docs){
+ await doc.ref.delete();
+ }
+ // 2. Borrar entries
+ const entries=await fb.db.collection('entries').get();
+ console.log('[nuke] Borrando',entries.size,'entries...');
+ for(const doc of entries.docs){
+ await doc.ref.delete();
+ }
+ // 3. Borrar payouts
+ const payouts=await fb.db.collection('payouts').get();
+ console.log('[nuke] Borrando',payouts.size,'payouts...');
+ for(const doc of payouts.docs){
+ await doc.ref.delete();
+ }
+ // 4. Borrar users excepto admin actual
+ const users=await fb.db.collection('users').get();
+ console.log('[nuke] Borrando users excepto admin...');
+ for(const doc of users.docs){
+ if(doc.id!==CUR.id){
+ // Borrar subcolecciones primero
+ try{
+ const preds=await doc.ref.collection('predictions').get();
+ for(const p of preds.docs)await p.ref.delete();
+ const tour=await doc.ref.collection('tournament').get();
+ for(const t of tour.docs)await t.ref.delete();
+ }catch(e){}
+ await doc.ref.delete();
+ }
+ }
+ // 5. Borrar logs
+ const logs=await fb.db.collection('logs').get();
+ console.log('[nuke] Borrando',logs.size,'logs...');
+ for(const doc of logs.docs){
+ await doc.ref.delete();
+ }
+ // 6. Borrar resetear results del torneo
+ const results=await fb.db.collection('results').get();
+ console.log('[nuke] Borrando',results.size,'results...');
+ for(const doc of results.docs){
+ await doc.ref.delete();
+ }
+ // 7. Borrar locks
+ const locks=await fb.db.collection('locks').get();
+ for(const doc of locks.docs){
+ await doc.ref.delete();
+ }
+ // 8. Borrar mis predicciones (admin) también
+ try{
+ const myPreds=await fb.db.collection('users').doc(CUR.id).collection('predictions').get();
+ for(const p of myPreds.docs)await p.ref.delete();
+ const myTour=await fb.db.collection('users').doc(CUR.id).collection('tournament').get();
+ for(const t of myTour.docs)await t.ref.delete();
+ }catch(e){console.warn('[nuke] No se pudo borrar mis preds:',e.message);}
+ }
+ // 9. Resetear DB local conservando solo mi cuenta
+ const myUser=DB.users.find(u=>u.id===CUR.id);
+ const cleanUser=myUser?{
+ ...myUser,
+ quinielas:{},
+ activeQuinielaId:null,
+ entries:[],
+ wcBalance:0,
+ ledger:[]
+ }:null;
+ DB.users=cleanUser?[cleanUser]:[];
+ DB.privateLeagues=[];
+ DB.results={groups:{},ko:{},champion:'',topscorer:''};
+ DB.locks={groups:{},ko:{}};
+ DB.logs=[];
+ DB.referrers=[];
+ DB.commissions=[];
+ DB.payouts=[];
+ DB.payoutsReleased=false;
+ DB.nextId=1;
+ if(cleanUser)CUR=cleanUser;
+ saveDB();saveCur();
+ toast('Producción reseteada · Listos para lanzamiento','success');
+ setTimeout(()=>location.reload(),1500);
+ } catch(err){
+ console.error('[nuke] Error:',err);
+ toast('Error: '+err.message,'error');
+ }
+}
+window.nukeProductionData = nukeProductionData;
 
 // ════════════════════════════════════════════════════════
 // PWA: registrar service worker para offline + push
