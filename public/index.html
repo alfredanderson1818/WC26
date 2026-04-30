@@ -29,17 +29,17 @@
 <meta property="og:image" content="/icon-512.png">
 <meta property="og:type" content="website">
 <script>
-// Aplicar tema antes de cualquier render para evitar flash
+// v68: Tema blanco por defecto. Si usuario cambia, se guarda su preferencia.
 (function(){
   try {
     var saved = localStorage.getItem('wc26v5_theme');
     if (!saved) {
-      var prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
-      saved = prefersLight ? 'light' : 'dark';
+      // Default LIGHT (sin importar preferencia del sistema)
+      saved = 'light';
     }
     document.documentElement.setAttribute('data-theme', saved);
   } catch(e) {
-    document.documentElement.setAttribute('data-theme', 'dark');
+    document.documentElement.setAttribute('data-theme', 'light');
   }
 })();
 </script>
@@ -158,31 +158,31 @@
  --copper:var(--accent-soft);
  --bronze:var(--accent-soft);
 
- /* Fondos claros en escala de grises tibios */
- --bg:#FAFAF7;
- --bg2:#F2F1EC;
- --bg3:#FFFFFF;
- --bg4:#F8F7F2;
- --bg5:#EAE9E2;
+ /* v69: Fondos crema suave (no blanco puro - reduce vibración visual) */
+ --bg:#F4F1EA;        /* Fondo principal: crema cálido */
+ --bg2:#EDEAE2;       /* Fondo secundario: crema más oscuro */
+ --bg3:#FAF8F2;       /* Cards: crema muy claro pero NO blanco */
+ --bg4:#EFEDE5;       /* Cards alt: crema medio */
+ --bg5:#E2DFD7;       /* Bordes/separadores: crema oscuro */
 
  /* Bordes oscuros sutiles */
- --b:rgba(20,20,30,0.08);
- --b2:rgba(201,162,39,0.20);
+ --b:rgba(40,30,15,0.10);
+ --b2:rgba(201,162,39,0.22);
  --b3:rgba(201,162,39,0.45);
 
- /* Texto oscuro sobre fondo claro */
- --t:#1A1A2E;
- --t2:#54545E;
- --t3:#8A8A92;
+ /* Texto oscuro sobre fondo crema */
+ --t:#1F1A12;         /* Texto principal: casi negro con tinte cálido */
+ --t2:#5A5246;        /* Texto secundario: gris cálido */
+ --t3:#8B8276;        /* Texto terciario: gris claro cálido */
 
- --hdr-bg:rgba(255,255,255,.96);
- --bnav-bg:rgba(255,255,255,.97);
- --modal-ov-bg:rgba(20,20,30,.55);
- --input-bg:#FFFFFF;
- --btn-secondary-bg:#FFFFFF;
- --btn-primary-color:#1A1A2E;
- --shadow-soft:0 2px 8px rgba(201,162,39,.20);
- --shadow-card:0 1px 3px rgba(20,20,30,.05);
+ --hdr-bg:rgba(244,241,234,.96);
+ --bnav-bg:rgba(244,241,234,.97);
+ --modal-ov-bg:rgba(31,26,18,.55);
+ --input-bg:#FAF8F2;
+ --btn-secondary-bg:#FAF8F2;
+ --btn-primary-color:#1F1A12;
+ --shadow-soft:0 2px 8px rgba(201,162,39,.18);
+ --shadow-card:0 1px 3px rgba(40,30,15,.06);
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html{scroll-behavior:smooth}
@@ -3500,63 +3500,7 @@ async function deletePrivateLeagueFromFirestore(leagueId){
 }
 window.deletePrivateLeagueFromFirestore = deletePrivateLeagueFromFirestore;
 
-/* Listener: descarga TODAS las quinielas privadas del cloud
-   y las refleja en DB.privateLeagues local */
-function startPrivateLeaguesListener(){
- if(!window.fsMode||!fb?.auth?.currentUser)return null;
- if(window._privateLeaguesListener){try{window._privateLeaguesListener();}catch(e){}}
- try{
- const unsub = fsListen('privateLeagues', (docs)=>{
- if(!Array.isArray(docs))return;
- if(!DB.privateLeagues)DB.privateLeagues=[];
- // Sync: para cada doc en cloud, actualizar/crear en local
- docs.forEach(d=>{
- if(!d.id||!d.code)return;
- let local = DB.privateLeagues.find(l=>l.id===d.id);
- if(local){
- // Update campos del cloud
- local.code = d.code;
- local.name = d.name;
- local.description = d.description||'';
- local.commissionerId = d.commissionerId;
- local.commissionerName = d.commissionerName||'';
- local.commissionerEmail = d.commissionerEmail||'';
- local.status = d.status||'active';
- local.createdAt = d.createdAt;
- local.activatedAt = d.activatedAt||d.createdAt;
- local.members = d.members||[];
- local.maxMembers = d.maxMembers||MAX_MEMBERS_PRIVATE;
- local.fee = d.fee||0;
- } else {
- DB.privateLeagues.push({
- id: d.id, code: d.code, name: d.name,
- description: d.description||'',
- commissionerId: d.commissionerId,
- commissionerName: d.commissionerName||'',
- commissionerEmail: d.commissionerEmail||'',
- status: d.status||'active',
- createdAt: d.createdAt,
- activatedAt: d.activatedAt||d.createdAt,
- members: d.members||[],
- maxMembers: d.maxMembers||MAX_MEMBERS_PRIVATE,
- fee: d.fee||0,
- });
- }
- });
- saveDB();
- // Refrescar UI relevante
- if(typeof renderMyPrivateLeagues==='function')renderMyPrivateLeagues();
- if(typeof renderMyLeagues==='function')renderMyLeagues();
- console.log('[v63] PrivateLeagues updated:',docs.length,'docs');
- });
- window._privateLeaguesListener = unsub;
- return unsub;
- }catch(err){
- console.error('[v63] startPrivateLeaguesListener failed:',err.code||err.message);
- return null;
- }
-}
-window.startPrivateLeaguesListener = startPrivateLeaguesListener;
+/* v67: Definición vieja eliminada - se redefine al final del script */
 
 /* ────────────── PAYOUTS (premios reclamados) ────────────── */
 async function syncPayoutToFirestore(payout){
@@ -7767,14 +7711,19 @@ function renderAdminDashboard(){
  {ico:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M3 21v-5h5"/></svg>',
  title:'Restaurar',sub:'Importar backup .json',onclick:'openRestoreModal()',badge:null},
  ];
- cards.innerHTML=cardData.map(c=>`<div class="admin-card${c.alert?' alert':''}" onclick="${c.onclick}">
+ cards.innerHTML=cardData.map(c=>{
+ // v66: Sanitizar onclick - extraer nombre de función y argumentos
+ // Permite onclick='openX()' sin que falle por scope
+ const fnCall=c.onclick;
+ return `<div class="admin-card${c.alert?' alert':''}" onclick="window._adminCardClick('${fnCall.replace(/'/g,'__APOS__')}')">
  ${c.badge?`<div class="admin-card-badge">${c.badge}</div>`:''}
  <div class="admin-card-ico">${c.ico}</div>
  <div>
  <div class="admin-card-title">${c.title}</div>
  <div class="admin-card-sub">${c.sub}</div>
  </div>
- </div>`).join('');
+ </div>`;
+ }).join('');
 
  if(pendSec){
  if(pendingCount>0){
@@ -7938,6 +7887,41 @@ function switchInscTab(tab){
 }
 window.switchInscTab = switchInscTab;
 
+/* v66: Ejecutor de onclick de cards admin con fallback robusto */
+window._adminCardClick = function(callStr){
+ // Decodificar
+ callStr=callStr.replace(/__APOS__/g,"'");
+ // Extraer nombre de función: "openX()" o "openX('arg')"
+ const m=callStr.match(/^(\w+)\((.*)\)$/);
+ if(!m){console.error('[adminCardClick] formato inválido:',callStr);return;}
+ const fnName=m[1];
+ const argsStr=m[2].trim();
+ // Resolver función
+ let fn=window[fnName];
+ if(typeof fn!=='function'){
+ // Fallback: buscar en scope global vía eval
+ try{fn=eval(fnName);}catch(e){}
+ }
+ if(typeof fn!=='function'){
+ console.error('[adminCardClick] función no encontrada:',fnName);
+ if(typeof toast==='function')toast('Error: '+fnName+' no disponible','error');
+ return;
+ }
+ // Parsear args (si los hay)
+ let args=[];
+ if(argsStr){
+ // Args simples: strings entre comillas separados por coma
+ try{args=JSON.parse('['+argsStr.replace(/'/g,'"')+']');}
+ catch(e){args=[argsStr.replace(/^['"]|['"]$/g,'')];}
+ }
+ try{
+ fn.apply(null,args);
+ }catch(err){
+ console.error('[adminCardClick] error ejecutando',fnName,err);
+ if(typeof toast==='function')toast('Error: '+err.message,'error');
+ }
+};
+
 /* ── PANEL ADMIN — Acreditar saldo a usuarios ──
  El admin elige un usuario, ingresa el monto, opcionalmente una nota,
  y se acredita el saldo $WC al usuario. */
@@ -7971,32 +7955,32 @@ function renderAdminPanel(){
  // Lista de usuarios (sin saldos)
  const users=DB.users.filter(u=>!u.id.startsWith('guest_')).sort((a,b)=>a.name.localeCompare(b.name));
  cont.innerHTML=`
- <button class="btn btn-primary btn-full" onclick="openResultsAdmin()" style="margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:8px">
+ <button class="btn btn-primary btn-full" onclick="window._adminCardClick('openResultsAdmin()')" style="margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:8px">
  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
  Resultados oficiales <span style="opacity:.7;font-size:11px">(${resultsCount})</span>
  </button>
- <button class="btn btn-secondary btn-full" onclick="openAuditLog()" style="margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:8px">
+ <button class="btn btn-secondary btn-full" onclick="window._adminCardClick('openAuditLog()')" style="margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:8px">
  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
  Logs de actividad <span style="opacity:.7;font-size:11px">(${(DB.logs||[]).length})</span>
  </button>
- <button class="btn btn-secondary btn-full" onclick="openIngresosAdmin()" style="margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:8px;border-color:rgba(255,215,0,.3);color:var(--accent)">
+ <button class="btn btn-secondary btn-full" onclick="window._adminCardClick('openIngresosAdmin()')" style="margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:8px;border-color:rgba(255,215,0,.3);color:var(--accent)">
  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
  Ingresos · Mi ganancia
  </button>
- <button class="btn btn-secondary btn-full" onclick="openPayoutsAdmin()" style="margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:8px">
+ <button class="btn btn-secondary btn-full" onclick="window._adminCardClick('openPayoutsAdmin()')" style="margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:8px">
  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H3l1 5h2m12-5h3l-1 5h-2M6 9V4h12v5M6 9c0 4.418 2.686 8 6 8s6-3.582 6-8M9 20h6M12 18v2"/></svg>
  Premios <span style="opacity:.7;font-size:11px" id="payouts-pending-count">(${(DB.payouts||[]).filter(p=>p.status==='claimed').length} reclamados)</span>
  </button>
- <button class="btn btn-secondary btn-full" onclick="openReferrersAdmin()" style="margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:8px">
+ <button class="btn btn-secondary btn-full" onclick="window._adminCardClick('openReferrersAdmin()')" style="margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:8px">
  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
  Agentes <span style="opacity:.7;font-size:11px">(${(DB.referrers||[]).length})</span>
  </button>
- <button class="btn btn-secondary btn-full" onclick="openAdminConfig()" style="margin-bottom:14px;display:flex;align-items:center;justify-content:center;gap:8px">
+ <button class="btn btn-secondary btn-full" onclick="window._adminCardClick('openAdminConfig()')" style="margin-bottom:14px;display:flex;align-items:center;justify-content:center;gap:8px">
  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
  Configuración ${waConfigured?'<span style="color:var(--green-ok);font-size:11px"></span>':'<span style="color:var(--red);font-size:11px">! Pendiente</span>'}
  </button>
  <!-- Step 1 (v18): boton de prueba Firestore para admin -->
- <button class="btn btn-secondary btn-full" onclick="openFirestoreTestModal()" style="margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:8px;border-color:rgba(91,201,125,.25);color:var(--green-ok)">
+ <button class="btn btn-secondary btn-full" onclick="window._adminCardClick('openFirestoreTestModal()')" style="margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:8px;border-color:rgba(91,201,125,.25);color:var(--green-ok)">
  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><circle cx="12" cy="10" r="3"/></svg>
  Test Firestore <span id="fs-status-pill" style="opacity:.85;font-size:11px;font-weight:700">${fb&&fb.firestoreReady===true?' ON':fb&&fb.firestoreReady==='no-auth'?'! login':'○'}</span>
  </button>
@@ -9259,7 +9243,7 @@ function openCreateReferrerModal(){
  </div>
  <div class="err" id="ref-new-err"></div>
  <button class="btn btn-primary btn-full" onclick="confirmCreateReferrer()" style="margin-bottom:8px">Crear agente</button>
- <button class="btn btn-secondary btn-full" onclick="openReferrersAdmin()">Cancelar</button>
+ <button class="btn btn-secondary btn-full" onclick="window._adminCardClick('openReferrersAdmin()')">Cancelar</button>
  `);
 }
 function onReferrerNameInput(){
@@ -9352,7 +9336,7 @@ function openReferrerDetail(referrerId){
  <div class="admin-section-label">Comisiones (${comList.length})</div>
  <div style="max-height:35vh;overflow-y:auto;margin:0 -4px">${comRows}</div>
 
- <button class="btn btn-secondary btn-full" style="margin-top:12px" onclick="openReferrersAdmin()">← Volver</button>
+ <button class="btn btn-secondary btn-full" style="margin-top:12px" onclick="window._adminCardClick('openReferrersAdmin()')">← Volver</button>
  `);
 }
 /* Editar tasa de comision de un agente existente */
@@ -9967,6 +9951,8 @@ window.sharePrivateLeagueCode = sharePrivateLeagueCode;
 function openPrivateLeagueModal(leagueId){
  const league=(DB.privateLeagues||[]).find(l=>l.id===leagueId);
  if(!league){toast('No encontrada','error');return;}
+ // v67: Guardar ID para que el listener pueda refrescar
+ window._currentPrivateLeagueModalId=leagueId;
  const isMine=league.commissionerId===CUR.id;
  const memberCount=league.members.length;
  // Render inicial con loading del ranking
@@ -10129,23 +10115,42 @@ async function renderPrivateTab(leagueId, tab){
  Lo que predigas aquí no afecta tus otras quinielas (oficiales o privadas).
  </div>
 
- <button class="btn btn-primary btn-full" onclick="closeModal();selectLeague('${leagueId}')">
+ <button class="btn btn-primary btn-full" onclick="closeModal();switchQuiniela('${leagueId}');navTo('grupos')">
  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="margin-right:6px;vertical-align:-3px"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
- Predecir partidos
+ Ir a predecir partidos
  </button>`;
  } else if(tab==='members'){
- const members=league.members.map(uid=>{
+ // v67: Loading state mientras buscamos usuarios faltantes en Firestore
+ cont.innerHTML=`<div style="text-align:center;padding:30px 16px;color:var(--t3);font-size:13px">Cargando miembros...</div>`;
+ // Async: buscar usuarios faltantes
+ (async ()=>{
+ const members=[];
+ for(const uid of league.members){
  let u=DB.users.find(usr=>usr.id===uid);
- return {
+ if(!u&&fb&&fb.db){
+ // Si no está local, buscar en Firestore
+ try{
+ const remoteUser=await fsGet(`users/${uid}`);
+ if(remoteUser){
+ u={id:uid,name:remoteUser.name,email:remoteUser.email};
+ }
+ } catch(e){
+ console.warn('[v67] No se encontró user',uid,e.message);
+ }
+ }
+ members.push({
  id:uid,
- name:u?.name||'Usuario',
+ name:u?.name||'Usuario nuevo',
  email:u?.email||'',
  isCommissioner:uid===league.commissionerId,
  isMe:CUR&&uid===CUR.id
- };
  });
- cont.innerHTML=`<div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:8px">${members.length}/${league.maxMembers} miembros</div>
- <div style="background:var(--bg3);border:1px solid var(--b);border-radius:10px;padding:8px;max-height:280px;overflow-y:auto">
+ }
+ // Verificar que el modal sigue abierto y en el mismo tab
+ const cont2=document.getElementById('priv-tab-content');
+ if(!cont2)return;
+ cont2.innerHTML=`<div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:8px">${members.length}/${league.maxMembers} miembros</div>
+ <div style="background:var(--bg3);border:1px solid var(--b);border-radius:10px;padding:8px;max-height:320px;overflow-y:auto">
  ${members.map((m,i)=>`<div style="display:flex;align-items:center;gap:10px;padding:8px 6px;${i<members.length-1?'border-bottom:1px solid var(--b)':''}">
  <div style="width:32px;height:32px;border-radius:50%;background:var(--bg4);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--t2)">${initials(m.name)}</div>
  <div style="flex:1;min-width:0">
@@ -10155,6 +10160,7 @@ async function renderPrivateTab(leagueId, tab){
  ${m.isCommissioner?'<span style="background:rgba(255,215,0,.15);color:var(--gold);font-size:9px;padding:3px 6px;border-radius:4px;font-weight:700;letter-spacing:.3px;text-transform:uppercase">Creador</span>':''}
  </div>`).join('')}
  </div>`;
+ })();
  } else if(tab==='code'){
  cont.innerHTML=`<div style="background:var(--bg3);border:1px solid var(--b);border-radius:10px;padding:18px;margin-bottom:14px;text-align:center">
  <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:10px">Código de invitación</div>
@@ -10412,13 +10418,24 @@ function startPrivateLeaguesListener(){
  try{
  _privateLeaguesUnsub=fsListen('privateLeagues',(docs)=>{
  if(!DB.privateLeagues)DB.privateLeagues=[];
+ // Detectar cambios para detectar si el modal abierto necesita refresh
+ let changedLeagueIds=new Set();
  docs.forEach(remote=>{
  if(remote.members&&remote.members.includes(CUR.id)){
  const idx=DB.privateLeagues.findIndex(l=>l.id===remote.id);
  if(idx>=0){
+ // v67: Detectar cambio de members para refrescar UI
+ const oldMembers=DB.privateLeagues[idx].members||[];
+ const newMembers=remote.members||[];
+ if(oldMembers.length!==newMembers.length||
+    oldMembers.some(m=>!newMembers.includes(m))){
+ changedLeagueIds.add(remote.id);
+ console.log('[v67] Cambio detectado en miembros de',remote.id,':',oldMembers.length,'→',newMembers.length);
+ }
  DB.privateLeagues[idx]={...DB.privateLeagues[idx],...remote};
  } else {
  DB.privateLeagues.push(remote);
+ changedLeagueIds.add(remote.id);
  }
  // Asegurar quiniela aislada local
  if(!CUR.quinielas)CUR.quinielas={};
@@ -10432,16 +10449,26 @@ function startPrivateLeaguesListener(){
  return true;
  });
  saveDB();
- // Re-render si estoy en perfil o mi quiniela
+ console.log('[v67] PrivateLeagues sync · cambios:',changedLeagueIds.size);
+ // v67: Refrescar TODOS los lugares donde se muestran privadas
  const active=document.querySelector('.page.active');
  if(active){
  if(active.id==='page-perfil'&&typeof renderMyPrivateLeagues==='function')renderMyPrivateLeagues();
  if(active.id==='page-miquiniela'&&typeof renderMyLeagues==='function')renderMyLeagues();
+ if(active.id==='page-dashboard'&&typeof renderQuinielasSection==='function')renderQuinielasSection();
+ if(active.id==='page-ranking'&&typeof renderPrivateLeaguesInRanking==='function')renderPrivateLeaguesInRanking();
+ }
+ // v67: Refrescar modal abierto si la liga cambió
+ const modalLeagueId=window._currentPrivateLeagueModalId;
+ if(modalLeagueId&&changedLeagueIds.has(modalLeagueId)){
+ console.log('[v67] Refrescando modal abierto:',modalLeagueId);
+ const activeTab=document.querySelector('.priv-tab-btn.priv-tab-active')?.dataset.tab||'ranking';
+ if(typeof renderPrivateTab==='function')renderPrivateTab(modalLeagueId,activeTab);
  }
  });
- console.log('[v63] Listener privateLeagues iniciado');
+ console.log('[v67] Listener privateLeagues iniciado');
  } catch(err){
- console.error('[v63] Error iniciando listener:', err);
+ console.error('[v67] Error iniciando listener:', err);
  }
 }
 window.startPrivateLeaguesListener = startPrivateLeaguesListener;
@@ -11377,19 +11404,17 @@ window.toggleTheme = toggleTheme;
 window.applyTheme = applyTheme;
 window.getCurrentTheme = getCurrentTheme;
 
-/* Aplicar tema lo antes posible (antes de DOMContentLoaded ideal) */
+/* v68: Default LIGHT. Si usuario cambia, se le queda guardado. */
 (function initThemeImmediate(){
  try{
  let saved = localStorage.getItem(THEME_KEY);
  if(!saved){
- // Auto-detectar preferencia del sistema en primera visita
- const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
- saved = prefersLight?'light':'dark';
+ saved = 'light';
  localStorage.setItem(THEME_KEY,saved);
  }
  applyTheme(saved);
  }catch(e){
- applyTheme('dark');
+ applyTheme('light');
  }
 })();
 
@@ -11792,7 +11817,11 @@ function openModal(html,opts){
  if(opts&&opts.wide)ov.classList.add('modal-wide');
  else ov.classList.remove('modal-wide');
 }
-function closeModal(){document.getElementById('modal-ov').classList.add('hidden');}
+function closeModal(){
+ document.getElementById('modal-ov').classList.add('hidden');
+ // v67: limpiar tracking del modal de privadas
+ window._currentPrivateLeagueModalId=null;
+}
 document.getElementById('modal-ov').addEventListener('click',e=>{if(e.target===document.getElementById('modal-ov'))closeModal();});
 
 /* ── TOAST ── */
