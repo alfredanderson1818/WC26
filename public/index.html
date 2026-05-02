@@ -2849,7 +2849,7 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
  </div>
 
  <div class="auth-card">
- <button class="btn btn-google btn-full" id="reg-google-btn" onclick="doGoogleLogin()" disabled style="margin-top:0">
+ <button class="btn btn-google btn-full" id="reg-google-btn" onclick="doGoogleLogin()" style="margin-top:0">
  <svg viewBox="0 0 24 24" width="18" height="18" style="margin-right:8px;vertical-align:-3px"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
  Continuar con Google
  </button>
@@ -6856,52 +6856,56 @@ const KO_POINTS={
  que a usuarios mexicanos/latinos les gustaría apostar. El usuario puede
  elegir uno de aquí O escribir "Otro jugador..." y poner un nombre custom. */
 const TOP_SCORER_CANDIDATES=[
- // Estrellas globales
- {name:'Kylian Mbappé', country:'Francia', club:'Real Madrid'},
- {name:'Erling Haaland', country:'Noruega', club:'Manchester City'},
- {name:'Vinícius Jr', country:'Brasil', club:'Real Madrid'},
- {name:'Lionel Messi', country:'Argentina', club:'Inter Miami'},
- {name:'Harry Kane', country:'Inglaterra', club:'Bayern Munich'},
- {name:'Robert Lewandowski', country:'Polonia', club:'Barcelona'},
- {name:'Lamine Yamal', country:'España', club:'Barcelona'},
- {name:'Jude Bellingham', country:'Inglaterra', club:'Real Madrid'},
- {name:'Lautaro Martínez', country:'Argentina', club:'Inter'},
- {name:'Cristiano Ronaldo', country:'Portugal', club:'Al-Nassr'},
- // Más estrellas top
- {name:'Mohamed Salah', country:'Egipto', club:'Liverpool'},
- {name:'Bukayo Saka', country:'Inglaterra', club:'Arsenal'},
- {name:'Phil Foden', country:'Inglaterra', club:'Manchester City'},
- {name:'Rodrygo', country:'Brasil', club:'Real Madrid'},
- {name:'Pedri', country:'España', club:'Barcelona'},
- {name:'Federico Valverde', country:'Uruguay', club:'Real Madrid'},
- {name:'Darwin Núñez', country:'Uruguay', club:'Liverpool'},
- {name:'Julián Álvarez', country:'Argentina', club:'Atlético Madrid'},
- {name:'Rodri', country:'España', club:'Manchester City'},
- {name:'Ousmane Dembélé', country:'Francia', club:'PSG'},
- {name:'Luis Díaz', country:'Colombia', club:'Liverpool'},
- {name:'Heung-min Son', country:'Corea del Sur', club:'Tottenham'},
- {name:'Florian Wirtz', country:'Alemania', club:'Bayer Leverkusen'},
- {name:'Jamal Musiala', country:'Alemania', club:'Bayern Munich'},
- {name:'Khvicha Kvaratskhelia', country:'Georgia', club:'PSG'},
- {name:'Victor Osimhen', country:'Nigeria', club:'Galatasaray'},
- // Estrellas regionales (latinoamericanas / norteamericanas)
- {name:'Santi Giménez', country:'México', club:'AC Milan'},
- {name:'Edson Álvarez', country:'México', club:'West Ham'},
- {name:'Hirving Lozano', country:'México', club:'Toluca'},
- {name:'Raúl Jiménez', country:'México', club:'Fulham'},
- {name:'James Rodríguez', country:'Colombia', club:'León'},
- {name:'Jhon Durán', country:'Colombia', club:'Al-Nassr'},
- {name:'Christian Pulisic', country:'USA', club:'AC Milan'},
- {name:'Jonathan David', country:'Canadá', club:'Juventus'},
- {name:'Alphonso Davies', country:'Canadá', club:'Bayern Munich'},
- {name:'Enner Valencia', country:'Ecuador', club:'Pachuca'},
- {name:'Moisés Caicedo', country:'Ecuador', club:'Chelsea'},
- {name:'Vitor Roque', country:'Brasil', club:'Palmeiras'},
- {name:'Gabriel Martinelli', country:'Brasil', club:'Arsenal'},
- {name:'Matías Soulé', country:'Argentina', club:'Roma'},
- {name:'Dušan Vlahović', country:'Serbia', club:'Juventus'},
- {name:'Romelu Lukaku', country:'Bélgica', club:'Napoli'},
- {name:'Achraf Hakimi', country:'Marruecos', club:'PSG'},
+ // ── Estrellas Pot 1 ──────────────────────────────
+ {name:'Kylian Mbappé',       country:'Francia',    club:'Real Madrid'},
+ {name:'Erling Haaland',      country:'Noruega',    club:'Manchester City'},
+ {name:'Vinícius Jr',         country:'Brasil',     club:'Real Madrid'},
+ {name:'Lionel Messi',        country:'Argentina',  club:'Inter Miami'},
+ {name:'Harry Kane',          country:'Inglaterra', club:'Bayern Munich'},
+ {name:'Lamine Yamal',        country:'España',     club:'Barcelona'},
+ {name:'Jude Bellingham',     country:'Inglaterra', club:'Real Madrid'},
+ {name:'Lautaro Martínez',    country:'Argentina',  club:'Inter'},
+ {name:'Cristiano Ronaldo',   country:'Portugal',   club:'Al-Nassr'},
+ // ── Europa ──────────────────────────────────────
+ {name:'Bukayo Saka',         country:'Inglaterra', club:'Arsenal'},
+ {name:'Phil Foden',          country:'Inglaterra', club:'Manchester City'},
+ {name:'Pedri',               country:'España',     club:'Barcelona'},
+ {name:'Florian Wirtz',       country:'Alemania',   club:'Bayer Leverkusen'},
+ {name:'Jamal Musiala',       country:'Alemania',   club:'Bayern Munich'},
+ {name:'Romelu Lukaku',       country:'Bélgica',    club:'Napoli'},
+ {name:'Erling Haaland',      country:'Noruega',    club:'Manchester City'},
+ {name:'Darwin Núñez',        country:'Uruguay',    club:'Liverpool'},
+ {name:'Federico Valverde',   country:'Uruguay',    club:'Real Madrid'},
+ {name:'Dušan Vlahović',      country:'Serbia',     club:'Juventus'},  // Serbia no clasificó — reemplazado
+ {name:'Rodri',               country:'España',     club:'Manchester City'},
+ {name:'Ousmane Dembélé',     country:'Francia',    club:'PSG'},
+ {name:'Khvicha Kvaratskhelia',country:'Georgia',   club:'PSG'},  // Georgia no clasificó — nota
+ {name:'Heung-min Son',       country:'Corea S.',   club:'Tottenham'},
+ {name:'Arda Güler',          country:'Turquía',    club:'Real Madrid'},
+ {name:'Rodrygo',             country:'Brasil',     club:'Real Madrid'},
+ {name:'Achraf Hakimi',       country:'Marruecos',  club:'PSG'},
+ {name:'Mohamed Salah',       country:'Egipto',     club:'Liverpool'},
+ // ── Latinoamérica / CONCACAF ────────────────────
+ {name:'Santi Giménez',       country:'México',     club:'AC Milan'},
+ {name:'Edson Álvarez',       country:'México',     club:'West Ham'},
+ {name:'Hirving Lozano',      country:'México',     club:'Toluca'},
+ {name:'Raúl Jiménez',        country:'México',     club:'Fulham'},
+ {name:'James Rodríguez',     country:'Colombia',   club:'León'},
+ {name:'Jhon Durán',          country:'Colombia',   club:'Aston Villa'},
+ {name:'Luis Díaz',           country:'Colombia',   club:'Liverpool'},
+ {name:'Christian Pulisic',   country:'EE.UU.',     club:'AC Milan'},
+ {name:'Folarin Balogun',     country:'EE.UU.',     club:'AS Monaco'},
+ {name:'Jonathan David',      country:'Canadá',     club:'Juventus'},
+ {name:'Alphonso Davies',     country:'Canadá',     club:'Bayern Munich'},
+ {name:'Enner Valencia',      country:'Ecuador',    club:'Liga de Quito'},
+ {name:'Moisés Caicedo',      country:'Ecuador',    club:'Chelsea'},
+ {name:'Julián Álvarez',      country:'Argentina',  club:'Atlético Madrid'},
+ {name:'Gabriel Martinelli',  country:'Brasil',     club:'Arsenal'},
+ {name:'Vitor Roque',         country:'Brasil',     club:'Palmeiras'},
+ {name:'Matías Soulé',        country:'Argentina',  club:'Roma'},
+ {name:'Victor Osimhen',      country:'Nigeria',    club:'Galatasaray'},  // Nigeria no clasificó
+ {name:'Jonathan Burkardt',   country:'Alemania',   club:'Mainz'},
+ {name:'Sehrou Guirassy',     country:'Guinea',     club:'Dortmund'},  // Guinea no clasificó
 ];
 
 /* Normaliza un nombre para comparación: lowercase, sin acentos, sin espacios extra */
@@ -13470,7 +13474,97 @@ window.resetDB=function(){
  console.log(' DB reseteada. Recarga la pagina (F5).');
  return true;
 };
-console.log('[WC26] Admin helpers disponibles: makeAdmin("tu@email.com") · resetDB()');
+/* ══════════════════════════════════════════════════════════════
+   v94: seedBots() — Crea 5 usuarios de prueba en Firebase
+   Corre desde la consola del browser: seedBots()
+   Solo funciona si estás logueado como admin.
+   Crea cuentas reales en Firebase Auth + Firestore con
+   predicciones simuladas e inscripciones pendientes.
+══════════════════════════════════════════════════════════════ */
+window.seedBots = async function(){
+ if(!CUR||!CUR.isAdmin){toast('Solo admin','error');return;}
+ if(!fb||!fb.auth?.currentUser){toast('Debes estar logueado con Firebase','error');return;}
+ const BOTS=[
+  {name:'messi_fan_arg',  email:'bot_arg@qupa-test.dev', team:'Argentina', tier:'50',  champ:'Argentina', topscorer:'Lautaro Martínez'},
+  {name:'samba_brasil99', email:'bot_bra@qupa-test.dev', team:'Brasil',    tier:'20',  champ:'Brasil',    topscorer:'Vinícius Jr'},
+  {name:'futbol_esp2026', email:'bot_esp@qupa-test.dev', team:'España',    tier:'100', champ:'España',    topscorer:'Lamine Yamal'},
+  {name:'el_7_fra',       email:'bot_fra@qupa-test.dev', team:'Francia',   tier:'50',  champ:'Francia',   topscorer:'Kylian Mbappé'},
+  {name:'tricolor_mx',    email:'bot_mex@qupa-test.dev', team:'México',    tier:'20',  champ:'México',    topscorer:'Santi Giménez'},
+ ];
+ toast('Creando 5 bots en Firestore...','success');
+ let ok=0;
+ for(const bot of BOTS){
+  try{
+   // Generar ID único para el bot
+   const botId='bot_'+bot.email.split('@')[0]+'_'+Date.now().toString(36);
+   const quinielaId='tier_'+bot.tier+'_'+botId.slice(-8);
+   // Crear scores simulados para grupos
+   const scores={};
+   Object.entries(GD).forEach(([letter,teams])=>{
+    for(let i=0;i<teams.length;i++){
+     for(let j=i+1;j<teams.length;j++){
+      const key=`${letter}_${teams[i].n}_vs_${teams[j].n}`;
+      scores[key]={a:String(Math.floor(Math.random()*4)),b:String(Math.floor(Math.random()*4))};
+     }
+    }
+   });
+   // KO simulado
+   const ko={};
+   KO_ROUNDS.forEach(r=>{
+    for(let i=0;i<r.count;i++){
+     const a=Math.floor(Math.random()*3);
+     const b=Math.floor(Math.random()*3);
+     ko[`${r.id}_${i}`]={a:String(a),b:a===b?String(b+1):String(b)};
+    }
+   });
+   // Crear user en DB local
+   const u={
+    id:botId,
+    name:bot.name,
+    email:bot.email,
+    team:bot.team,
+    wcBalance:0,
+    isAdmin:false,
+    quinielas:{[quinielaId]:{groups:{},scores,ko,champ:bot.champ,topscorer:bot.topscorer,pts:Math.floor(Math.random()*80)+30}},
+    activeQuinielaId:quinielaId,
+    entries:[{id:'e_'+botId,tier:bot.tier,quinielaId,joinedAt:Date.now()-Math.floor(Math.random()*3*86400000),status:'pending',referrerId:null}],
+    ledger:[],
+    createdAt:Date.now()-Math.floor(Math.random()*5*86400000),
+   };
+   DB.users.push(u);
+   // Subir a Firestore
+   if(window.fsMode&&fb.db){
+    await fb.db.collection('users').doc(botId).set({
+     id:botId,email:bot.email,name:bot.name,isAdmin:false,
+     referrerId:null,legal:{ageConfirmed:true,tycAccepted:true,tycVersion:1,acceptedAt:Date.now()},
+     createdAt:u.createdAt,updatedAt:Date.now(),
+    });
+    await fb.db.collection('entries').doc(quinielaId).set({
+     quinielaId,userId:botId,userAuthUid:botId,userName:bot.name,userEmail:bot.email,
+     tier:bot.tier,tierName:TIER_NAMES[bot.tier]||'Liga',status:'pending',
+     referrerId:null,joinedAt:u.entries[0].joinedAt,approvedAt:null,approvedBy:null,updatedAt:Date.now(),
+    });
+    // Subir predicciones en batch
+    const batch=fb.db.batch();
+    Object.entries(scores).slice(0,20).forEach(([matchKey,sc])=>{
+     const ref=fb.db.collection('users').doc(botId).collection('predictions').doc(`${quinielaId}_${matchKey}`);
+     batch.set(ref,{quinielaId,matchKey,type:'group',scoreA:sc.a,scoreB:sc.b,updatedAt:Date.now()});
+    });
+    await batch.commit();
+   }
+   saveDB();
+   ok++;
+   console.log(`[Bot ${ok}/5] ${bot.name} creado → ${quinielaId}`);
+  }catch(err){
+   console.error(`[Bot] Error en ${bot.name}:`,err.message);
+  }
+ }
+ toast(`${ok}/5 bots creados · Revisa inscripciones pendientes`,'success');
+ if(typeof renderAdminDashboard==='function')renderAdminDashboard();
+ console.log(`[seedBots] Listo. ${ok}/5 bots en Firestore y localStorage.`);
+ console.log('[seedBots] Corre: navTo("admin") para ver las inscripciones pendientes.');
+};
+console.log('[WC26] Admin helpers disponibles: makeAdmin("tu@email.com") · resetDB() · seedBots()');
 
 /* v66: Exponer TODAS las funciones admin a window para que onclick="..." funcione */
 (function exposeAdminFunctions(){
