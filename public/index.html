@@ -6167,7 +6167,17 @@ DB.privateLeagues.forEach(l=>{
  l.fee=0;
  }
 });
+// v93: Migración suave — quitar isAdmin:true de usuarios demo seed (IDs d1-d7)
+// Caches viejos pueden tener el seed d1 con isAdmin:true. El admin real
+// se promueve solo via Firestore. No borramos datos del usuario, solo corregimos el flag.
+const DEMO_IDS=['d1','d2','d3','d4','d5','d6','d7'];
+DB.users.forEach(u=>{
+ if(DEMO_IDS.includes(u.id)&&u.isAdmin===true){u.isAdmin=false;}
+});
+saveDB();
 let CUR=JSON.parse(localStorage.getItem('wc26v5_cur')||'null');
+// v93: si CUR es un usuario demo seed con isAdmin:true en cache viejo, corregirlo
+if(CUR&&DEMO_IDS.includes(CUR.id)&&CUR.isAdmin===true){CUR.isAdmin=false;}
 
 function saveDB(){localStorage.setItem('wc26v5_db',JSON.stringify(DB));}
 function saveCur(){localStorage.setItem('wc26v5_cur',JSON.stringify(CUR));}
@@ -7720,6 +7730,12 @@ function onScoreChange(inp){
  if(!q.scores[cleanKey])q.scores[cleanKey]={a:'',b:''};
  if(isA)q.scores[cleanKey].a=inp.value;
  else q.scores[cleanKey].b=inp.value;
+ // v93: clamp en JS — HTML min/max es solo UX, no seguridad
+ const raw=parseInt(inp.value);
+ const clamped=isNaN(raw)?'':(Math.max(0,Math.min(20,raw))).toString();
+ if(inp.value!==''&&clamped!==inp.value){inp.value=clamped;}
+ if(isA)q.scores[cleanKey].a=clamped;
+ else q.scores[cleanKey].b=clamped;
  console.log('[Step4 DEBUG] onScoreChange:',cleanKey,'=',q.scores[cleanKey],'qid:',CUR.activeQuinielaId);
  recalcPts();sync();
  // Log debounced (espera 1.5s para agrupar ediciones rapidas)
