@@ -6085,7 +6085,7 @@ function getMatchLoser(roundId, idx){
 }
 
 const DEMO=[
- {id:'d1',name:'el_pulpo_pablo',email:'pablo@demo.com',pass:'demo123',team:'Argentina',isAdmin:true,
+ {id:'d1',name:'el_pulpo_pablo',email:'pablo@demo.com',pass:'demo123',team:'Argentina',isAdmin:false, // v92: admin real se promueve via Firestore, no via seed
  quinielas:{free:{groups:{},scores:{},ko:{},champ:'',topscorer:'',pts:0},tier_50_1:{groups:{},scores:{},ko:{},champ:'Argentina',topscorer:'Lautaro Martinez',pts:142}},
  activeQuinielaId:'tier_50_1',entries:[{tier:'50',entryNum:1,joinedAt:Date.now()-86400000*10,quinielaId:'tier_50_1',status:'approved',approvedAt:Date.now()-86400000*10}]},
  {id:'d2',name:'goleadora99',email:'gol@demo.com',pass:'demo123',team:'Brasil',
@@ -6670,6 +6670,8 @@ function doLogout(){
  stopMyUserListener();
  stopResultsListeners();
  stopAllStep5Listeners();
+ // v92: limpiar el timer de verificacion de email para evitar acumulacion en re-logins
+ if(window._verifyCheckTimer){clearInterval(window._verifyCheckTimer);window._verifyCheckTimer=null;}
  // Cerrar tambien en Firebase si hay sesion
  fb.auth.signOut().catch(()=>{});
  CUR=null;
@@ -6741,7 +6743,7 @@ fb.auth.onAuthStateChanged(async user=>{
 /* ── ENTER APP ── */
 function enterApp(){
  goTo('screen-app');
- const _hav=document.getElementById('header-av');if(_hav)_hav.textContent=initials(CUR.name);
+ const _hav=document.getElementById('header-av');if(_hav)_hav.textContent=initials(CUR?.name||''); // v92: guard name nulo
  // Migration: ensure quinielas object exists
  if(!CUR.quinielas)CUR.quinielas={};
  // (Quiniela libre eliminada en v19. Solo hay ligas pagadas con premio)
@@ -6777,7 +6779,7 @@ function enterApp(){
  }
  },1000);
 }
-function initials(n){return n.slice(0,2).toUpperCase();}
+function initials(n){return (n||'??').slice(0,2).toUpperCase();} // v92: guard contra name undefined
 function updatePts(){
  const q=getActiveQ();
  document.getElementById('header-pts').textContent=q?q.pts:0;
