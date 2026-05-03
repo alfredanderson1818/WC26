@@ -237,6 +237,463 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
 }
 
 /* v97: Banner "Modo vista previa" brutalist */
+
+/* ════════════════════════════════════════════════════════
+   v98: BARRIDO GLOBAL - Neutralizar TODOS los inline styles
+   con gradientes/rgba/border-radius del estilo Apple viejo.
+   Aplica brutalist consistente en TODA la app sin tocar HTML.
+   ════════════════════════════════════════════════════════ */
+
+/* ════════════════════════════════════════════════════════
+   v98: PAGINA RANKING REDISEÑADA
+   - Header limpio y ordenado
+   - Tabs brutalist horizontales
+   - Banner premio brutalist con sombra dorada
+   - Podio rediseñado con cuadrados grandes
+   - Tabla compacta, alta legibilidad
+   ════════════════════════════════════════════════════════ */
+
+/* Header del ranking - mejor jerarquia */
+#page-ranking{padding-top:8px}
+#page-ranking #rank-live-indicator button{
+ border-radius:0 !important;
+ border:2px solid #000 !important;
+ background:#000 !important;
+ color:#C9F23A !important;
+ font-family:'JetBrains Mono',monospace !important;
+ font-weight:800 !important;
+ letter-spacing:1px !important;
+ box-shadow:3px 3px 0 #C9F23A !important;
+}
+#page-ranking #rank-live-indicator button:active{
+ transform:translate(2px,2px);
+ box-shadow:0 0 0 #C9F23A !important;
+}
+[data-theme="light"] #page-ranking #rank-live-indicator button{
+ background:#000 !important;
+ color:#C9F23A !important;
+ box-shadow:3px 3px 0 #000 !important;
+}
+
+/* Tabs de ligas (Quiniela $20 / $50 / $100 / Privadas) */
+.rank-tabs{
+ display:flex;flex-wrap:nowrap;gap:6px;
+ margin-bottom:18px;
+ overflow-x:auto;
+ -webkit-overflow-scrolling:touch;
+ scrollbar-width:none;
+ padding-bottom:4px;
+}
+.rank-tabs::-webkit-scrollbar{display:none}
+.rank-tab{
+ flex-shrink:0;
+ padding:10px 16px;
+ background:transparent;
+ border:2px solid var(--t);
+ border-radius:0 !important;
+ font-family:'Anton','Bebas Neue',sans-serif;
+ font-size:14px;
+ font-weight:400;
+ color:var(--t);
+ cursor:pointer;
+ text-transform:uppercase;
+ letter-spacing:-.2px;
+ transition:transform .1s;
+ white-space:nowrap;
+}
+.rank-tab.active{
+ background:#FFD700;
+ color:#000;
+ border-color:#000;
+ box-shadow:3px 3px 0 #000;
+}
+[data-theme="light"] .rank-tab{border-color:#000}
+[data-theme="light"] .rank-tab.active{background:#000;color:#FFD700;border-color:#000}
+.rank-tab:active{transform:translate(2px,2px)}
+
+/* Banner premio */
+.rank-prize-banner{
+ padding:18px;
+ margin-bottom:20px;
+ text-align:center;
+ border-radius:0 !important;
+ background:#A8123E !important;
+ border:3px solid #FFFFFF !important;
+ box-shadow:6px 6px 0 #FFD700 !important;
+}
+[data-theme="light"] .rank-prize-banner{
+ border-color:#000 !important;
+ box-shadow:6px 6px 0 #FFD700 !important;
+}
+.rank-prize-banner > *{color:#FFFFFF !important}
+.rank-prize-banner [class*="prize"]{color:#FFD700 !important}
+
+/* Podio brutalist - 3 cuadrados grandes */
+.podium-v2{
+ display:grid !important;
+ grid-template-columns:1fr 1.2fr 1fr !important;
+ gap:8px !important;
+ margin-bottom:20px;
+ align-items:end !important;
+ padding:0 !important;
+ border:none !important;
+}
+.podium-spot{
+ padding:14px 8px 16px !important;
+ text-align:center;
+ border-radius:0 !important;
+ position:relative;
+ max-width:none !important;
+ flex:none !important;
+ display:block !important;
+}
+[data-theme="dark"] .podium-spot{background:#000;border:3px solid #FFFFFF}
+[data-theme="light"] .podium-spot{background:#FFFFFF;border:3px solid #000000}
+
+/* Posicion 1 - dorado, MAS GRANDE */
+.podium-spot-1{
+ order:2 !important;
+ background:#FFD700 !important;
+ border-color:#000 !important;
+ box-shadow:5px 5px 0 #000 !important;
+ padding:18px 8px 22px !important;
+ transform:translateY(-12px);
+}
+.podium-spot-1 *{color:#000 !important}
+.podium-spot-1 .podium-avatar{
+ width:62px !important;height:62px !important;
+ background:#FFFFFF !important;
+ border:3px solid #000 !important;
+ border-radius:0 !important;
+ font-family:'Anton','Bebas Neue',sans-serif !important;
+ font-size:24px !important;
+ color:#000 !important;
+ margin:0 auto 8px !important;
+ display:flex !important;
+ align-items:center !important;
+ justify-content:center !important;
+ position:relative;
+ box-shadow:none !important;
+}
+.podium-spot-1 .podium-name{
+ font-family:'Anton','Bebas Neue',sans-serif !important;
+ font-size:14px !important;
+ font-weight:400 !important;
+ text-transform:uppercase !important;
+ letter-spacing:-.3px !important;
+ line-height:1.1 !important;
+ word-break:break-word !important;
+ margin:6px 0 4px !important;
+}
+.podium-spot-1 .podium-pts{
+ font-family:'JetBrains Mono',monospace !important;
+ font-size:11px !important;
+ font-weight:800 !important;
+ letter-spacing:1px !important;
+ margin-top:2px !important;
+}
+
+/* Posicion 2 - cyan brutalist */
+.podium-spot-2{
+ order:1 !important;
+ background:#3DDBD9 !important;
+ border-color:#000 !important;
+ box-shadow:4px 4px 0 #000 !important;
+}
+.podium-spot-2 *{color:#000 !important}
+
+/* Posicion 3 - naranja brutalist */
+.podium-spot-3{
+ order:3 !important;
+ background:#FF3D00 !important;
+ border-color:#000 !important;
+ box-shadow:4px 4px 0 #000 !important;
+}
+.podium-spot-3 *{color:#FFFFFF !important}
+
+.podium-spot-2 .podium-avatar,
+.podium-spot-3 .podium-avatar{
+ width:50px !important;height:50px !important;
+ background:#FFFFFF !important;
+ border:2.5px solid #000 !important;
+ border-radius:0 !important;
+ font-family:'Anton','Bebas Neue',sans-serif !important;
+ font-size:18px !important;
+ color:#000 !important;
+ margin:0 auto 6px !important;
+ display:flex !important;
+ align-items:center !important;
+ justify-content:center !important;
+ box-shadow:none !important;
+}
+.podium-spot-3 .podium-avatar{background:#FFD700 !important}
+
+.podium-spot .podium-name{
+ font-family:'Anton','Bebas Neue',sans-serif !important;
+ font-size:13px !important;
+ font-weight:400 !important;
+ text-transform:uppercase !important;
+ letter-spacing:-.2px !important;
+ line-height:1.1 !important;
+ word-break:break-word !important;
+ margin:4px 0 2px !important;
+}
+.podium-spot .podium-pts{
+ font-family:'JetBrains Mono',monospace !important;
+ font-size:10px !important;
+ font-weight:800 !important;
+ letter-spacing:1px !important;
+}
+
+/* Medalla number escondida (el podio ya muestra orden visualmente) */
+.podium-medal{display:none !important}
+
+/* Tabla del ranking - filas brutalist con clase rank-row-v2 */
+.rank-table{
+ overflow:hidden;
+ border-radius:0 !important;
+ border:none !important;
+ background:transparent !important;
+}
+.rank-row-v2{
+ display:grid !important;
+ grid-template-columns:36px 36px 1fr auto !important;
+ align-items:center;
+ gap:10px !important;
+ padding:12px 14px !important;
+ border-radius:0 !important;
+ margin-bottom:6px !important;
+}
+[data-theme="dark"] .rank-row-v2{
+ background:#000 !important;
+ border:2px solid #333 !important;
+}
+[data-theme="light"] .rank-row-v2{
+ background:#FFFFFF !important;
+ border:2px solid #000 !important;
+}
+.rank-row-v2.me{
+ background:#FFD700 !important;
+ border-color:#000 !important;
+ box-shadow:3px 3px 0 #000 !important;
+}
+.rank-row-v2.me *{color:#000 !important}
+.rank-row-v2:last-child{margin-bottom:0}
+
+.rank-row-v2-pos{
+ font-family:'Anton','Bebas Neue',sans-serif !important;
+ font-size:22px !important;
+ font-weight:400 !important;
+ letter-spacing:-1px !important;
+ color:#FFD700 !important;
+ text-align:center;
+ line-height:1 !important;
+}
+[data-theme="light"] .rank-row-v2-pos{color:#FF3D00 !important}
+.rank-row-v2.me .rank-row-v2-pos{color:#000 !important}
+
+.rank-row-v2-av{
+ width:36px !important;height:36px !important;
+ border-radius:0 !important;
+ background:#FFD700 !important;
+ border:2px solid #000 !important;
+ display:flex;align-items:center;justify-content:center;
+ font-family:'Anton',sans-serif !important;
+ font-weight:400 !important;
+ font-size:14px !important;
+ color:#000 !important;
+ flex-shrink:0;
+ box-shadow:none !important;
+}
+
+.rank-row-v2-info{min-width:0;overflow:hidden}
+.rank-row-v2-name{
+ font-family:'Anton','Bebas Neue',sans-serif !important;
+ font-size:15px !important;
+ font-weight:400 !important;
+ text-transform:uppercase !important;
+ letter-spacing:-.2px !important;
+ color:var(--t) !important;
+ line-height:1.1 !important;
+ overflow:hidden;
+ text-overflow:ellipsis;
+ white-space:nowrap;
+}
+.rank-row-v2-meta{
+ font-family:'JetBrains Mono',monospace !important;
+ font-size:9.5px !important;
+ font-weight:600 !important;
+ color:var(--t2) !important;
+ text-transform:uppercase !important;
+ letter-spacing:.5px !important;
+ margin-top:2px !important;
+}
+.rank-row-v2-pts{
+ font-family:'Anton','Bebas Neue',sans-serif !important;
+ font-size:24px !important;
+ font-weight:400 !important;
+ color:#FFD700 !important;
+ letter-spacing:-1px !important;
+ line-height:1 !important;
+}
+[data-theme="light"] .rank-row-v2-pts{color:#000 !important}
+.rank-row-v2.me .rank-row-v2-pts{color:#000 !important}
+
+/* Banner premio (legacy + nuevo) */
+.rank-prize-banner,
+.rank-prize-empty{
+ padding:18px;
+ margin-bottom:20px;
+ text-align:center;
+ border-radius:0 !important;
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ gap:14px;
+}
+[data-theme="dark"] .rank-prize-banner{
+ background:#A8123E !important;
+ border:3px solid #FFFFFF !important;
+ box-shadow:6px 6px 0 #FFD700 !important;
+}
+[data-theme="light"] .rank-prize-banner{
+ background:#A8123E !important;
+ border:3px solid #000 !important;
+ box-shadow:6px 6px 0 #FFD700 !important;
+}
+.rank-prize-info{flex:1;text-align:left}
+.rank-prize-label{
+ font-family:'JetBrains Mono',monospace;
+ font-size:10px;
+ color:#FFFFFF !important;
+ text-transform:uppercase;
+ letter-spacing:2px;
+ font-weight:800;
+ margin-bottom:4px;
+ opacity:.9;
+}
+.rank-prize-amount{
+ font-family:'Anton','Bebas Neue',sans-serif !important;
+ font-size:42px !important;
+ color:#FFD700 !important;
+ line-height:1 !important;
+ letter-spacing:-2px !important;
+ font-weight:400 !important;
+}
+.rank-prize-sub{
+ font-family:'JetBrains Mono',monospace;
+ font-size:10px;
+ color:#FFFFFF !important;
+ margin-top:6px;
+ font-weight:600;
+ letter-spacing:.5px;
+ text-transform:uppercase;
+ opacity:.85;
+}
+.rank-prize-icon{
+ width:50px;height:50px;
+ background:#FFD700;
+ border:2px solid #000;
+ display:flex;align-items:center;justify-content:center;
+ color:#000;
+ flex-shrink:0;
+}
+.rank-prize-empty{
+ background:transparent !important;
+ border:2px dashed var(--t2) !important;
+ color:var(--t2);
+ font-family:'JetBrains Mono',monospace;
+ font-size:11px;
+ font-weight:600;
+ text-align:center;
+ padding:24px;
+ line-height:1.4;
+}
+
+/* Quinielas privadas section en ranking */
+#rank-private-section h2,
+#rank-private-section h3{
+ font-family:'Anton','Bebas Neue',sans-serif !important;
+ font-size:24px !important;
+ font-weight:400 !important;
+ text-transform:uppercase !important;
+ letter-spacing:-.5px !important;
+ color:var(--t) !important;
+ margin-bottom:12px !important;
+}
+
+/* Cualquier div con gradiente dorado inline → brutalist box */
+[data-theme="dark"] [style*="linear-gradient(135deg,rgba(255,215,0"]{
+ background:#000 !important;
+ border:3px solid #FFFFFF !important;
+ border-radius:0 !important;
+ box-shadow:5px 5px 0 #FFD700 !important;
+}
+[data-theme="light"] [style*="linear-gradient(135deg,rgba(255,215,0"]{
+ background:#FFFFFF !important;
+ border:3px solid #000000 !important;
+ border-radius:0 !important;
+ box-shadow:5px 5px 0 #FFD700 !important;
+}
+
+/* Verde (success/private) gradiente → brutalist verde */
+[data-theme="dark"] [style*="linear-gradient(135deg,rgba(91,201,125"]{
+ background:#000 !important;
+ border:3px solid #FFFFFF !important;
+ border-radius:0 !important;
+ box-shadow:5px 5px 0 #C9F23A !important;
+}
+[data-theme="light"] [style*="linear-gradient(135deg,rgba(91,201,125"]{
+ background:#FFFFFF !important;
+ border:3px solid #000000 !important;
+ border-radius:0 !important;
+ box-shadow:5px 5px 0 #0F5C3D !important;
+}
+
+/* Cards genéricas con bg-secondary y border-radius redondeado */
+[data-theme="dark"] [style*="background:var(--bg3)"][style*="border-radius:1"]{
+ background:#000 !important;
+ border:2px solid #FFFFFF !important;
+ border-radius:0 !important;
+}
+[data-theme="light"] [style*="background:var(--bg3)"][style*="border-radius:1"]{
+ background:#FFFFFF !important;
+ border:2px solid #000000 !important;
+ border-radius:0 !important;
+}
+[data-theme="dark"] [style*="background:var(--bg4)"]{
+ background:#1A1A1A !important;
+ border:2px solid #FFFFFF !important;
+ border-radius:0 !important;
+}
+[data-theme="light"] [style*="background:var(--bg4)"]{
+ background:#F5F5F5 !important;
+ border:2px solid #000000 !important;
+ border-radius:0 !important;
+}
+
+/* Botones genéricos con background:#25D366 (whatsapp green) - mantener verde pero brutalist */
+[style*="background:#25D366"]{
+ border-radius:0 !important;
+ border:2px solid #000 !important;
+ font-family:'Anton','Bebas Neue',sans-serif !important;
+ font-weight:400 !important;
+ text-transform:uppercase !important;
+ letter-spacing:0 !important;
+ box-shadow:3px 3px 0 #000 !important;
+}
+
+/* SVG icons con border-radius:50% (círculos) → cuadrados brutalist */
+[style*="border-radius:50%"][style*="background:rgba(255,215,0"]{
+ border-radius:0 !important;
+ background:#FFD700 !important;
+ border:2px solid #000 !important;
+}
+[style*="border-radius:50%"][style*="background:rgba(91,201,125"]{
+ border-radius:0 !important;
+ background:#C9F23A !important;
+ border:2px solid #000 !important;
+}
 .brut-preview-banner{
  padding:14px;margin-bottom:14px;
  display:flex;align-items:center;gap:14px;
