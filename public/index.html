@@ -219,6 +219,98 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
 .btn-primary{background:#FFD700;color:#000;box-shadow:6px 6px 0 #FFFFFF;border-color:#FFFFFF;font-weight:400}
 .btn-primary:active{transform:translate(3px,3px);box-shadow:3px 3px 0 #FFFFFF}
 .btn-secondary{background:#000;color:#fff;border:3px solid #FFFFFF}
+
+/* v94: Scoring custom modal brutalist */
+.scoring-cat-title{
+ font-family:'JetBrains Mono',monospace;
+ font-size:11px;font-weight:800;
+ color:#FF3D00;
+ text-transform:uppercase;letter-spacing:2px;
+ margin-top:14px;margin-bottom:8px;
+ padding-bottom:6px;
+ border-bottom:2px solid #FF3D00;
+}
+
+/* v94: Tab code brutalist (modal liga privada) */
+.brut-priv-code-card{
+ padding:20px;margin-bottom:14px;text-align:center;border-radius:0;
+}
+[data-theme="dark"] .brut-priv-code-card{background:#000;border:3px solid #FFFFFF;box-shadow:6px 6px 0 #FFD700}
+[data-theme="light"] .brut-priv-code-card{background:#FFFFFF;border:3px solid #000000;box-shadow:6px 6px 0 #FFD700}
+.brut-priv-code-label{
+ font-family:'JetBrains Mono',monospace;
+ font-size:11px;color:#FF3D00;
+ text-transform:uppercase;letter-spacing:2px;
+ font-weight:800;margin-bottom:14px;
+}
+.brut-priv-code-big{
+ font-family:'Anton','Bebas Neue',sans-serif;
+ font-size:42px;color:#FFD700;
+ letter-spacing:-1px;line-height:1;
+ padding:14px 18px;margin-bottom:18px;
+ word-break:break-all;font-weight:400;
+ border:2px solid #FFD700;
+}
+[data-theme="light"] .brut-priv-code-big{background:#FFD700;color:#000;border-color:#000}
+[data-theme="dark"] .brut-priv-code-big{background:#1A1A1A}
+
+.brut-priv-scoring-card{
+ padding:16px;border-radius:0;
+}
+[data-theme="dark"] .brut-priv-scoring-card{background:#000;border:3px solid #FFFFFF;box-shadow:6px 6px 0 #FF3D00}
+[data-theme="light"] .brut-priv-scoring-card{background:#FFFFFF;border:3px solid #000000;box-shadow:6px 6px 0 #FF3D00}
+
+.scoring-cat-title:first-child{margin-top:0}
+.scoring-row{
+ display:flex;align-items:center;gap:10px;
+ padding:8px 0;
+}
+.scoring-label{
+ flex:1;
+ font-family:'JetBrains Mono',monospace;
+ font-size:12px;font-weight:600;
+ color:var(--t);letter-spacing:.2px;
+}
+.scoring-input{
+ width:60px;
+ font-family:'Anton','Bebas Neue',sans-serif !important;
+ font-size:20px !important;
+ font-weight:400 !important;
+ text-align:center;
+ padding:4px 6px !important;
+ border-radius:0 !important;
+ letter-spacing:-.5px;
+}
+[data-theme="dark"] .scoring-input{background:#000 !important;border:2px solid #FFFFFF !important;color:#FFD700 !important}
+[data-theme="light"] .scoring-input{background:#FFFFFF !important;border:2px solid #000000 !important;color:#FF3D00 !important}
+.scoring-input:disabled{opacity:.5;cursor:not-allowed}
+.scoring-pts{
+ font-family:'JetBrains Mono',monospace;
+ font-size:9px;font-weight:800;
+ color:var(--t2);
+ letter-spacing:1px;
+}
+
+/* v94: Botón Dev Admin brutalist - solo en localhost */
+.btn-dev-admin{
+ width:100%;
+ background:#FF3D00;
+ color:#FFFFFF;
+ border:3px solid #000;
+ border-radius:0;
+ padding:14px 16px;
+ font-family:'Anton','Bebas Neue',sans-serif;
+ font-size:16px;
+ font-weight:400;
+ letter-spacing:0;
+ text-transform:uppercase;
+ cursor:pointer;
+ margin-top:8px;
+ box-shadow:4px 4px 0 #000;
+ transition:transform .1s;
+}
+.btn-dev-admin:active{transform:translate(2px,2px);box-shadow:0 0 0 #000}
+[data-theme="light"] .btn-dev-admin{background:#FF3D00;color:#FFFFFF;border-color:#000;box-shadow:4px 4px 0 #000}
 .btn-secondary:active{background:#fff;color:#000;transform:translate(2px,2px)}
 .btn-google{background:#fff;color:#3c4043;border:1px solid #dadce0;font-weight:600;display:flex;align-items:center;justify-content:center;margin-top:8px}
 .btn-google:active{background:#f8f9fa;transform:scale(.98)}
@@ -526,19 +618,40 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
 /* Hidden helper para grupos-content y mq-content */
 #grupos-content.hidden,#mq-content.hidden{display:none}
 
-/* ── BOTTOM NAV (4 items uniformes) ── */
-.app-bnav{position:fixed;bottom:0;left:0;right:0;z-index:100;background:var(--bnav-bg);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--b);display:flex;padding-bottom:var(--sb);padding-top:6px}
-.bnav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 4px 6px;background:none;border:none;cursor:pointer;color:var(--t3);gap:3px;-webkit-tap-highlight-color:transparent;touch-action:manipulation;transition:color .15s;font-family:'DM Sans',sans-serif}
+/* ── BOTTOM NAV BRUTALIST (5 items + admin) ── */
+.app-bnav{position:fixed;bottom:0;left:0;right:0;z-index:100;display:flex;padding-bottom:var(--sb);padding-top:8px;backdrop-filter:none;-webkit-backdrop-filter:none}
+[data-theme="dark"] .app-bnav{background:#0E0E0E;border-top:3px solid #FFFFFF}
+[data-theme="light"] .app-bnav{background:#FFFFFF;border-top:3px solid #000000}
+
+.bnav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px 4px 6px;background:none;border:none;cursor:pointer;gap:5px;-webkit-tap-highlight-color:transparent;touch-action:manipulation;transition:transform .1s;font-family:'JetBrains Mono',monospace;color:var(--t2)}
+.bnav-btn:active{transform:translate(1px,1px)}
+.bnav-btn.active{color:#FFD700}
+[data-theme="light"] .bnav-btn{color:#666}
+[data-theme="light"] .bnav-btn.active{color:#000}
+.bnav-btn svg{width:20px;height:20px;flex-shrink:0;stroke-width:2.5}
+.bnav-btn.active svg{stroke-width:3}
+.bnav-label{font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;white-space:nowrap}
+
+/* Botón Admin destacado con borde naranja brutalist */
+.bnav-btn.bnav-center{position:relative}
+.bnav-btn.bnav-center::after{content:'';position:absolute;bottom:6px;left:50%;transform:translateX(-50%);width:6px;height:6px;background:#FF3D00;opacity:.8}
+.bnav-btn.bnav-center.active::after{opacity:0}
+.bnav-btn.bnav-center .bnav-center-circle{display:contents}
 
 /* Admin page — centro de control */
-.admin-hero{background:linear-gradient(135deg,rgba(255,215,0,.15),rgba(255,215,0,.04));border:1px solid rgba(255,215,0,.3);border-radius:14px;padding:18px;margin-bottom:18px}
-.admin-hero-label{font-size:11px;color:var(--accent);text-transform:uppercase;letter-spacing:1px;font-weight:800;margin-bottom:4px}
-.admin-hero-amount{font-family:'Anton',sans-serif;font-size:48px;color:var(--accent);line-height:1;letter-spacing:.5px}
-.admin-hero-sub{font-size:12px;color:var(--t2);margin-top:6px}
-.admin-hero-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,215,0,.15)}
-.admin-hero-mini{text-align:center}
-.admin-hero-mini-num{font-family:'Anton',sans-serif;font-size:22px;color:var(--t)}
-.admin-hero-mini-lbl{font-size:10px;color:var(--t2);text-transform:uppercase;letter-spacing:.5px}
+.admin-hero{padding:18px;margin-bottom:18px;border-radius:0}
+[data-theme="dark"] .admin-hero{background:#000;border:3px solid #FFFFFF;box-shadow:8px 8px 0 #FFD700}
+[data-theme="light"] .admin-hero{background:#FFFFFF;border:3px solid #000000;box-shadow:8px 8px 0 #FFD700}
+.admin-hero-label{font-family:'JetBrains Mono',monospace;font-size:11px;color:#FF3D00;text-transform:uppercase;letter-spacing:2px;font-weight:800;margin-bottom:6px}
+.admin-hero-amount{font-family:'Anton','Bebas Neue',sans-serif;font-size:clamp(48px, 12vw, 64px);color:#FFD700;line-height:1;letter-spacing:-2px;font-weight:400}
+.admin-hero-sub{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--t2);margin-top:8px;font-weight:600;letter-spacing:.5px;text-transform:uppercase}
+.admin-hero-row{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-top:16px;border-top:2px solid var(--t)}
+[data-theme="light"] .admin-hero-row{border-top-color:#000}
+.admin-hero-mini{text-align:center;padding:14px 8px}
+.admin-hero-mini:first-child{border-right:2px solid var(--t)}
+[data-theme="light"] .admin-hero-mini:first-child{border-right-color:#000}
+.admin-hero-mini-num{font-family:'Anton','Bebas Neue',sans-serif;font-size:28px;color:var(--t);line-height:1;letter-spacing:-.5px;font-weight:400}
+.admin-hero-mini-lbl{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--t2);text-transform:uppercase;letter-spacing:1.5px;font-weight:800;margin-top:6px}
 
 .admin-cards{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .admin-card{padding:14px;cursor:pointer;transition:transform .1s;position:relative;display:flex;flex-direction:column;justify-content:space-between;min-height:110px;border-radius:0}
@@ -553,7 +666,7 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
 .admin-card-ico{width:40px;height:40px;border-radius:0;background:#FFD700;border:2px solid #000;display:flex;align-items:center;justify-content:center;color:#000;margin-bottom:10px}
 .admin-card-ico svg{width:20px;height:20px;stroke-width:2.5}
 .admin-card-title{font-family:'Anton','Bebas Neue',sans-serif;font-size:18px;font-weight:400;color:var(--t);margin-bottom:4px;text-transform:uppercase;letter-spacing:-.3px;line-height:1}
-.admin-card-sub{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--t2);line-height:1.4;font-weight:600;letter-spacing:.3px;text-transform:uppercase}
+.admin-card-sub{font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--t2);line-height:1.4;font-weight:500;letter-spacing:.2px;text-transform:none}
 .admin-card-badge{position:absolute;top:-8px;right:-8px;background:#FF3D00;color:#FFF;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:800;padding:4px 8px;border-radius:0;letter-spacing:.5px;border:2px solid #000;line-height:1}
 .admin-card.alert{}
 [data-theme="dark"] .admin-card.alert{box-shadow:4px 4px 0 #FF3D00}
@@ -572,14 +685,7 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
 .admin-pending-actions button{font-family:'Anton','Bebas Neue',sans-serif;font-size:13px;padding:8px 12px;font-weight:400;letter-spacing:0;text-transform:uppercase;border-radius:0;cursor:pointer;line-height:1;transition:transform .1s;border:2px solid #000}
 .admin-pending-actions button:active{transform:translate(2px,2px)}
 
-.bnav-btn.active{color:var(--gold)}
-.bnav-btn svg{width:22px;height:22px;flex-shrink:0}
-/* Botón centrado: mismo tamaño que los demás, solo con un punto dorado debajo cuando NO está activo */
-.bnav-btn.bnav-center{position:relative}
-.bnav-btn.bnav-center::after{content:'';position:absolute;bottom:2px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:var(--accent);opacity:.6;transition:opacity .15s, transform .15s}
-.bnav-btn.bnav-center.active::after{opacity:0}
 .bnav-btn.bnav-center .bnav-center-circle{display:contents}
-.bnav-label{font-size:10px;font-weight:500;white-space:nowrap}
 
 .app-content{flex:1;padding:20px 16px 110px;max-width:680px;margin:0 auto;width:100%}
 
@@ -794,7 +900,7 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
 .featured-match-time{font-size:13px;color:var(--t2);margin-bottom:14px;font-weight:600}
 .featured-match-teams{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}
 .featured-team{flex:1;display:flex;flex-direction:column;align-items:center;gap:8px;min-width:0}
-.featured-team .flag{width:48px;height:36px;border-radius:5px;flex-shrink:0}
+.featured-team .flag{width:64px;height:48px;border-radius:0;flex-shrink:0;box-shadow:0 0 0 2px #000, 4px 4px 0 #000}
 .featured-team-name{font-family:'Anton','Bebas Neue',sans-serif;font-size:20px;letter-spacing:.3px;color:var(--t);text-transform:uppercase;text-align:center;line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
 .featured-vs{font-family:'Anton','Bebas Neue',sans-serif;font-size:24px;color:var(--t3);letter-spacing:1px;flex-shrink:0}
 .featured-match-cta{display:flex;align-items:center;justify-content:center;gap:8px;background:var(--accent-dim);color:var(--accent);border:1px solid var(--accent);border-radius:8px;padding:12px;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;cursor:pointer;width:100%;font-family:'Inter',sans-serif;transition:all .15s}
@@ -821,7 +927,7 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
 .dash-up-teams{flex:1;display:flex;align-items:center;justify-content:center;gap:10px;min-width:0}
 .dash-up-team{display:flex;align-items:center;gap:6px;flex:1;min-width:0}
 .dash-up-team.r{justify-content:flex-end}
-.dash-up-team .flag{width:24px;height:18px;border-radius:0}
+.dash-up-team .flag{width:32px;height:24px;border-radius:0;box-shadow:0 0 0 2px #000}
 .dash-up-team .team-code{font-family:'Anton','Bebas Neue',sans-serif;font-size:14px;letter-spacing:-.3px;text-transform:uppercase;color:var(--t)}
 .dash-up-vs{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--t2);font-weight:800;flex-shrink:0;letter-spacing:1px}
 .dash-up-status{font-family:'JetBrains Mono',monospace;font-size:9px;color:#0FFF50;font-weight:800;text-transform:uppercase;letter-spacing:1px;flex-shrink:0;padding:4px 6px;background:rgba(15,255,80,.1)}
@@ -888,11 +994,11 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
 /* ── BANDERAS CSS INLINE (NO requiere red) ──
  Cada país tiene su patrón con linear-gradient. Render via:
  flagImg('ar','md') → <span class="flag flag-md" data-cc="ARG"></span> */
-.flag{display:inline-block;border-radius:2px;flex-shrink:0;background:#444;box-shadow:0 0 0 1px rgba(255,255,255,.10), 0 1px 3px rgba(0,0,0,.4);position:relative;overflow:hidden;vertical-align:-3px}
-.flag-sm{width:18px;height:13px}
-.flag-md{width:22px;height:16px}
-.flag-lg{width:36px;height:27px;border-radius:3px}
-.flag-xl{width:48px;height:36px;border-radius:4px}
+.flag{display:inline-block;border-radius:0;flex-shrink:0;background:#444;box-shadow:0 0 0 2px #000;position:relative;overflow:hidden;vertical-align:-3px}
+.flag-sm{width:24px;height:18px}
+.flag-md{width:36px;height:27px}
+.flag-lg{width:52px;height:39px;box-shadow:0 0 0 2px #000, 3px 3px 0 #000}
+.flag-xl{width:72px;height:54px;box-shadow:0 0 0 2px #000, 4px 4px 0 #000}
 
 /* Banderas de 3 franjas verticales: cc, c1 c2 c3 son colores izq medio der */
 .flag[data-cc="MEX"]{background:linear-gradient(90deg,#006847 0 33.33%,#fff 33.33% 66.66%,#CE1126 66.66%)}
@@ -1713,17 +1819,19 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
  text-transform:uppercase !important;
 }
 
-/* SECTION TITLES BRUTALIST: Anton enorme + skewX accent */
+/* SECTION TITLES BRUTALIST: Anton fluid (no se corta en mobile) */
 [data-theme="dark"] .sec-title,
 [data-theme="dark"] h1.sec-title,
 [data-theme="dark"] h2.sec-title{
  font-family:'Anton','Bebas Neue',sans-serif !important;
- font-size:42px !important;
+ font-size:clamp(24px, 7vw, 34px) !important;
  font-weight:400 !important;
- letter-spacing:-1.5px !important;
- line-height:.9 !important;
+ letter-spacing:-1px !important;
+ line-height:.95 !important;
  text-transform:uppercase !important;
  color:#FFFFFF !important;
+ word-wrap:break-word !important;
+ overflow-wrap:break-word !important;
 }
 
 /* Modales brutalist */
@@ -2082,12 +2190,14 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
 [data-theme="light"] h1.sec-title,
 [data-theme="light"] h2.sec-title{
  font-family:'Anton','Bebas Neue',sans-serif !important;
- font-size:42px !important;
+ font-size:clamp(24px, 7vw, 34px) !important;
  font-weight:900 !important;
- letter-spacing:-1.5px !important;
- line-height:.9 !important;
+ letter-spacing:-1px !important;
+ line-height:.95 !important;
  text-transform:uppercase !important;
  color:#000000 !important;
+ word-wrap:break-word !important;
+ overflow-wrap:break-word !important;
 }
 
 [data-theme="light"] .modal-inner{
@@ -2796,7 +2906,7 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="margin-left:6px"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
  </button>
  <button class="btn btn-secondary btn-full" onclick="goTo('screen-login')">Ya tengo cuenta</button>
- <button id="dev-admin-btn" class="btn btn-secondary btn-full" onclick="devAdminLogin()" style="display:none;border-color:#FF6B35;color:#FF6B35;margin-top:6px;font-size:13px"> Dev Admin (local only)</button>
+ <button id="dev-admin-btn" class="btn btn-dev-admin" onclick="devAdminLogin()" style="display:none">▶ DEV ADMIN · LOCAL ONLY</button>
 
  <!-- TRUST INDICATORS -->
  <div class="ob-trust">
@@ -2849,7 +2959,7 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
  </div>
 
  <div class="auth-card">
- <button class="btn btn-google btn-full" id="reg-google-btn" onclick="doGoogleLogin()" disabled style="margin-top:0">
+ <button class="btn btn-google btn-full" id="reg-google-btn" onclick="doGoogleLogin()" style="margin-top:0">
  <svg viewBox="0 0 24 24" width="18" height="18" style="margin-right:8px;vertical-align:-3px"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
  Continuar con Google
  </button>
@@ -3230,11 +3340,11 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
 
  <!-- Panel admin (solo visible si CUR.isAdmin) -->
  <div id="admin-panel" class="hidden" style="margin-top:24px">
- <h3 style="font-size:14px;font-weight:600;margin-bottom:10px;color:var(--gold);display:flex;align-items:center;gap:6px">
- <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1l3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></svg>
- Panel admin
+ <h3 style="font-family:'Anton','Bebas Neue',sans-serif;font-size:24px;font-weight:400;margin-bottom:8px;color:var(--t);display:flex;align-items:center;gap:8px;text-transform:uppercase;letter-spacing:-.5px;line-height:1">
+ <svg width="20" height="20" viewBox="0 0 24 24" fill="#FFD700" stroke="#000" stroke-width="2"><path d="M12 1l3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1z"/></svg>
+ Panel Admin
  </h3>
- <p style="font-size:12px;color:var(--t2);margin-bottom:14px">Aprueba inscripciones pendientes despues de confirmar el pago por fuera de la app.</p>
+ <p style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--t2);margin-bottom:14px;line-height:1.4;font-weight:500">Aprueba inscripciones pendientes despues de confirmar el pago por fuera de la app.</p>
  <div id="admin-pending"></div>
  </div>
 
@@ -3318,6 +3428,37 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
 
 <script>
 /* ══════════════════════════════════════════
+ v92: Logger gateado - desactiva console.log en produccion
+ Solo deja console.error y console.warn que son criticos
+══════════════════════════════════════════ */
+(function(){
+ const h = location.hostname;
+ const isLocal = h==='localhost'||h==='127.0.0.1'||h===''||h.startsWith('192.168.')||h.endsWith('.local');
+ if(!isLocal){
+  // En produccion: silenciar console.log e console.info
+  // Mantener console.error, console.warn (informacion critica para debugging real)
+  console.log = function(){};
+  console.info = function(){};
+  console.debug = function(){};
+ }
+})();
+
+/* ══════════════════════════════════════════
+ v92: escapeHTML helper - sanitiza nombres de usuarios para innerHTML
+ Previene rotura de layout con nombres como "<test>" o "name & co"
+══════════════════════════════════════════ */
+function escapeHTML(str){
+ if(str==null)return '';
+ return String(str)
+  .replace(/&/g,'&amp;')
+  .replace(/</g,'&lt;')
+  .replace(/>/g,'&gt;')
+  .replace(/"/g,'&quot;')
+  .replace(/'/g,'&#039;');
+}
+window.escapeHTML = escapeHTML;
+
+/* ══════════════════════════════════════════
  DATA
 ══════════════════════════════════════════ */
 /* GRUPOS OFICIALES FIFA WORLD CUP 2026
@@ -3378,32 +3519,6 @@ function flagImg(iso, size='md'){
  const cc=ISO_TO_CC[iso.toLowerCase()]||iso.toUpperCase();
  return `<span class="flag flag-${size}" data-cc="${cc}"></span>`;
 }
-/* ── v91: MATCHES global — usado por isMatchLikelyLive() para detectar partidos en vivo ──
-   Se construye una vez al cargar, con los kickoffs calculados igual que buildUpcomingUI.
-   Estructura: { groups: [{key, kickoff},...], ko: [{key, kickoff},...] }            */
-const MATCHES=(function buildMatchesIndex(){
- const groups=[];
- Object.entries(GD).forEach(([letter,teams])=>{
-  let idx=0;
-  for(let i=0;i<teams.length;i++){
-   for(let j=i+1;j<teams.length;j++){
-    groups.push({key:`${letter}_${teams[i].n}_vs_${teams[j].n}`,kickoff:new Date(getMatchKickoff(letter,idx)).toISOString()});
-    idx++;
-   }
-  }
- });
- const ko=[];
- // KO_ROUNDS se define justo abajo; usamos los offsets directamente
- const koRoundIds=['r32','r16','qf','sf','tp','f'];
- const koCounts={r32:16,r16:8,qf:4,sf:2,tp:1,f:1};
- koRoundIds.forEach(roundId=>{
-  const count=koCounts[roundId]||1;
-  for(let i=0;i<count;i++){
-   ko.push({key:`${roundId}_${i}`,kickoff:new Date(getKOKickoff(roundId,i)).toISOString()});
-  }
- });
- return {groups,ko};
-})();
 const KO_ROUNDS=[
  {id:'r32',label:'32avos de final',pts:'10 pts / ganador',count:16},
  {id:'r16',label:'Octavos de final',pts:'15 pts / ganador',count:8},
@@ -6331,19 +6446,15 @@ function navTo(page){
  // Renderizar lista de mis ligas (incluso vacia)
  renderMyLeagues();
  }
- if(page==='ranking'){
-  renderRanking();
-  // v91: actualizar label EN VIVO / ACTUALIZAR al navegar a ranking
-  setTimeout(()=>{
-   const dot=document.getElementById('rank-live-dot');
-   const label=document.getElementById('rank-live-label');
-   const live=isMatchLikelyLive();
-   if(label)label.textContent=live?'EN VIVO':'ACTUALIZAR';
-   if(dot)dot.style.animation=live?'blink 1s infinite':'none';
-  },100);
- }
+ if(page==='ranking')renderRanking();
  if(page==='perfil')renderPerfil();
- if(page==='admin')renderAdminDashboard();
+ if(page==='admin'){
+  // v92: Token de sesion para acciones criticas (nuke, etc)
+  if(CUR&&CUR.isAdmin){
+   window._adminSessionToken = 'admin_'+Date.now()+'_'+Math.random().toString(36).slice(2);
+  }
+  renderAdminDashboard();
+ }
 }
 
 /* ── AUTH (Firebase Auth + DB.users sincronizados por email) ──
@@ -6586,18 +6697,6 @@ function isLocalDev(){
  const h=location.hostname;
  return h==='localhost'||h==='127.0.0.1'||h===''||h.startsWith('192.168.')||h.endsWith('.local');
 }
-/* ── v91: silenciar logs en producción ──
-   En dev (localhost) los logs siguen funcionando normal.
-   En producción se reemplazan por no-ops para no exponer
-   datos de usuarios en la consola del navegador. */
-(function patchConsoleForProd(){
- if(isLocalDev())return;
- const noop=()=>{};
- console.log=noop;
- console.debug=noop;
- console.info=noop;
- // console.warn y console.error se mantienen para errores reales
-})();
 function devAdminLogin(){
  if(!isLocalDev()){toast('Solo disponible en local','error');return;}
  const now=Date.now();
@@ -6973,45 +7072,69 @@ function comparePrediction(pred, real){
 
 /* Calcula puntos de UNA quiniela específica usando los resultados oficiales.
  No depende del estado de getActiveQ() — recibe la quiniela como parámetro
- para poder recalcular las quinielas de TODOS los usuarios. */
-function calcQuinielaPoints(q){
+ para poder recalcular las quinielas de TODOS los usuarios.
+ v95: si quinielaId es de una liga privada con customScoring, usa esos puntos. */
+function calcQuinielaPoints(q, quinielaId){
  if(!q)return 0;
  const results=DB.results||{groups:{},ko:{}};
  let pts=0;
 
+ // v95: detectar scoring custom de liga privada
+ let scoring = null;
+ if(quinielaId && quinielaId.startsWith('priv_')){
+  const league = (DB.privateLeagues||[]).find(l=>l.id===quinielaId);
+  if(league && league.customScoring) scoring = league.customScoring;
+ }
+ // Default scoring (oficial)
+ const defaultScoring = {
+  groupExact:10, groupWinner:3,
+  r32Exact:10, r32Winner:3,
+  r16Exact:15, r16Winner:5,
+  qfExact:25, qfWinner:8,
+  sfExact:40, sfWinner:15,
+  tpExact:30, tpWinner:10,
+  fExact:60, fWinner:20,
+  champion:75, topscorer:50
+ };
+ const sc = scoring || defaultScoring;
+
  // Partidos de grupos
  if(q.scores){
- Object.entries(q.scores).forEach(([key,sc])=>{
- if(!sc||sc.a===''||sc.b==='')return;
+ Object.entries(q.scores).forEach(([key,score])=>{
+ if(!score||score.a===''||score.b==='')return;
  const real=results.groups[key];
- if(!real)return; // sin resultado oficial todavía
- const cmp=comparePrediction(sc,real);
+ if(!real)return;
+ const cmp=comparePrediction(score,real);
  if(!cmp)return;
- if(cmp.exact)pts+=10;
- else if(cmp.winner)pts+=3;
+ if(cmp.exact)pts+=sc.groupExact;
+ else if(cmp.winner)pts+=sc.groupWinner;
  });
  }
 
- // Partidos KO
+ // Partidos KO con scoring por ronda
  if(q.ko){
- Object.entries(q.ko).forEach(([key,sc])=>{
- if(!sc||sc.a===''||sc.b==='')return;
+ Object.entries(q.ko).forEach(([key,score])=>{
+ if(!score||score.a===''||score.b==='')return;
  const real=results.ko[key];
  if(!real)return;
- const cmp=comparePrediction(sc,real);
+ const cmp=comparePrediction(score,real);
  if(!cmp)return;
  const round=key.split('_')[0];
- const conf=KO_POINTS[round]||{exact:10,winner:3};
- if(cmp.exact)pts+=conf.exact;
- else if(cmp.winner)pts+=conf.winner;
+ // Mapear round a sus llaves de scoring
+ const exactKey = round+'Exact';
+ const winnerKey = round+'Winner';
+ const exactPts = sc[exactKey] !== undefined ? sc[exactKey] : 10;
+ const winnerPts = sc[winnerKey] !== undefined ? sc[winnerKey] : 3;
+ if(cmp.exact)pts+=exactPts;
+ else if(cmp.winner)pts+=winnerPts;
  });
  }
 
  // Campeón
- if(q.champ&&results.champion&&q.champ===results.champion)pts+=75;
- // Goleador: fuzzy match (tolera acentos, typos pequeños, "Messi" vs "Lionel Messi")
+ if(q.champ&&results.champion&&q.champ===results.champion)pts+=sc.champion;
+ // Goleador: fuzzy match
  if(q.topscorer&&results.topscorer){
- if(fuzzyMatchTopScorer(q.topscorer,results.topscorer))pts+=50;
+ if(fuzzyMatchTopScorer(q.topscorer,results.topscorer))pts+=sc.topscorer;
  }
 
  return pts;
@@ -7020,9 +7143,9 @@ function calcQuinielaPoints(q){
 function recalcPts(){
  const q=getActiveQ();
  if(!q)return;
- // v60: No recalcular en preview mode (quiniela temporal sin entry real)
  if(q.__preview)return;
- q.pts=calcQuinielaPoints(q);
+ // v95: pasar el activeQuinielaId para que use customScoring si es liga privada
+ q.pts=calcQuinielaPoints(q, CUR.activeQuinielaId);
  updatePts();
 }
 
@@ -7031,8 +7154,9 @@ function recalcPts(){
 function recalcAllUsers(){
  DB.users.forEach(u=>{
  if(!u.quinielas)return;
- Object.values(u.quinielas).forEach(q=>{
- if(q)q.pts=calcQuinielaPoints(q);
+ // v95: pasar el quinielaId para detectar customScoring
+ Object.entries(u.quinielas).forEach(([qid,q])=>{
+ if(q)q.pts=calcQuinielaPoints(q, qid);
  });
  });
  // Si CUR está activo, sincronizar
@@ -7306,7 +7430,7 @@ function renderUpcomingMini(){
 /* Refresh stats del header tras edicion inline */
 function refreshDashStats(){
  if(typeof updatePts==='function')updatePts();
- // v91: eliminado el check muerto de renderDashboard (no existe) — siempre actualizar KPIs
+ // v92: corregido - eliminar referencia muerta a renderDashboard
  const q=getActiveQ();if(!q)return;
  const pct=getPct();
  const el=document.getElementById('kpi-pct');if(el)el.textContent=pct+'%';
@@ -8715,13 +8839,8 @@ function askAI(){
 
 /* ── DEPÓSITO: deshabilitado en este flujo (los pagos se coordinan por WhatsApp
  directamente al unirse a un tier, y el admin aprueba la inscripcion). */
-/* ── DEPÓSITO: deshabilitado en este flujo ──
-   Los pagos se coordinan directamente al unirse a un tier (joinTier).
-   El admin aprueba la inscripción vía WhatsApp.
-   Si en el futuro se reactiva el flujo de recarga de saldo $WC,
-   implementar aquí el modal con instrucciones de pago. */
 function openDepositModal(){
- toast('El pago se coordina al inscribirte a una quiniela','success');
+ // Stub seguro: redirige al hub de Ligas.
  closeModal();
  navTo('dashboard');
 }
@@ -11573,21 +11692,22 @@ async function renderPrivateTab(leagueId, tab){
  </div>`;
  })();
  } else if(tab==='code'){
- cont.innerHTML=`<div style="background:var(--bg3);border:1px solid var(--b);border-radius:10px;padding:18px;margin-bottom:14px;text-align:center">
- <div style="font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:10px">Código de invitación</div>
- <div style="font-family:'Anton',sans-serif;font-size:32px;color:var(--gold);letter-spacing:3px;background:var(--bg4);padding:14px 18px;border-radius:10px;margin-bottom:14px;word-break:break-all">${league.code}</div>
+ const isCommissioner = league.commissionerId === CUR.id;
+ const locked = isScoringLocked();
+ cont.innerHTML=`<div class="brut-priv-code-card">
+ <div class="brut-priv-code-label">Código de invitación</div>
+ <div class="brut-priv-code-big">${league.code}</div>
  <div style="display:flex;gap:8px">
- <button class="btn btn-secondary" style="flex:1;font-size:12px" onclick="copyPrivateLeagueCode('${league.code}')">
- <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;vertical-align:-2px"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
- Copiar
- </button>
- <button class="btn btn-primary" style="flex:1;font-size:12px;background:#25D366;border-color:#25D366;color:#fff" onclick="sharePrivateLeagueCode('${league.id}')">
- <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="margin-right:4px;vertical-align:-2px"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448L.057 24z"/></svg>
- Compartir
- </button>
+ <button class="brut-priv-btn" style="flex:1" onclick="copyPrivateLeagueCode('${league.code}')">COPIAR</button>
+ <button class="brut-priv-btn" style="flex:1;background:#25D366;color:#fff;border-color:#000" onclick="sharePrivateLeagueCode('${league.id}')">COMPARTIR</button>
  </div>
  </div>
- <p style="font-size:11px;color:var(--t3);text-align:center;line-height:1.4">Comparte este código con quien quieras invitar. Cualquiera con el código puede unirse.</p>`;
+ <p style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--t2);text-align:center;line-height:1.4;font-weight:600;margin-bottom:18px">Comparte este código con quien quieras invitar. Cualquiera con el código puede unirse.</p>
+ ${isCommissioner?`<div class="brut-priv-scoring-card">
+ <div class="brut-priv-code-label" style="margin-bottom:8px">Sistema de Puntos</div>
+ <p style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--t2);line-height:1.4;font-weight:600;margin-bottom:12px">${locked?'<span style="color:#FF3D00;font-weight:800">BLOQUEADO ·</span> El Mundial ya comenzó':'Personaliza cuántos puntos vale cada acierto. Editable hasta 5 min antes del primer partido.'}</p>
+ <button class="brut-priv-btn primary" style="width:100%" onclick="openCustomScoringModal('${league.id}')">${locked?'VER SISTEMA DE PUNTOS':'EDITAR SISTEMA DE PUNTOS'}</button>
+ </div>`:''}`;
  }
 }
 window.renderPrivateTab = renderPrivateTab;
@@ -11728,6 +11848,18 @@ async function createPrivateLeague(name, description){
  members:[CUR.id],
  maxMembers:MAX_MEMBERS_PRIVATE,
  fee:0,
+ // v94: Sistema de puntos custom (default = sistema oficial)
+ // Bloqueado al iniciar el Mundial (TOURNAMENT_START - 5 min)
+ customScoring:{
+  groupExact:10, groupWinner:3,
+  r32Exact:10, r32Winner:3,
+  r16Exact:15, r16Winner:5,
+  qfExact:25, qfWinner:8,
+  sfExact:40, sfWinner:15,
+  tpExact:30, tpWinner:10,
+  fExact:60, fWinner:20,
+  champion:75, topscorer:50
+ },
  };
  if(!DB.privateLeagues)DB.privateLeagues=[];
  DB.privateLeagues.push(league);
@@ -11906,7 +12038,7 @@ async function loadGroupPredictionsForRanking(leagueId){
  else if(p.type==='ko'&&p.matchKey)q.ko[p.matchKey]={a:p.scoreA||'',b:p.scoreB||''};
  });
  if(tournamentDocs&&tournamentDocs[0])q.topscorer=tournamentDocs[0].topscorer||'';
- q.pts=calcQuinielaPoints(q);
+ q.pts=calcQuinielaPoints(q, leagueId);
  let userName='Usuario',userEmail='';
  const localUser=DB.users.find(u=>u.id===memberId);
  if(localUser){
@@ -12923,6 +13055,23 @@ function computeMyStats(quinielaId){
  if(!q)return null;
  const results = DB.results||{groups:{},ko:{}};
 
+ // v95: scoring custom de liga privada o default
+ let customScoring = null;
+ if(quinielaId && quinielaId.startsWith('priv_')){
+  const league = (DB.privateLeagues||[]).find(l=>l.id===quinielaId);
+  if(league && league.customScoring) customScoring = league.customScoring;
+ }
+ const sc = customScoring || {
+  groupExact:10, groupWinner:3,
+  r32Exact:10, r32Winner:3,
+  r16Exact:15, r16Winner:5,
+  qfExact:25, qfWinner:8,
+  sfExact:40, sfWinner:15,
+  tpExact:30, tpWinner:10,
+  fExact:60, fWinner:20,
+  champion:75, topscorer:50
+ };
+
  const stats = {
  quinielaId,
  totalPts: q.pts||0,
@@ -12955,29 +13104,29 @@ function computeMyStats(quinielaId){
 
  // Procesar grupos
  if(q.scores){
- Object.entries(q.scores).forEach(([key,sc])=>{
- if(!sc||sc.a===''||sc.b==='')return;
+ Object.entries(q.scores).forEach(([key,score])=>{
+ if(!score||score.a===''||score.b==='')return;
  stats.phases.groups.predicted++;
  stats.totalPredicted++;
  const real = results.groups[key];
  if(!real)return; // sin resultado, no se evalua
  stats.phases.groups.withResult++;
  stats.totalEvaluated++;
- const cmp = comparePrediction(sc,real);
+ const cmp = comparePrediction(score,real);
  if(!cmp)return;
  let pts = 0;
- if(cmp.exact){ pts=10; stats.phases.groups.exact++; stats.totalExact++; stats.phases.groups.points+=pts; }
- else if(cmp.winner){ pts=3; stats.phases.groups.winner++; stats.totalWinner++; stats.phases.groups.points+=pts; }
+ if(cmp.exact){ pts=sc.groupExact; stats.phases.groups.exact++; stats.totalExact++; stats.phases.groups.points+=pts; }
+ else if(cmp.winner){ pts=sc.groupWinner; stats.phases.groups.winner++; stats.totalWinner++; stats.phases.groups.points+=pts; }
  else { stats.phases.groups.missed++; stats.totalMissed++; }
- if(pts>0)stats.best.push({matchKey:key,prediction:`${sc.a}-${sc.b}`,real:`${real.a}-${real.b}`,points:pts,phase:'Grupos'});
- if(!cmp.winner)stats.missed.push({matchKey:key,prediction:`${sc.a}-${sc.b}`,real:`${real.a}-${real.b}`,phase:'Grupos'});
+ if(pts>0)stats.best.push({matchKey:key,prediction:`${score.a}-${score.b}`,real:`${real.a}-${real.b}`,points:pts,phase:'Grupos'});
+ if(!cmp.winner)stats.missed.push({matchKey:key,prediction:`${score.a}-${score.b}`,real:`${real.a}-${real.b}`,phase:'Grupos'});
  });
  }
 
  // Procesar KO
  if(q.ko){
- Object.entries(q.ko).forEach(([key,sc])=>{
- if(!sc||sc.a===''||sc.b==='')return;
+ Object.entries(q.ko).forEach(([key,score])=>{
+ if(!score||score.a===''||score.b==='')return;
  const round = key.split('_')[0];
  if(!stats.phases[round])return;
  stats.phases[round].predicted++;
@@ -12986,27 +13135,30 @@ function computeMyStats(quinielaId){
  if(!real)return;
  stats.phases[round].withResult++;
  stats.totalEvaluated++;
- const cmp = comparePrediction(sc,real);
+ const cmp = comparePrediction(score,real);
  if(!cmp)return;
- const conf = KO_POINTS[round]||{exact:10,winner:3};
+ const exactKey = round+'Exact';
+ const winnerKey = round+'Winner';
+ const exactPts = sc[exactKey] !== undefined ? sc[exactKey] : 10;
+ const winnerPts = sc[winnerKey] !== undefined ? sc[winnerKey] : 3;
  let pts = 0;
- if(cmp.exact){ pts=conf.exact; stats.phases[round].exact++; stats.totalExact++; stats.phases[round].points+=pts; }
- else if(cmp.winner){ pts=conf.winner; stats.phases[round].winner++; stats.totalWinner++; stats.phases[round].points+=pts; }
+ if(cmp.exact){ pts=exactPts; stats.phases[round].exact++; stats.totalExact++; stats.phases[round].points+=pts; }
+ else if(cmp.winner){ pts=winnerPts; stats.phases[round].winner++; stats.totalWinner++; stats.phases[round].points+=pts; }
  else { stats.phases[round].missed++; stats.totalMissed++; }
  const phaseLabel = {r32:'32avos',r16:'Octavos',qf:'Cuartos',sf:'Semis',tp:'Tercer lugar',f:'Final'}[round]||round;
- if(pts>0)stats.best.push({matchKey:key,prediction:`${sc.a}-${sc.b}`,real:`${real.a}-${real.b}`,points:pts,phase:phaseLabel});
- if(!cmp.winner)stats.missed.push({matchKey:key,prediction:`${sc.a}-${sc.b}`,real:`${real.a}-${real.b}`,phase:phaseLabel});
+ if(pts>0)stats.best.push({matchKey:key,prediction:`${score.a}-${score.b}`,real:`${real.a}-${real.b}`,points:pts,phase:phaseLabel});
+ if(!cmp.winner)stats.missed.push({matchKey:key,prediction:`${score.a}-${score.b}`,real:`${real.a}-${real.b}`,phase:phaseLabel});
  });
  }
 
  // Bonus
  if(results.champion && q.champ){
  stats.bonus.champion.correct = q.champ===results.champion;
- if(stats.bonus.champion.correct)stats.bonus.champion.points = 75;
+ if(stats.bonus.champion.correct)stats.bonus.champion.points = sc.champion;
  }
  if(results.topscorer && q.topscorer){
  stats.bonus.topscorer.correct = fuzzyMatchTopScorer(q.topscorer,results.topscorer);
- if(stats.bonus.topscorer.correct)stats.bonus.topscorer.points = 50;
+ if(stats.bonus.topscorer.correct)stats.bonus.topscorer.points = sc.topscorer;
  }
 
  // Rates
@@ -13511,17 +13663,15 @@ console.log('[WC26] Admin helpers disponibles: makeAdmin("tu@email.com") · rese
    - DB local entera (excepto cuenta actual)
    ════════════════════════════════════════════════════════ */
 async function nukeProductionData(){
+ // v92: Hardening - validar admin y token de sesion
  if(!CUR||!CUR.isAdmin){toast('Solo admin','error');return;}
- if(!fb?.auth?.currentUser){toast('Debes estar autenticado con Firebase','error');return;}
- // v91: token de sesión único basado en UID + fecha — no es "BORRAR TODO" hardcodeado
- // que cualquiera que lea el código conoce. Cambia cada día.
- const uid=fb.auth.currentUser.uid;
- const dateStr=new Date().toISOString().slice(0,10).replace(/-/g,''); // "20260611"
- const expectedToken=`NUKE-${uid.slice(-6).toUpperCase()}-${dateStr}`;
- const confirm1=prompt(
-  `⚠️ ATENCIÓN: Esto borra TODAS las quinielas, inscripciones y usuarios excepto tu cuenta admin.\n\nEscribe el token de hoy para confirmar:\n\n${expectedToken}`
- );
- if(confirm1!==expectedToken){toast('Token incorrecto — operación cancelada','error');return;}
+ // Token de sesion: requiere haber entrado a Admin desde la UI en esta sesion
+ if(!window._adminSessionToken){
+  toast('Acceso solo desde panel Admin UI','error');
+  return;
+ }
+ const confirm1=prompt('⚠️ ATENCIÓN: Esto borra TODAS las quinielas, inscripciones y usuarios excepto tu cuenta admin.\n\nEscribe "BORRAR TODO" para confirmar:');
+ if(confirm1!=='BORRAR TODO'){toast('Cancelado','error');return;}
  const confirm2=confirm('ÚLTIMO AVISO: ¿De verdad borrar TODO? No se puede deshacer.');
  if(!confirm2){toast('Cancelado','error');return;}
  toast('Borrando datos...','success');
@@ -13529,21 +13679,25 @@ async function nukeProductionData(){
  // 1. Borrar privateLeagues de Firestore
  if(fb&&fb.db){
  const privates=await fb.db.collection('privateLeagues').get();
+ console.log('[nuke] Borrando',privates.size,'quinielas privadas...');
  for(const doc of privates.docs){
  await doc.ref.delete();
  }
  // 2. Borrar entries
  const entries=await fb.db.collection('entries').get();
+ console.log('[nuke] Borrando',entries.size,'entries...');
  for(const doc of entries.docs){
  await doc.ref.delete();
  }
  // 3. Borrar payouts
  const payouts=await fb.db.collection('payouts').get();
+ console.log('[nuke] Borrando',payouts.size,'payouts...');
  for(const doc of payouts.docs){
  await doc.ref.delete();
  }
  // 4. Borrar users excepto admin actual
  const users=await fb.db.collection('users').get();
+ console.log('[nuke] Borrando users excepto admin...');
  for(const doc of users.docs){
  if(doc.id!==CUR.id){
  // Borrar subcolecciones primero
@@ -13558,11 +13712,13 @@ async function nukeProductionData(){
  }
  // 5. Borrar logs
  const logs=await fb.db.collection('logs').get();
+ console.log('[nuke] Borrando',logs.size,'logs...');
  for(const doc of logs.docs){
  await doc.ref.delete();
  }
  // 6. Borrar resetear results del torneo
  const results=await fb.db.collection('results').get();
+ console.log('[nuke] Borrando',results.size,'results...');
  for(const doc of results.docs){
  await doc.ref.delete();
  }
@@ -13577,7 +13733,7 @@ async function nukeProductionData(){
  for(const p of myPreds.docs)await p.ref.delete();
  const myTour=await fb.db.collection('users').doc(CUR.id).collection('tournament').get();
  for(const t of myTour.docs)await t.ref.delete();
- }catch(e){}
+ }catch(e){console.warn('[nuke] No se pudo borrar mis preds:',e.message);}
  }
  // 9. Resetear DB local conservando solo mi cuenta
  const myUser=DB.users.find(u=>u.id===CUR.id);
@@ -13608,7 +13764,115 @@ async function nukeProductionData(){
  toast('Error: '+err.message,'error');
  }
 }
-// v91: NO se expone en window — solo accesible desde el panel admin autenticado
+window.nukeProductionData = nukeProductionData;
+
+/* ════════════════════════════════════════════════════════
+   v94: Sistema de puntos custom para quinielas privadas
+   - Solo el commissioner puede editar
+   - Bloqueado 5 min antes del primer kickoff del Mundial
+   ════════════════════════════════════════════════════════ */
+
+const SCORING_LABELS = {
+ groupExact:{label:'Resultado exacto',cat:'Fase de Grupos'},
+ groupWinner:{label:'Acertar ganador o empate',cat:'Fase de Grupos'},
+ r32Exact:{label:'32avos · resultado exacto',cat:'Eliminatorias'},
+ r32Winner:{label:'32avos · ganador',cat:'Eliminatorias'},
+ r16Exact:{label:'Octavos · resultado exacto',cat:'Eliminatorias'},
+ r16Winner:{label:'Octavos · ganador',cat:'Eliminatorias'},
+ qfExact:{label:'Cuartos · resultado exacto',cat:'Eliminatorias'},
+ qfWinner:{label:'Cuartos · ganador',cat:'Eliminatorias'},
+ sfExact:{label:'Semifinal · resultado exacto',cat:'Eliminatorias'},
+ sfWinner:{label:'Semifinal · ganador',cat:'Eliminatorias'},
+ tpExact:{label:'Tercer lugar · resultado exacto',cat:'Eliminatorias'},
+ tpWinner:{label:'Tercer lugar · ganador',cat:'Eliminatorias'},
+ fExact:{label:'Final · resultado exacto',cat:'Eliminatorias'},
+ fWinner:{label:'Final · ganador',cat:'Eliminatorias'},
+ champion:{label:'Acertar campeón del Mundial',cat:'Bonus'},
+ topscorer:{label:'Acertar goleador del torneo',cat:'Bonus'}
+};
+
+function isScoringLocked(){
+ // Bloqueado 5 min antes del kickoff del primer partido del Mundial
+ if(typeof TOURNAMENT_START==='undefined')return false;
+ const startMs = new Date(TOURNAMENT_START).getTime();
+ return Date.now() >= (startMs - 5*60*1000);
+}
+
+function openCustomScoringModal(leagueId){
+ const league = (DB.privateLeagues||[]).find(l=>l.id===leagueId);
+ if(!league){toast('Quiniela no encontrada','error');return;}
+ if(league.commissionerId !== CUR.id){
+  toast('Solo el creador puede editar el sistema de puntos','error');
+  return;
+ }
+ const locked = isScoringLocked();
+ const scoring = league.customScoring || {};
+
+ // Agrupar por categoria
+ const cats = {};
+ Object.keys(SCORING_LABELS).forEach(k=>{
+  const cat = SCORING_LABELS[k].cat;
+  if(!cats[cat])cats[cat]=[];
+  cats[cat].push({key:k,...SCORING_LABELS[k]});
+ });
+
+ let html = `<h3>Sistema de Puntos</h3>
+  <p style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--t2);margin-bottom:14px;font-weight:600;letter-spacing:.3px">Personaliza cuántos puntos vale cada acierto. ${locked?'<span style="color:#FF3D00;font-weight:800">BLOQUEADO · El Mundial ya comenzó</span>':'Editable hasta 5 min antes del primer partido.'}</p>`;
+
+ Object.keys(cats).forEach(cat=>{
+  html += `<div class="scoring-cat-title">${cat.toUpperCase()}</div>`;
+  cats[cat].forEach(item=>{
+   const val = scoring[item.key] || 0;
+   html += `<div class="scoring-row">
+    <span class="scoring-label">${item.label}</span>
+    <input type="number" min="0" max="999" id="scoring-${item.key}" value="${val}" ${locked?'disabled':''} class="scoring-input">
+    <span class="scoring-pts">PTS</span>
+   </div>`;
+  });
+ });
+
+ if(!locked){
+  html += `<div style="display:flex;gap:8px;margin-top:18px">
+   <button class="btn btn-secondary btn-full" onclick="closeModal()" style="flex:1">Cancelar</button>
+   <button class="btn btn-primary btn-full" onclick="saveCustomScoring('${leagueId}')" style="flex:1">Guardar</button>
+  </div>`;
+ } else {
+  html += `<button class="btn btn-secondary btn-full" onclick="closeModal()" style="margin-top:18px">Cerrar</button>`;
+ }
+
+ openModal(html, {wide:true});
+}
+window.openCustomScoringModal = openCustomScoringModal;
+
+async function saveCustomScoring(leagueId){
+ if(isScoringLocked()){
+  toast('No se puede modificar - Mundial ya comenzó','error');
+  return;
+ }
+ const league = (DB.privateLeagues||[]).find(l=>l.id===leagueId);
+ if(!league || league.commissionerId !== CUR.id){
+  toast('Sin permiso','error');
+  return;
+ }
+ const newScoring = {};
+ Object.keys(SCORING_LABELS).forEach(k=>{
+  const inp = document.getElementById('scoring-'+k);
+  if(inp){
+   const v = parseInt(inp.value)||0;
+   newScoring[k] = Math.min(Math.max(v,0),999);
+  }
+ });
+ league.customScoring = newScoring;
+ league.scoringUpdatedAt = Date.now();
+ saveDB();
+ sync();
+ if(typeof syncPrivateLeagueToFirestore==='function'){
+  await syncPrivateLeagueToFirestore(league);
+ }
+ toast('Sistema de puntos actualizado','success');
+ closeModal();
+}
+window.saveCustomScoring = saveCustomScoring;
 
 /* ════════════════════════════════════════════════════════
    v82: Live refresh ranking durante partidos
@@ -13620,20 +13884,40 @@ let _rankingAutoRefreshTimer = null;
 let _rankingLastRefresh = 0;
 
 function isMatchLikelyLive(){
+ // v92: Usa GD (grupos) y KO_ROUNDS que SI estan en scope global
  // Heurística: hay un partido empezado en las últimas 3 horas y no terminado
- if(typeof MATCHES==='undefined')return false;
  const now=Date.now();
  const threeHoursAgo=now-3*60*60*1000;
- // Buscar partidos cuyo kickoff estuvo en las últimas 3h
  try{
- const groupMatches=Object.values(MATCHES.groups||{}).flat();
- const koMatches=Object.values(MATCHES.ko||{}).flat();
- const all=[...groupMatches,...koMatches];
- for(const m of all){
- if(!m.kickoff)continue;
- const kickoffMs=new Date(m.kickoff).getTime();
- if(kickoffMs>=threeHoursAgo&&kickoffMs<=now)return true;
- }
+  // Revisar partidos de grupos
+  if(typeof GD!=='undefined'){
+   for(const letter of Object.keys(GD)){
+    const teams=GD[letter];
+    let idx=0;
+    for(let i=0;i<teams.length;i++){
+     for(let j=i+1;j<teams.length;j++){
+      const kickoff=getMatchKickoff(letter,idx);
+      if(kickoff){
+       const ms=new Date(kickoff).getTime();
+       if(ms>=threeHoursAgo&&ms<=now)return true;
+      }
+      idx++;
+     }
+    }
+   }
+  }
+  // Revisar partidos KO
+  if(typeof KO_ROUNDS!=='undefined'){
+   for(const r of KO_ROUNDS){
+    for(let i=0;i<(r.matches||0);i++){
+     const kickoff=getKOKickoff(r.id,i);
+     if(kickoff){
+      const ms=new Date(kickoff).getTime();
+      if(ms>=threeHoursAgo&&ms<=now)return true;
+     }
+    }
+   }
+  }
  }catch(e){}
  return false;
 }
@@ -13683,6 +13967,23 @@ window.stopRankingAutoRefresh = stopRankingAutoRefresh;
 document.addEventListener('DOMContentLoaded',()=>{
  setTimeout(startRankingAutoRefresh,2000);
 });
+
+// Update label del botón al cambiar de página
+const _origNavTo = window.navTo;
+if(_origNavTo){
+ window.navTo = function(page){
+ _origNavTo(page);
+ if(page==='ranking'){
+ setTimeout(()=>{
+ const dot=document.getElementById('rank-live-dot');
+ const label=document.getElementById('rank-live-label');
+ const live=isMatchLikelyLive();
+ if(label)label.textContent=live?'EN VIVO':'ACTUALIZAR';
+ if(dot)dot.style.animation=live?'blink 1s infinite':'none';
+ },100);
+ }
+ };
+}
 
 // ════════════════════════════════════════════════════════
 // PWA: registrar service worker para offline + push
