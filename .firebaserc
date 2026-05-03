@@ -1,5 +1,18 @@
 {
   "projects": {
     "default": "qupa26-a019a"
-  }
+  },
+  "targets": {
+    "qupa26-a019a": {
+      "hosting": {
+        "quinielawc26": [
+          "quinielawc26"
+        ],
+        "qupa26-a019a": [
+          "qupa26-a019a"
+        ]
+      }
+    }
+  },
+  "etags": {}
 }
