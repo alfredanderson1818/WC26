@@ -2849,7 +2849,7 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
  </div>
 
  <div class="auth-card">
- <button class="btn btn-google btn-full" id="reg-google-btn" onclick="doGoogleLogin()" style="margin-top:0">
+ <button class="btn btn-google btn-full" id="reg-google-btn" onclick="doGoogleLogin()" disabled style="margin-top:0">
  <svg viewBox="0 0 24 24" width="18" height="18" style="margin-right:8px;vertical-align:-3px"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
  Continuar con Google
  </button>
@@ -3378,32 +3378,6 @@ function flagImg(iso, size='md'){
  const cc=ISO_TO_CC[iso.toLowerCase()]||iso.toUpperCase();
  return `<span class="flag flag-${size}" data-cc="${cc}"></span>`;
 }
-/* ── v91: MATCHES global — usado por isMatchLikelyLive() para detectar partidos en vivo ──
-   Se construye una vez al cargar, con los kickoffs calculados igual que buildUpcomingUI.
-   Estructura: { groups: [{key, kickoff},...], ko: [{key, kickoff},...] }            */
-const MATCHES=(function buildMatchesIndex(){
- const groups=[];
- Object.entries(GD).forEach(([letter,teams])=>{
-  let idx=0;
-  for(let i=0;i<teams.length;i++){
-   for(let j=i+1;j<teams.length;j++){
-    groups.push({key:`${letter}_${teams[i].n}_vs_${teams[j].n}`,kickoff:new Date(getMatchKickoff(letter,idx)).toISOString()});
-    idx++;
-   }
-  }
- });
- const ko=[];
- // KO_ROUNDS se define justo abajo; usamos los offsets directamente
- const koRoundIds=['r32','r16','qf','sf','tp','f'];
- const koCounts={r32:16,r16:8,qf:4,sf:2,tp:1,f:1};
- koRoundIds.forEach(roundId=>{
-  const count=koCounts[roundId]||1;
-  for(let i=0;i<count;i++){
-   ko.push({key:`${roundId}_${i}`,kickoff:new Date(getKOKickoff(roundId,i)).toISOString()});
-  }
- });
- return {groups,ko};
-})();
 const KO_ROUNDS=[
  {id:'r32',label:'32avos de final',pts:'10 pts / ganador',count:16},
  {id:'r16',label:'Octavos de final',pts:'15 pts / ganador',count:8},
@@ -6085,7 +6059,7 @@ function getMatchLoser(roundId, idx){
 }
 
 const DEMO=[
- {id:'d1',name:'el_pulpo_pablo',email:'pablo@demo.com',pass:'demo123',team:'Argentina',isAdmin:false, // v92: admin real se promueve via Firestore, no via seed
+ {id:'d1',name:'el_pulpo_pablo',email:'pablo@demo.com',pass:'demo123',team:'Argentina',isAdmin:true,
  quinielas:{free:{groups:{},scores:{},ko:{},champ:'',topscorer:'',pts:0},tier_50_1:{groups:{},scores:{},ko:{},champ:'Argentina',topscorer:'Lautaro Martinez',pts:142}},
  activeQuinielaId:'tier_50_1',entries:[{tier:'50',entryNum:1,joinedAt:Date.now()-86400000*10,quinielaId:'tier_50_1',status:'approved',approvedAt:Date.now()-86400000*10}]},
  {id:'d2',name:'goleadora99',email:'gol@demo.com',pass:'demo123',team:'Brasil',
@@ -6167,17 +6141,7 @@ DB.privateLeagues.forEach(l=>{
  l.fee=0;
  }
 });
-// v93: Migración suave — quitar isAdmin:true de usuarios demo seed (IDs d1-d7)
-// Caches viejos pueden tener el seed d1 con isAdmin:true. El admin real
-// se promueve solo via Firestore. No borramos datos del usuario, solo corregimos el flag.
-const DEMO_IDS=['d1','d2','d3','d4','d5','d6','d7'];
-DB.users.forEach(u=>{
- if(DEMO_IDS.includes(u.id)&&u.isAdmin===true){u.isAdmin=false;}
-});
-saveDB();
 let CUR=JSON.parse(localStorage.getItem('wc26v5_cur')||'null');
-// v93: si CUR es un usuario demo seed con isAdmin:true en cache viejo, corregirlo
-if(CUR&&DEMO_IDS.includes(CUR.id)&&CUR.isAdmin===true){CUR.isAdmin=false;}
 
 function saveDB(){localStorage.setItem('wc26v5_db',JSON.stringify(DB));}
 function saveCur(){localStorage.setItem('wc26v5_cur',JSON.stringify(CUR));}
@@ -6341,17 +6305,7 @@ function navTo(page){
  // Renderizar lista de mis ligas (incluso vacia)
  renderMyLeagues();
  }
- if(page==='ranking'){
-  renderRanking();
-  // v91: actualizar label EN VIVO / ACTUALIZAR al navegar a ranking
-  setTimeout(()=>{
-   const dot=document.getElementById('rank-live-dot');
-   const label=document.getElementById('rank-live-label');
-   const live=isMatchLikelyLive();
-   if(label)label.textContent=live?'EN VIVO':'ACTUALIZAR';
-   if(dot)dot.style.animation=live?'blink 1s infinite':'none';
-  },100);
- }
+ if(page==='ranking')renderRanking();
  if(page==='perfil')renderPerfil();
  if(page==='admin')renderAdminDashboard();
 }
@@ -6596,18 +6550,6 @@ function isLocalDev(){
  const h=location.hostname;
  return h==='localhost'||h==='127.0.0.1'||h===''||h.startsWith('192.168.')||h.endsWith('.local');
 }
-/* ── v91: silenciar logs en producción ──
-   En dev (localhost) los logs siguen funcionando normal.
-   En producción se reemplazan por no-ops para no exponer
-   datos de usuarios en la consola del navegador. */
-(function patchConsoleForProd(){
- if(isLocalDev())return;
- const noop=()=>{};
- console.log=noop;
- console.debug=noop;
- console.info=noop;
- // console.warn y console.error se mantienen para errores reales
-})();
 function devAdminLogin(){
  if(!isLocalDev()){toast('Solo disponible en local','error');return;}
  const now=Date.now();
@@ -6680,8 +6622,6 @@ function doLogout(){
  stopMyUserListener();
  stopResultsListeners();
  stopAllStep5Listeners();
- // v92: limpiar el timer de verificacion de email para evitar acumulacion en re-logins
- if(window._verifyCheckTimer){clearInterval(window._verifyCheckTimer);window._verifyCheckTimer=null;}
  // Cerrar tambien en Firebase si hay sesion
  fb.auth.signOut().catch(()=>{});
  CUR=null;
@@ -6753,7 +6693,7 @@ fb.auth.onAuthStateChanged(async user=>{
 /* ── ENTER APP ── */
 function enterApp(){
  goTo('screen-app');
- const _hav=document.getElementById('header-av');if(_hav)_hav.textContent=initials(CUR?.name||''); // v92: guard name nulo
+ const _hav=document.getElementById('header-av');if(_hav)_hav.textContent=initials(CUR.name);
  // Migration: ensure quinielas object exists
  if(!CUR.quinielas)CUR.quinielas={};
  // (Quiniela libre eliminada en v19. Solo hay ligas pagadas con premio)
@@ -6789,7 +6729,7 @@ function enterApp(){
  }
  },1000);
 }
-function initials(n){return (n||'??').slice(0,2).toUpperCase();} // v92: guard contra name undefined
+function initials(n){return n.slice(0,2).toUpperCase();}
 function updatePts(){
  const q=getActiveQ();
  document.getElementById('header-pts').textContent=q?q.pts:0;
@@ -6856,56 +6796,52 @@ const KO_POINTS={
  que a usuarios mexicanos/latinos les gustaría apostar. El usuario puede
  elegir uno de aquí O escribir "Otro jugador..." y poner un nombre custom. */
 const TOP_SCORER_CANDIDATES=[
- // ── Estrellas Pot 1 ──────────────────────────────
- {name:'Kylian Mbappé',       country:'Francia',    club:'Real Madrid'},
- {name:'Erling Haaland',      country:'Noruega',    club:'Manchester City'},
- {name:'Vinícius Jr',         country:'Brasil',     club:'Real Madrid'},
- {name:'Lionel Messi',        country:'Argentina',  club:'Inter Miami'},
- {name:'Harry Kane',          country:'Inglaterra', club:'Bayern Munich'},
- {name:'Lamine Yamal',        country:'España',     club:'Barcelona'},
- {name:'Jude Bellingham',     country:'Inglaterra', club:'Real Madrid'},
- {name:'Lautaro Martínez',    country:'Argentina',  club:'Inter'},
- {name:'Cristiano Ronaldo',   country:'Portugal',   club:'Al-Nassr'},
- // ── Europa ──────────────────────────────────────
- {name:'Bukayo Saka',         country:'Inglaterra', club:'Arsenal'},
- {name:'Phil Foden',          country:'Inglaterra', club:'Manchester City'},
- {name:'Pedri',               country:'España',     club:'Barcelona'},
- {name:'Florian Wirtz',       country:'Alemania',   club:'Bayer Leverkusen'},
- {name:'Jamal Musiala',       country:'Alemania',   club:'Bayern Munich'},
- {name:'Romelu Lukaku',       country:'Bélgica',    club:'Napoli'},
- {name:'Erling Haaland',      country:'Noruega',    club:'Manchester City'},
- {name:'Darwin Núñez',        country:'Uruguay',    club:'Liverpool'},
- {name:'Federico Valverde',   country:'Uruguay',    club:'Real Madrid'},
- {name:'Dušan Vlahović',      country:'Serbia',     club:'Juventus'},  // Serbia no clasificó — reemplazado
- {name:'Rodri',               country:'España',     club:'Manchester City'},
- {name:'Ousmane Dembélé',     country:'Francia',    club:'PSG'},
- {name:'Khvicha Kvaratskhelia',country:'Georgia',   club:'PSG'},  // Georgia no clasificó — nota
- {name:'Heung-min Son',       country:'Corea S.',   club:'Tottenham'},
- {name:'Arda Güler',          country:'Turquía',    club:'Real Madrid'},
- {name:'Rodrygo',             country:'Brasil',     club:'Real Madrid'},
- {name:'Achraf Hakimi',       country:'Marruecos',  club:'PSG'},
- {name:'Mohamed Salah',       country:'Egipto',     club:'Liverpool'},
- // ── Latinoamérica / CONCACAF ────────────────────
- {name:'Santi Giménez',       country:'México',     club:'AC Milan'},
- {name:'Edson Álvarez',       country:'México',     club:'West Ham'},
- {name:'Hirving Lozano',      country:'México',     club:'Toluca'},
- {name:'Raúl Jiménez',        country:'México',     club:'Fulham'},
- {name:'James Rodríguez',     country:'Colombia',   club:'León'},
- {name:'Jhon Durán',          country:'Colombia',   club:'Aston Villa'},
- {name:'Luis Díaz',           country:'Colombia',   club:'Liverpool'},
- {name:'Christian Pulisic',   country:'EE.UU.',     club:'AC Milan'},
- {name:'Folarin Balogun',     country:'EE.UU.',     club:'AS Monaco'},
- {name:'Jonathan David',      country:'Canadá',     club:'Juventus'},
- {name:'Alphonso Davies',     country:'Canadá',     club:'Bayern Munich'},
- {name:'Enner Valencia',      country:'Ecuador',    club:'Liga de Quito'},
- {name:'Moisés Caicedo',      country:'Ecuador',    club:'Chelsea'},
- {name:'Julián Álvarez',      country:'Argentina',  club:'Atlético Madrid'},
- {name:'Gabriel Martinelli',  country:'Brasil',     club:'Arsenal'},
- {name:'Vitor Roque',         country:'Brasil',     club:'Palmeiras'},
- {name:'Matías Soulé',        country:'Argentina',  club:'Roma'},
- {name:'Victor Osimhen',      country:'Nigeria',    club:'Galatasaray'},  // Nigeria no clasificó
- {name:'Jonathan Burkardt',   country:'Alemania',   club:'Mainz'},
- {name:'Sehrou Guirassy',     country:'Guinea',     club:'Dortmund'},  // Guinea no clasificó
+ // Estrellas globales
+ {name:'Kylian Mbappé', country:'Francia', club:'Real Madrid'},
+ {name:'Erling Haaland', country:'Noruega', club:'Manchester City'},
+ {name:'Vinícius Jr', country:'Brasil', club:'Real Madrid'},
+ {name:'Lionel Messi', country:'Argentina', club:'Inter Miami'},
+ {name:'Harry Kane', country:'Inglaterra', club:'Bayern Munich'},
+ {name:'Robert Lewandowski', country:'Polonia', club:'Barcelona'},
+ {name:'Lamine Yamal', country:'España', club:'Barcelona'},
+ {name:'Jude Bellingham', country:'Inglaterra', club:'Real Madrid'},
+ {name:'Lautaro Martínez', country:'Argentina', club:'Inter'},
+ {name:'Cristiano Ronaldo', country:'Portugal', club:'Al-Nassr'},
+ // Más estrellas top
+ {name:'Mohamed Salah', country:'Egipto', club:'Liverpool'},
+ {name:'Bukayo Saka', country:'Inglaterra', club:'Arsenal'},
+ {name:'Phil Foden', country:'Inglaterra', club:'Manchester City'},
+ {name:'Rodrygo', country:'Brasil', club:'Real Madrid'},
+ {name:'Pedri', country:'España', club:'Barcelona'},
+ {name:'Federico Valverde', country:'Uruguay', club:'Real Madrid'},
+ {name:'Darwin Núñez', country:'Uruguay', club:'Liverpool'},
+ {name:'Julián Álvarez', country:'Argentina', club:'Atlético Madrid'},
+ {name:'Rodri', country:'España', club:'Manchester City'},
+ {name:'Ousmane Dembélé', country:'Francia', club:'PSG'},
+ {name:'Luis Díaz', country:'Colombia', club:'Liverpool'},
+ {name:'Heung-min Son', country:'Corea del Sur', club:'Tottenham'},
+ {name:'Florian Wirtz', country:'Alemania', club:'Bayer Leverkusen'},
+ {name:'Jamal Musiala', country:'Alemania', club:'Bayern Munich'},
+ {name:'Khvicha Kvaratskhelia', country:'Georgia', club:'PSG'},
+ {name:'Victor Osimhen', country:'Nigeria', club:'Galatasaray'},
+ // Estrellas regionales (latinoamericanas / norteamericanas)
+ {name:'Santi Giménez', country:'México', club:'AC Milan'},
+ {name:'Edson Álvarez', country:'México', club:'West Ham'},
+ {name:'Hirving Lozano', country:'México', club:'Toluca'},
+ {name:'Raúl Jiménez', country:'México', club:'Fulham'},
+ {name:'James Rodríguez', country:'Colombia', club:'León'},
+ {name:'Jhon Durán', country:'Colombia', club:'Al-Nassr'},
+ {name:'Christian Pulisic', country:'USA', club:'AC Milan'},
+ {name:'Jonathan David', country:'Canadá', club:'Juventus'},
+ {name:'Alphonso Davies', country:'Canadá', club:'Bayern Munich'},
+ {name:'Enner Valencia', country:'Ecuador', club:'Pachuca'},
+ {name:'Moisés Caicedo', country:'Ecuador', club:'Chelsea'},
+ {name:'Vitor Roque', country:'Brasil', club:'Palmeiras'},
+ {name:'Gabriel Martinelli', country:'Brasil', club:'Arsenal'},
+ {name:'Matías Soulé', country:'Argentina', club:'Roma'},
+ {name:'Dušan Vlahović', country:'Serbia', club:'Juventus'},
+ {name:'Romelu Lukaku', country:'Bélgica', club:'Napoli'},
+ {name:'Achraf Hakimi', country:'Marruecos', club:'PSG'},
 ];
 
 /* Normaliza un nombre para comparación: lowercase, sin acentos, sin espacios extra */
@@ -7322,13 +7258,14 @@ function renderUpcomingMini(){
 /* Refresh stats del header tras edicion inline */
 function refreshDashStats(){
  if(typeof updatePts==='function')updatePts();
- // v91: eliminado el check muerto de renderDashboard (no existe) — siempre actualizar KPIs
+ if(typeof renderDashboard==='function'){
  const q=getActiveQ();if(!q)return;
  const pct=getPct();
  const el=document.getElementById('kpi-pct');if(el)el.textContent=pct+'%';
  const cls=getCls();
  const e2=document.getElementById('kpi-cls');if(e2)e2.textContent=cls+'/24';
  const pts=document.getElementById('kpi-pts');if(pts)pts.textContent=q.pts;
+ }
 }
 
 /* ── HOME: Mini-bracket de eliminatorias ──
@@ -7734,12 +7671,6 @@ function onScoreChange(inp){
  if(!q.scores[cleanKey])q.scores[cleanKey]={a:'',b:''};
  if(isA)q.scores[cleanKey].a=inp.value;
  else q.scores[cleanKey].b=inp.value;
- // v93: clamp en JS — HTML min/max es solo UX, no seguridad
- const raw=parseInt(inp.value);
- const clamped=isNaN(raw)?'':(Math.max(0,Math.min(20,raw))).toString();
- if(inp.value!==''&&clamped!==inp.value){inp.value=clamped;}
- if(isA)q.scores[cleanKey].a=clamped;
- else q.scores[cleanKey].b=clamped;
  console.log('[Step4 DEBUG] onScoreChange:',cleanKey,'=',q.scores[cleanKey],'qid:',CUR.activeQuinielaId);
  recalcPts();sync();
  // Log debounced (espera 1.5s para agrupar ediciones rapidas)
@@ -8737,13 +8668,8 @@ function askAI(){
 
 /* ── DEPÓSITO: deshabilitado en este flujo (los pagos se coordinan por WhatsApp
  directamente al unirse a un tier, y el admin aprueba la inscripcion). */
-/* ── DEPÓSITO: deshabilitado en este flujo ──
-   Los pagos se coordinan directamente al unirse a un tier (joinTier).
-   El admin aprueba la inscripción vía WhatsApp.
-   Si en el futuro se reactiva el flujo de recarga de saldo $WC,
-   implementar aquí el modal con instrucciones de pago. */
 function openDepositModal(){
- toast('El pago se coordina al inscribirte a una quiniela','success');
+ // Stub seguro: redirige al hub de Ligas.
  closeModal();
  navTo('dashboard');
 }
@@ -13474,97 +13400,7 @@ window.resetDB=function(){
  console.log(' DB reseteada. Recarga la pagina (F5).');
  return true;
 };
-/* ══════════════════════════════════════════════════════════════
-   v94: seedBots() — Crea 5 usuarios de prueba en Firebase
-   Corre desde la consola del browser: seedBots()
-   Solo funciona si estás logueado como admin.
-   Crea cuentas reales en Firebase Auth + Firestore con
-   predicciones simuladas e inscripciones pendientes.
-══════════════════════════════════════════════════════════════ */
-window.seedBots = async function(){
- if(!CUR||!CUR.isAdmin){toast('Solo admin','error');return;}
- if(!fb||!fb.auth?.currentUser){toast('Debes estar logueado con Firebase','error');return;}
- const BOTS=[
-  {name:'messi_fan_arg',  email:'bot_arg@qupa-test.dev', team:'Argentina', tier:'50',  champ:'Argentina', topscorer:'Lautaro Martínez'},
-  {name:'samba_brasil99', email:'bot_bra@qupa-test.dev', team:'Brasil',    tier:'20',  champ:'Brasil',    topscorer:'Vinícius Jr'},
-  {name:'futbol_esp2026', email:'bot_esp@qupa-test.dev', team:'España',    tier:'100', champ:'España',    topscorer:'Lamine Yamal'},
-  {name:'el_7_fra',       email:'bot_fra@qupa-test.dev', team:'Francia',   tier:'50',  champ:'Francia',   topscorer:'Kylian Mbappé'},
-  {name:'tricolor_mx',    email:'bot_mex@qupa-test.dev', team:'México',    tier:'20',  champ:'México',    topscorer:'Santi Giménez'},
- ];
- toast('Creando 5 bots en Firestore...','success');
- let ok=0;
- for(const bot of BOTS){
-  try{
-   // Generar ID único para el bot
-   const botId='bot_'+bot.email.split('@')[0]+'_'+Date.now().toString(36);
-   const quinielaId='tier_'+bot.tier+'_'+botId.slice(-8);
-   // Crear scores simulados para grupos
-   const scores={};
-   Object.entries(GD).forEach(([letter,teams])=>{
-    for(let i=0;i<teams.length;i++){
-     for(let j=i+1;j<teams.length;j++){
-      const key=`${letter}_${teams[i].n}_vs_${teams[j].n}`;
-      scores[key]={a:String(Math.floor(Math.random()*4)),b:String(Math.floor(Math.random()*4))};
-     }
-    }
-   });
-   // KO simulado
-   const ko={};
-   KO_ROUNDS.forEach(r=>{
-    for(let i=0;i<r.count;i++){
-     const a=Math.floor(Math.random()*3);
-     const b=Math.floor(Math.random()*3);
-     ko[`${r.id}_${i}`]={a:String(a),b:a===b?String(b+1):String(b)};
-    }
-   });
-   // Crear user en DB local
-   const u={
-    id:botId,
-    name:bot.name,
-    email:bot.email,
-    team:bot.team,
-    wcBalance:0,
-    isAdmin:false,
-    quinielas:{[quinielaId]:{groups:{},scores,ko,champ:bot.champ,topscorer:bot.topscorer,pts:Math.floor(Math.random()*80)+30}},
-    activeQuinielaId:quinielaId,
-    entries:[{id:'e_'+botId,tier:bot.tier,quinielaId,joinedAt:Date.now()-Math.floor(Math.random()*3*86400000),status:'pending',referrerId:null}],
-    ledger:[],
-    createdAt:Date.now()-Math.floor(Math.random()*5*86400000),
-   };
-   DB.users.push(u);
-   // Subir a Firestore
-   if(window.fsMode&&fb.db){
-    await fb.db.collection('users').doc(botId).set({
-     id:botId,email:bot.email,name:bot.name,isAdmin:false,
-     referrerId:null,legal:{ageConfirmed:true,tycAccepted:true,tycVersion:1,acceptedAt:Date.now()},
-     createdAt:u.createdAt,updatedAt:Date.now(),
-    });
-    await fb.db.collection('entries').doc(quinielaId).set({
-     quinielaId,userId:botId,userAuthUid:botId,userName:bot.name,userEmail:bot.email,
-     tier:bot.tier,tierName:TIER_NAMES[bot.tier]||'Liga',status:'pending',
-     referrerId:null,joinedAt:u.entries[0].joinedAt,approvedAt:null,approvedBy:null,updatedAt:Date.now(),
-    });
-    // Subir predicciones en batch
-    const batch=fb.db.batch();
-    Object.entries(scores).slice(0,20).forEach(([matchKey,sc])=>{
-     const ref=fb.db.collection('users').doc(botId).collection('predictions').doc(`${quinielaId}_${matchKey}`);
-     batch.set(ref,{quinielaId,matchKey,type:'group',scoreA:sc.a,scoreB:sc.b,updatedAt:Date.now()});
-    });
-    await batch.commit();
-   }
-   saveDB();
-   ok++;
-   console.log(`[Bot ${ok}/5] ${bot.name} creado → ${quinielaId}`);
-  }catch(err){
-   console.error(`[Bot] Error en ${bot.name}:`,err.message);
-  }
- }
- toast(`${ok}/5 bots creados · Revisa inscripciones pendientes`,'success');
- if(typeof renderAdminDashboard==='function')renderAdminDashboard();
- console.log(`[seedBots] Listo. ${ok}/5 bots en Firestore y localStorage.`);
- console.log('[seedBots] Corre: navTo("admin") para ver las inscripciones pendientes.');
-};
-console.log('[WC26] Admin helpers disponibles: makeAdmin("tu@email.com") · resetDB() · seedBots()');
+console.log('[WC26] Admin helpers disponibles: makeAdmin("tu@email.com") · resetDB()');
 
 /* v66: Exponer TODAS las funciones admin a window para que onclick="..." funcione */
 (function exposeAdminFunctions(){
@@ -13624,16 +13460,8 @@ console.log('[WC26] Admin helpers disponibles: makeAdmin("tu@email.com") · rese
    ════════════════════════════════════════════════════════ */
 async function nukeProductionData(){
  if(!CUR||!CUR.isAdmin){toast('Solo admin','error');return;}
- if(!fb?.auth?.currentUser){toast('Debes estar autenticado con Firebase','error');return;}
- // v91: token de sesión único basado en UID + fecha — no es "BORRAR TODO" hardcodeado
- // que cualquiera que lea el código conoce. Cambia cada día.
- const uid=fb.auth.currentUser.uid;
- const dateStr=new Date().toISOString().slice(0,10).replace(/-/g,''); // "20260611"
- const expectedToken=`NUKE-${uid.slice(-6).toUpperCase()}-${dateStr}`;
- const confirm1=prompt(
-  `⚠️ ATENCIÓN: Esto borra TODAS las quinielas, inscripciones y usuarios excepto tu cuenta admin.\n\nEscribe el token de hoy para confirmar:\n\n${expectedToken}`
- );
- if(confirm1!==expectedToken){toast('Token incorrecto — operación cancelada','error');return;}
+ const confirm1=prompt('⚠️ ATENCIÓN: Esto borra TODAS las quinielas, inscripciones y usuarios excepto tu cuenta admin.\n\nEscribe "BORRAR TODO" para confirmar:');
+ if(confirm1!=='BORRAR TODO'){toast('Cancelado','error');return;}
  const confirm2=confirm('ÚLTIMO AVISO: ¿De verdad borrar TODO? No se puede deshacer.');
  if(!confirm2){toast('Cancelado','error');return;}
  toast('Borrando datos...','success');
@@ -13641,21 +13469,25 @@ async function nukeProductionData(){
  // 1. Borrar privateLeagues de Firestore
  if(fb&&fb.db){
  const privates=await fb.db.collection('privateLeagues').get();
+ console.log('[nuke] Borrando',privates.size,'quinielas privadas...');
  for(const doc of privates.docs){
  await doc.ref.delete();
  }
  // 2. Borrar entries
  const entries=await fb.db.collection('entries').get();
+ console.log('[nuke] Borrando',entries.size,'entries...');
  for(const doc of entries.docs){
  await doc.ref.delete();
  }
  // 3. Borrar payouts
  const payouts=await fb.db.collection('payouts').get();
+ console.log('[nuke] Borrando',payouts.size,'payouts...');
  for(const doc of payouts.docs){
  await doc.ref.delete();
  }
  // 4. Borrar users excepto admin actual
  const users=await fb.db.collection('users').get();
+ console.log('[nuke] Borrando users excepto admin...');
  for(const doc of users.docs){
  if(doc.id!==CUR.id){
  // Borrar subcolecciones primero
@@ -13670,11 +13502,13 @@ async function nukeProductionData(){
  }
  // 5. Borrar logs
  const logs=await fb.db.collection('logs').get();
+ console.log('[nuke] Borrando',logs.size,'logs...');
  for(const doc of logs.docs){
  await doc.ref.delete();
  }
  // 6. Borrar resetear results del torneo
  const results=await fb.db.collection('results').get();
+ console.log('[nuke] Borrando',results.size,'results...');
  for(const doc of results.docs){
  await doc.ref.delete();
  }
@@ -13689,7 +13523,7 @@ async function nukeProductionData(){
  for(const p of myPreds.docs)await p.ref.delete();
  const myTour=await fb.db.collection('users').doc(CUR.id).collection('tournament').get();
  for(const t of myTour.docs)await t.ref.delete();
- }catch(e){}
+ }catch(e){console.warn('[nuke] No se pudo borrar mis preds:',e.message);}
  }
  // 9. Resetear DB local conservando solo mi cuenta
  const myUser=DB.users.find(u=>u.id===CUR.id);
@@ -13720,7 +13554,7 @@ async function nukeProductionData(){
  toast('Error: '+err.message,'error');
  }
 }
-// v91: NO se expone en window — solo accesible desde el panel admin autenticado
+window.nukeProductionData = nukeProductionData;
 
 /* ════════════════════════════════════════════════════════
    v82: Live refresh ranking durante partidos
@@ -13795,6 +13629,23 @@ window.stopRankingAutoRefresh = stopRankingAutoRefresh;
 document.addEventListener('DOMContentLoaded',()=>{
  setTimeout(startRankingAutoRefresh,2000);
 });
+
+// Update label del botón al cambiar de página
+const _origNavTo = window.navTo;
+if(_origNavTo){
+ window.navTo = function(page){
+ _origNavTo(page);
+ if(page==='ranking'){
+ setTimeout(()=>{
+ const dot=document.getElementById('rank-live-dot');
+ const label=document.getElementById('rank-live-label');
+ const live=isMatchLikelyLive();
+ if(label)label.textContent=live?'EN VIVO':'ACTUALIZAR';
+ if(dot)dot.style.animation=live?'blink 1s infinite':'none';
+ },100);
+ }
+ };
+}
 
 // ════════════════════════════════════════════════════════
 // PWA: registrar service worker para offline + push
