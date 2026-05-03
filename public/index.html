@@ -328,39 +328,117 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
 .rank-prize-banner > *{color:#FFFFFF !important}
 .rank-prize-banner [class*="prize"]{color:#FFD700 !important}
 
-/* Podio brutalist - 3 cuadrados grandes */
+/* Podio brutalist - 3 cuadrados grandes CENTRADOS Y EPICOS */
 .podium-v2{
- display:grid !important;
- grid-template-columns:1fr 1.2fr 1fr !important;
- gap:8px !important;
- margin-bottom:20px;
- align-items:end !important;
+ display:flex !important;
+ flex-direction:row !important;
+ justify-content:center !important;
+ align-items:flex-end !important;
+ gap:10px !important;
+ margin:0 auto 28px !important;
  padding:0 !important;
  border:none !important;
+ max-width:520px !important;
 }
 .podium-spot{
- padding:14px 8px 16px !important;
- text-align:center;
+ flex:1 1 0 !important;
+ max-width:160px !important;
+ min-width:90px !important;
+ padding:14px 6px 14px !important;
+ text-align:center !important;
  border-radius:0 !important;
- position:relative;
- max-width:none !important;
- flex:none !important;
- display:block !important;
+ position:relative !important;
+ display:flex !important;
+ flex-direction:column !important;
+ align-items:center !important;
+ justify-content:flex-start !important;
 }
-[data-theme="dark"] .podium-spot{background:#000;border:3px solid #FFFFFF}
-[data-theme="light"] .podium-spot{background:#FFFFFF;border:3px solid #000000}
 
-/* Posicion 1 - dorado, MAS GRANDE */
+/* Posicion 1 - DORADO, GIGANTE, CENTRADO */
 .podium-spot-1{
  order:2 !important;
  background:#FFD700 !important;
- border-color:#000 !important;
- box-shadow:5px 5px 0 #000 !important;
- padding:18px 8px 22px !important;
- transform:translateY(-12px);
+ border:4px solid #000 !important;
+ border-radius:0 !important;
+ box-shadow:6px 6px 0 #000 !important;
+ padding:22px 10px 24px !important;
+ transform:translateY(-16px);
+ z-index:3;
+ max-width:180px !important;
+}
+.podium-spot-1::before{
+ content:'CAMPEON';
+ position:absolute;
+ top:-22px;left:50%;
+ transform:translateX(-50%);
+ background:#000;color:#FFD700;
+ font-family:'Anton','Bebas Neue',sans-serif;
+ font-size:13px;font-weight:400;
+ padding:4px 12px;
+ letter-spacing:1px;
+ white-space:nowrap;
+ z-index:5;
+ border:2px solid #000;
 }
 .podium-spot-1 *{color:#000 !important}
 .podium-spot-1 .podium-avatar{
+ width:78px !important;height:78px !important;
+ background:#FFFFFF !important;
+ border:4px solid #000 !important;
+ border-radius:0 !important;
+ font-family:'Anton','Bebas Neue',sans-serif !important;
+ font-size:30px !important;
+ color:#000 !important;
+ margin:0 auto 10px !important;
+ display:flex !important;
+ align-items:center !important;
+ justify-content:center !important;
+ box-shadow:none !important;
+}
+.podium-spot-1 .podium-name{
+ font-family:'Anton','Bebas Neue',sans-serif !important;
+ font-size:15px !important;
+ font-weight:400 !important;
+ text-transform:uppercase !important;
+ letter-spacing:-.3px !important;
+ line-height:1.05 !important;
+ word-break:break-word !important;
+ margin:8px 0 6px !important;
+ color:#000 !important;
+}
+.podium-spot-1 .podium-pts{
+ font-family:'Anton','Bebas Neue',sans-serif !important;
+ font-size:22px !important;
+ font-weight:400 !important;
+ letter-spacing:-1px !important;
+ line-height:1 !important;
+ margin:2px 0 !important;
+ color:#000 !important;
+}
+.podium-spot-1 [style*="font-size:11px"]{
+ font-family:'Anton','Bebas Neue',sans-serif !important;
+ font-size:18px !important;
+ font-weight:400 !important;
+ background:#000 !important;
+ color:#FFD700 !important;
+ padding:4px 8px !important;
+ margin-top:6px !important;
+ letter-spacing:-.3px !important;
+ display:inline-block !important;
+ line-height:1 !important;
+}
+
+/* Posicion 2 - cyan brutalist */
+.podium-spot-2{
+ order:1 !important;
+ background:#3DDBD9 !important;
+ border:3px solid #000 !important;
+ border-radius:0 !important;
+ box-shadow:5px 5px 0 #000 !important;
+ padding:14px 6px 16px !important;
+}
+.podium-spot-2 *{color:#000 !important}
+.podium-spot-2 .podium-avatar{
  width:62px !important;height:62px !important;
  background:#FFFFFF !important;
  border:3px solid #000 !important;
@@ -372,80 +450,66 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
  display:flex !important;
  align-items:center !important;
  justify-content:center !important;
- position:relative;
  box-shadow:none !important;
 }
-.podium-spot-1 .podium-name{
- font-family:'Anton','Bebas Neue',sans-serif !important;
- font-size:14px !important;
- font-weight:400 !important;
- text-transform:uppercase !important;
- letter-spacing:-.3px !important;
- line-height:1.1 !important;
- word-break:break-word !important;
- margin:6px 0 4px !important;
-}
-.podium-spot-1 .podium-pts{
- font-family:'JetBrains Mono',monospace !important;
- font-size:11px !important;
- font-weight:800 !important;
- letter-spacing:1px !important;
- margin-top:2px !important;
-}
-
-/* Posicion 2 - cyan brutalist */
-.podium-spot-2{
- order:1 !important;
- background:#3DDBD9 !important;
- border-color:#000 !important;
- box-shadow:4px 4px 0 #000 !important;
-}
-.podium-spot-2 *{color:#000 !important}
 
 /* Posicion 3 - naranja brutalist */
 .podium-spot-3{
  order:3 !important;
  background:#FF3D00 !important;
- border-color:#000 !important;
- box-shadow:4px 4px 0 #000 !important;
+ border:3px solid #000 !important;
+ border-radius:0 !important;
+ box-shadow:5px 5px 0 #000 !important;
+ padding:14px 6px 16px !important;
 }
 .podium-spot-3 *{color:#FFFFFF !important}
-
-.podium-spot-2 .podium-avatar,
 .podium-spot-3 .podium-avatar{
- width:50px !important;height:50px !important;
- background:#FFFFFF !important;
- border:2.5px solid #000 !important;
+ width:62px !important;height:62px !important;
+ background:#FFD700 !important;
+ border:3px solid #000 !important;
  border-radius:0 !important;
  font-family:'Anton','Bebas Neue',sans-serif !important;
- font-size:18px !important;
+ font-size:24px !important;
  color:#000 !important;
- margin:0 auto 6px !important;
+ margin:0 auto 8px !important;
  display:flex !important;
  align-items:center !important;
  justify-content:center !important;
  box-shadow:none !important;
 }
-.podium-spot-3 .podium-avatar{background:#FFD700 !important}
 
-.podium-spot .podium-name{
+/* Nombre y puntos para 2do y 3er lugar */
+.podium-spot-2 .podium-name,
+.podium-spot-3 .podium-name{
  font-family:'Anton','Bebas Neue',sans-serif !important;
  font-size:13px !important;
  font-weight:400 !important;
  text-transform:uppercase !important;
  letter-spacing:-.2px !important;
- line-height:1.1 !important;
+ line-height:1.05 !important;
  word-break:break-word !important;
- margin:4px 0 2px !important;
+ margin:6px 0 4px !important;
 }
-.podium-spot .podium-pts{
+.podium-spot-2 .podium-pts,
+.podium-spot-3 .podium-pts{
+ font-family:'Anton','Bebas Neue',sans-serif !important;
+ font-size:18px !important;
+ font-weight:400 !important;
+ letter-spacing:-.5px !important;
+ line-height:1 !important;
+ margin:2px 0 !important;
+}
+.podium-spot-2 [style*="font-size:11px"],
+.podium-spot-3 [style*="font-size:11px"]{
  font-family:'JetBrains Mono',monospace !important;
- font-size:10px !important;
+ font-size:11px !important;
  font-weight:800 !important;
- letter-spacing:1px !important;
+ letter-spacing:.5px !important;
+ margin-top:4px !important;
+ display:block !important;
 }
 
-/* Medalla number escondida (el podio ya muestra orden visualmente) */
+/* Medalla number escondida */
 .podium-medal{display:none !important}
 
 /* Tabla del ranking - filas brutalist con clase rank-row-v2 */
@@ -542,61 +606,64 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
 /* Banner premio (legacy + nuevo) */
 .rank-prize-banner,
 .rank-prize-empty{
- padding:18px;
- margin-bottom:20px;
+ padding:22px 18px;
+ margin-bottom:32px;
  text-align:center;
  border-radius:0 !important;
  display:flex;
  align-items:center;
- justify-content:space-between;
- gap:14px;
+ justify-content:center;
+ gap:16px;
+ position:relative;
 }
 [data-theme="dark"] .rank-prize-banner{
  background:#A8123E !important;
- border:3px solid #FFFFFF !important;
- box-shadow:6px 6px 0 #FFD700 !important;
+ border:4px solid #FFFFFF !important;
+ box-shadow:7px 7px 0 #FFD700 !important;
 }
 [data-theme="light"] .rank-prize-banner{
  background:#A8123E !important;
- border:3px solid #000 !important;
- box-shadow:6px 6px 0 #FFD700 !important;
+ border:4px solid #000 !important;
+ box-shadow:7px 7px 0 #FFD700 !important;
 }
-.rank-prize-info{flex:1;text-align:left}
+.rank-prize-info{flex:1;text-align:center !important;min-width:0}
 .rank-prize-label{
  font-family:'JetBrains Mono',monospace;
- font-size:10px;
- color:#FFFFFF !important;
+ font-size:11px;
+ color:#FFD700 !important;
  text-transform:uppercase;
- letter-spacing:2px;
+ letter-spacing:2.5px;
  font-weight:800;
- margin-bottom:4px;
- opacity:.9;
+ margin-bottom:6px;
 }
 .rank-prize-amount{
  font-family:'Anton','Bebas Neue',sans-serif !important;
- font-size:42px !important;
+ font-size:54px !important;
  color:#FFD700 !important;
  line-height:1 !important;
- letter-spacing:-2px !important;
+ letter-spacing:-2.5px !important;
  font-weight:400 !important;
+ text-shadow:3px 3px 0 #000;
 }
 .rank-prize-sub{
  font-family:'JetBrains Mono',monospace;
  font-size:10px;
  color:#FFFFFF !important;
- margin-top:6px;
+ margin-top:8px;
  font-weight:600;
  letter-spacing:.5px;
  text-transform:uppercase;
- opacity:.85;
+ opacity:.9;
+ line-height:1.4;
 }
 .rank-prize-icon{
- width:50px;height:50px;
+ width:60px;height:60px;
  background:#FFD700;
- border:2px solid #000;
+ border:3px solid #000;
  display:flex;align-items:center;justify-content:center;
  color:#000;
  flex-shrink:0;
+ box-shadow:3px 3px 0 #000;
 }
 .rank-prize-empty{
  background:transparent !important;
