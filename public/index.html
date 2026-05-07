@@ -969,8 +969,97 @@ label{font-size:12px;color:var(--t2);display:block;margin-bottom:6px;font-weight
 .ob-btns{display:flex;flex-direction:column;gap:10px}
 
 /* === v44: Onboard rediseñado === */
-.ob-countdown{display:inline-flex;align-items:center;gap:6px;background:rgba(255,215,0,.08);border:1px solid rgba(255,215,0,.2);border-radius:20px;padding:6px 14px;margin-top:14px;font-size:11px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.8px}
-.ob-countdown::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--gold);box-shadow:0 0 8px var(--gold);animation:obPulse 2s ease-in-out infinite}
+.ob-countdown{display:block;margin:18px auto 0;max-width:520px;width:100%;text-transform:none;letter-spacing:0;background:transparent;border:none;border-radius:0;padding:0;color:inherit;font-size:inherit;font-weight:inherit}
+.ob-countdown::before{display:none}
+
+/* v100: Cuenta regresiva al Mundial brutalist */
+.brut-countdown-label{
+ font-family:'JetBrains Mono',monospace;
+ font-size:11px;
+ font-weight:800;
+ color:#FF3D00;
+ letter-spacing:2.5px;
+ text-align:center;
+ margin-bottom:10px;
+}
+.brut-countdown-grid{
+ display:flex;
+ align-items:stretch;
+ justify-content:center;
+ gap:6px;
+}
+.brut-cd-cell{
+ flex:1;
+ padding:10px 4px 8px;
+ text-align:center;
+ background:#FFD700;
+ border:3px solid #000;
+ border-radius:0;
+ box-shadow:4px 4px 0 #000;
+ min-width:0;
+}
+[data-theme="dark"] .brut-cd-cell{
+ background:#FFD700;
+ border-color:#000;
+ box-shadow:4px 4px 0 #FFFFFF;
+}
+.brut-cd-num{
+ font-family:'Anton','Bebas Neue',sans-serif;
+ font-size:34px;
+ font-weight:400;
+ line-height:1;
+ letter-spacing:-2px;
+ color:#000;
+}
+.brut-cd-lbl{
+ font-family:'JetBrains Mono',monospace;
+ font-size:9px;
+ font-weight:800;
+ color:#000;
+ letter-spacing:1.5px;
+ text-transform:uppercase;
+ margin-top:4px;
+}
+.brut-cd-sep{
+ font-family:'Anton','Bebas Neue',sans-serif;
+ font-size:32px;
+ line-height:1;
+ color:#FFD700;
+ align-self:center;
+ padding-bottom:14px;
+ font-weight:400;
+}
+[data-theme="light"] .brut-cd-sep{color:#000}
+.brut-cd-secs .brut-cd-num{color:#FF3D00}
+.brut-countdown-live{
+ background:#0FFF50;
+ color:#000;
+ border:3px solid #000;
+ border-radius:0;
+ padding:12px 18px;
+ font-family:'Anton','Bebas Neue',sans-serif;
+ font-size:20px;
+ font-weight:400;
+ letter-spacing:-.5px;
+ text-align:center;
+ box-shadow:5px 5px 0 #000;
+ display:inline-flex;
+ align-items:center;
+ gap:10px;
+ text-transform:uppercase;
+}
+.brut-cd-live-dot{
+ width:12px;height:12px;
+ background:#FF3D00;
+ animation:obPulse 1s ease-in-out infinite;
+}
+
+@media (max-width:380px){
+ .brut-cd-num{font-size:26px}
+ .brut-cd-lbl{font-size:8px;letter-spacing:1px}
+ .brut-cd-sep{font-size:24px}
+ .brut-cd-cell{padding:8px 2px 6px}
+}
 @keyframes obPulse{0%,100%{opacity:1}50%{opacity:.4}}
 .ob-tagline-new{font-family:'JetBrains Mono',monospace;font-size:12px;color:#888;margin-top:10px;letter-spacing:1px;font-weight:600;text-transform:uppercase}
 
@@ -13559,19 +13648,38 @@ function refreshOnboardCountdown(){
  const now = Date.now();
  const diff = TOURNAMENT_START - now;
  if(diff<=0){
- el.innerHTML = `<span>Mundial 2026 EN VIVO</span>`;
- return;
+  el.innerHTML = `<div class="brut-countdown-live"><span class="brut-cd-live-dot"></span>MUNDIAL 2026 EN VIVO</div>`;
+  return;
  }
  const days = Math.floor(diff/86400000);
  const hours = Math.floor((diff%86400000)/3600000);
  const mins = Math.floor((diff%3600000)/60000);
- if(days>0){
- el.innerHTML = `<span>${days} ${days===1?'día':'días'} para el inicio</span>`;
- } else if(hours>0){
- el.innerHTML = `<span>${hours}h ${mins}m para el inicio</span>`;
- } else {
- el.innerHTML = `<span>${mins} minutos para el inicio</span>`;
- }
+ const secs = Math.floor((diff%60000)/1000);
+
+ el.innerHTML = `
+  <div class="brut-countdown-label">FALTAN PARA EL MUNDIAL</div>
+  <div class="brut-countdown-grid">
+   <div class="brut-cd-cell">
+    <div class="brut-cd-num">${String(days).padStart(2,'0')}</div>
+    <div class="brut-cd-lbl">${days===1?'día':'días'}</div>
+   </div>
+   <div class="brut-cd-sep">:</div>
+   <div class="brut-cd-cell">
+    <div class="brut-cd-num">${String(hours).padStart(2,'0')}</div>
+    <div class="brut-cd-lbl">${hours===1?'hora':'horas'}</div>
+   </div>
+   <div class="brut-cd-sep">:</div>
+   <div class="brut-cd-cell">
+    <div class="brut-cd-num">${String(mins).padStart(2,'0')}</div>
+    <div class="brut-cd-lbl">min</div>
+   </div>
+   <div class="brut-cd-sep">:</div>
+   <div class="brut-cd-cell brut-cd-secs">
+    <div class="brut-cd-num">${String(secs).padStart(2,'0')}</div>
+    <div class="brut-cd-lbl">seg</div>
+   </div>
+  </div>
+ `;
 }
 
 function refreshOnboardStats(){
@@ -13603,7 +13711,7 @@ function initOnboard(){
  refreshOnboardCountdown();
  refreshOnboardStats();
  if(_obCountdownTimer)clearInterval(_obCountdownTimer);
- _obCountdownTimer = setInterval(refreshOnboardCountdown, 60000); // actualizar cada min
+ _obCountdownTimer = setInterval(refreshOnboardCountdown, 1000); // actualizar cada segundo
 }
 window.initOnboard = initOnboard;
 
